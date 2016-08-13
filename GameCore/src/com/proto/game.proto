@@ -1,0 +1,718 @@
+package com.pbmessage;
+option java_package = "com.pbmessage";
+option java_outer_classname = "GamePBMsg";
+
+// 账号登录
+message AccountLoginMsg {
+	optional string accountName = 1;  //玩家账号
+	optional string password = 2;	  //玩家密码
+	optional string gameId = 3;       //
+	optional string channelId = 4;    //
+	optional string serverId = 5;     //
+	optional string imei = 6;         //手机imei
+	optional string model = 7;        //手机型号
+	optional string brand = 8;        //手机品牌
+}
+
+// 玩家账号登录之后返回信息
+message AccountLoginResultMsg {
+	optional int32 loginResult = 1;   	 			//登录结果
+	optional int64 accountId = 2;   	 			//账号Id
+	optional int32 delCDTime = 3;        			//删除角色的冷却时间
+	optional string gateWayIp = 4;       			//网关的IP
+	optional int32 gateWayPort = 5;      			//网关的端口
+	repeated PlayerInfoMsg playerInfoList = 6;   	//玩家的角色列表信息
+}
+
+//登录的玩家信息
+message PlayerInfoMsg {
+	optional int64 userId = 1;      	//玩家Id
+	optional string userName = 2;   	//玩家名字
+	optional int32 playerLv = 3;		//玩家等级
+	optional int32 jobType = 4;			//玩家职业
+	optional int32 fightStrength = 5;  	//玩家的战斗力
+}
+
+// 装备副属性的信息
+message AttributeInfoMsg {
+	optional int32 attributeType = 1;     //副属性类型
+	optional int32 attributeValue = 2;	  //副属性值
+}
+
+//道具相关的信息
+message ItemInfoMsg {
+	optional int64 itemId = 1; 						//玩家道具id
+	optional int32 templateId = 2; 					//模板编号
+	optional int32 posIndex = 3; 					//所在位置
+	optional int32 stackCount = 4;					//堆叠数量
+	optional int32 bagType = 5; 					//背包的类型，0为装备栏，1为背包栏
+	optional bool isBind = 6; 						//是否绑定	
+	optional int32 gainTime = 7; 					//道具获得时间
+	optional int32 blessLv = 8; 					//祝福等级
+	optional int32 blessAttribute = 9;              //祝福的属性
+	repeated int32 inlayCard = 10;                  //镶嵌卡片的列表
+	repeated AttributeInfoMsg attributeInfo = 11;	//副属性信息
+}
+
+//道具更改列表信息
+message ItemChangeListMsg {
+	repeated ItemInfoMsg itemChangeList = 1;  //道具列表信息
+}
+
+//道具操作相关
+message PropOperatorMsg {
+	optional int32 operatorType = 1; 			//道具操作类型，具体参看使用消息的地方
+	optional int32 srcBagType = 2; 				//背包类型，0为装备栏，1为背包
+	optional int32 destBagType = 3;
+	optional int32 srcPosIndex = 4;         	//道具所在的原来位置
+	optional int32 destPosIndex = 5;        	//道具所在的目标位置
+	optional int32 propCount = 6;           	//用于表示道具使用和出售的个数
+}
+
+//装备进阶的消息
+message EquipAdvanceMsg {
+	optional int32 bagType = 1; 				//背包类型，0为装备栏，1为背包
+	optional int32 posIndex = 2;         		//装备所在的位置
+	optional int32 lowMaterialId = 3;           //低级材料的Id
+	optional int32 lowMaterialNum = 4;          //低级材料的数量
+	optional int32 highMaterialId = 5;          //高级材料的Id
+	optional int32 highMaterialNum = 6;         //高级材料的数量
+	optional int32 advanceResult = 7;           //装备进阶的结果 1表示成功 2表示失败
+}
+
+//装备祝福的消息
+message EquipBlessMsg {
+	optional int32 bagType = 1; 				//背包类型，0为装备栏，1为背包
+	optional int32 posIndex = 2;         		//装备所在的位置
+	optional int32 blessMaterialId = 3;         //祝福卡片的Id
+	optional int32 blessResult = 4;             //祝福的结果 1表示成功 2表示无效 3表示失败
+}
+
+//装备镶嵌的消息
+message EquipInlayMsg {
+	optional int32 operType = 1;                //操作类型 1为镶嵌 2为摘取
+	optional int32 bagType = 2; 				//背包类型，0为装备栏，1为背包
+	optional int32 posIndex = 3;         		//装备所在的位置
+	optional int32 inlayPosIndex = 4;           //装备镶嵌的孔位
+	optional int32 cardPosIndex = 5;          	//镶嵌卡片所在的位置
+}
+
+// 提示语
+message TipInfoMsg {
+	optional int32 tipId = 1;			//提示Id
+	repeated string content = 2;		//内容参数
+}
+
+//跨服服务器负载
+message LoadMsg {
+	optional int32 server_id = 1;        	     //服务器id
+	optional string server_name = 2;     	     //服务器名称
+	optional int32 load = 3;             	     //服务器的负载
+	optional string address = 4;        	     //ip地址
+	optional int32 port = 5;             	     //端口
+	optional string user_server_name = 6;	     //玩家注册的中文站点名称
+	optional int32 type = 7;             	     //端口
+	optional int32 connTimes = 8;                //连接次数
+	optional int32 index = 9;
+}
+
+// 玩家登陆
+message LoginReqMsg {
+	optional int64 accountId = 1;	//玩家的账号ID
+	optional string token = 2;		//玩家KEY
+}	
+
+// 玩家战斗属性信息
+message FightAttributeMsg {
+	optional int32 strength = 1;			//力量
+	optional int32 agility = 2;             //敏捷
+	optional int32 vitality = 3;          	//体质
+	optional int32 intelligence = 4;        //智力
+	optional int32 dexterity = 5;           //灵巧
+	optional int32 lucky = 6;              	//幸运
+	optional int32 attack = 7;				//物理攻击
+	optional int32 defence = 8;				//物理防御
+	optional int32 magicattack = 9;			//法术攻击
+	optional int32 magicdefence = 10;		//法术防御
+	optional int32 attackspeed = 11;		//攻速
+	optional int32 magiccold = 12;			//施法
+	optional int32 hitting = 13;   			//命中
+	optional int32 dodge = 14;  			//闪避
+}
+
+// 玩家基本信息
+message PlayerMsg {
+	optional int64 userId = 1 [default = -1];			//玩家Id
+	optional string userName = 2 [default = ""];		//玩家名字
+	optional int32 jobId = 3 [default = -1];			//职业Id
+	optional int32 gold = 4 [default = -1];				//黄金
+	optional int32 diamond = 5 [default = -1];			//钻石
+  	optional int32 playerState = 6 [default = -1];		//状态
+	optional int32 playerLv = 7 [default = -1];			//玩家等级
+	optional int32 playerExp = 8 [default = -1];		//当前经验
+	optional int32 noviceProcess = 9 [default = -1];   	//新手引导进度
+	optional int32 fightStrength = 10 [default = -1];  	//玩家的战斗力
+	optional int32 currHP = 11 [default = -1];          //玩家的当前血量
+	optional int32 maxHP = 12 [default = -1];			//玩家的最大血量
+	optional int32 currMP = 13 [default = -1];          //玩家的当前魔法值
+	optional int32 maxMP = 14 [default = -1];           //玩家的最大魔法值
+	optional float posX = 15 [default = -1.0];          //玩家的X坐标位置
+	optional float posY = 16 [default = -1.0];			//玩家的Y坐标位置
+	optional float direction = 17 [default = -1.0];     //玩家的方向
+	optional int64 guildId = 18 [default = -1];         //玩家的公会Id
+	optional string guildName = 19 [default = ""];      //玩家的公会名字
+	optional int64 teamId = 20 [default = -1];          //玩家的队伍Id
+	optional int32 currShieldHp = 21 [default = -1];    //玩家的当前护盾值
+}
+
+// 玩家详细信息
+message PlayerDetailMsg {
+	optional PlayerMsg playerInfo = 1;					//玩家基础信息
+	repeated ItemInfoMsg itemInfoList = 2;				//装备信息
+	optional SkillMsg skillInfo = 3;					//技能信息
+}
+
+//服务器踢人的消息
+message KickOutPlayerMsg {
+	optional int32 kickOutType = 1;  //踢人的类型  1 账号在其他地方登陆，2 GM踢人，3  服务器停服
+}
+
+//同步服务器的时间，作为心跳包
+message SyncServerTimeMsg {
+	optional int32 serverTime = 1;  //服务器的时间
+}
+
+message PlayerCheckMsg {
+	optional int64 accountId = 1;	// 账号Id
+	optional string token = 2;		// 键
+	optional bool result = 3;		// 结果
+}
+
+//房间玩家信息
+message RoomPlayerInfoMsg {
+	optional PlayerMsg playerInfo = 1;			//玩家详细信息
+	optional int32 roomIndex = 2;				//玩家在房间的下标索引
+	optional int32 roomCamp = 3;                //玩家所在的阵营
+	optional int32 pvpId = 4;                   //玩家的PVPId
+}
+
+//房间BOSS的信息
+message RoomBossInfoMsg {
+	optional int32 bossId = 1;					//BOSS的Id
+	optional int32 bossCamp = 2;				//BOSS的阵营
+	optional int32 bossPvpId = 3;				//BOSS的PVPId
+	optional int32 nodeId = 4;					//BOSS的节点Id
+	optional int32 bossHP = 5;					//BOSS的血量
+	optional int64 bossMasterId = 6;            //BOSS所属的玩家Id
+}
+
+//房间信息
+message RoomMsg {
+	optional int32 roomId = 1;						//房间ID	
+	repeated RoomPlayerInfoMsg roomPlayerList = 2;	//房间玩家列表详细信息
+	optional RoomBossInfoMsg bossInfo = 3;          //房间BOSS的信息
+	optional int32 roomStageId = 4;                 //房间的关卡Id
+}
+
+//房间信息
+message RoomInfoMsg {
+    optional int32 roomId = 1;	               //房间Id
+    optional string roomName = 2;              //房间名字
+	optional int32 roomState = 3;              //房间的状态 1为可以入侵 2为不可以入侵（即已经被人入侵了）
+}
+
+message RoomInfoListMsg {
+	repeated RoomInfoMsg roomInfoList = 1;	   //房间列表信息
+}
+
+// 技能信息
+message SkillInfoMsg {
+	optional int32 skillId = 1;			 //技能Id
+	optional int32 skillLv = 2;          //技能等级
+	optional bool isActiveSkill = 3;     //技能的类型 true为主动技能 false为被动技能
+}
+
+// 技能信息和技能链相关信息
+message SkillMsg {
+	repeated SkillInfoMsg skillInfoList = 1;			  //技能列表信息
+	repeated int32 skillChainList = 2;                    //出战技能设置列表  -1表示没有技能 否则为技能Id
+}
+
+// 技能升级信息
+message UpgradeSkillMsg {
+	optional int32 skillId = 1;			  	//技能Id
+	optional int32 upgradeType = 2;  		//技能升级的类型，1为单独升级，2为一键升级
+}
+
+//设置出战技能
+message SkillChainMsg {
+	optional int32 operType = 1;        //操作类型 1为设置出战技能 2为交换出战技能
+	optional int32 skillSrcPos = 2;		//技能原来的位置
+	optional int32 skillId = 3;         //技能Id
+	optional int32 skillDestPos = 4;	//技能目标的位置
+}
+
+//同步动作
+message SyncActionMsg {
+	optional string pvpId = 1;
+	optional string label = 4;
+	optional bool reset = 5;
+	optional int32 frame = 6;
+	optional int32 state = 7;
+	optional float posX = 8;
+	optional float posY = 9;
+	optional float posZ = 10;
+	optional int32 labelIdx= 11;
+}
+
+//同步动作标签
+message SyncActionLabelMsg {
+	repeated string actionLabel = 1; 	// 动作标签
+}
+
+//创建飞行道具
+message SyncCreatProjectileMsg {
+	optional int32 parentPvpId = 1;  	//飞行道具的父类的PVPId
+	optional int32 pvpId = 2;    		//飞行道具自身的PVPId
+	optional string modelName = 3;      //飞行道具的模型名字
+	optional string otherPlayerRes = 4; //飞行道具的路径地址
+	optional float offsetX = 5;
+	optional float offsetY = 6;
+	optional float offsetZ = 7;
+	optional bool bindBone = 8;
+	optional string bindName = 9;
+	optional bool isWarning = 10;//警示圈
+	optional bool useChkGround= 11;
+	optional bool isBindPosition = 12;
+	optional float lifeTime = 13;
+	optional string beginAction = 14;
+	optional float targetX = 15;
+	optional float targetY = 16;
+	optional float targetZ = 17;    
+	optional float posX = 18;
+	optional float posY = 19;
+	optional float posZ = 20;
+}
+
+//同步飞行道具位置
+message SyncProjectilePosMsg {
+	optional int32 pvpId = 1;    		//飞行道具自身的PVPId
+	optional float moveSpeed = 2;
+	optional float posX = 3;
+	optional float posY = 4;
+	optional float posZ = 5;
+}
+//同步方向
+message SyncDirectionMsg {
+	optional string id = 1;
+	optional int32 dir = 2;
+}
+
+//同步飞行道具位置
+message SyncFlyPositionMsg {
+	optional string pvpName = 1;
+	optional int32 id = 2;
+	optional float x = 3;
+	optional float y = 4;
+	optional float z = 5;
+}
+
+//同步起身动作
+message SyncGetUpMsg {
+	optional string id = 1;
+}
+
+//同步伤害
+message SyncHurtMsg {
+  	optional int32 pvpId = 1;
+	optional int32 hitGroupIdx = 2;
+	optional int32 directionX = 3;	
+	optional bool isFly = 4;
+	optional string modelName = 5;
+	optional string actionLabel = 6;
+  	optional int32 flySkillId = 7;
+  	repeated SyncHitDataMsg bearHurtList  = 8;
+}
+
+//被攻击者受到的伤害信息
+message SyncHitDataMsg {
+  	optional int32 bearerId = 1;
+  	optional int32 currentSuperArmorLevel = 2;
+  	optional float hitPointX = 3;
+	optional float hitPointY = 4;
+	optional float hitPointZ = 5;
+	optional float bearerPointX = 6;
+	optional float bearerPointY = 7;
+	optional float bearerPointZ = 8;
+	optional bool synIsBuffer = 9 ;
+	repeated OnceHitDataMsg hitDataList = 10;
+	optional int32 currHP = 11;  //当前剩余的血量
+	optional int32 curBearShieldHp = 12;//当前剩余护盾值
+}
+
+//单次伤害的计算
+message OnceHitDataMsg {
+	optional int32 syncBearHp = 1;
+	optional int32 syncBearArmor = 2;
+	optional bool syncIsCrit = 3;
+}
+
+message FlyItemInfoMsg {
+	optional int32 pvpId = 1;   	//飞行道具的PVPId
+	optional float lifeTime = 2; 	//飞行道具存活的时间
+}
+
+message SyncFlyItemMsg {
+	optional int32 pvpId = 1;  //PVP的Id
+	repeated FlyItemInfoMsg flyItemList = 2;  //飞行道具的列表
+}
+
+//同步跳的动作
+message SyncJumpMsg {
+	optional string id = 1;
+	optional float power = 2;
+	optional string riseType = 3;
+	optional string riseLoopType = 4;
+	optional string fallType = 5;
+	optional string fallLoopType = 6;
+	optional string toGroundType = 7;
+}
+
+//PVP过程中同步的共用消息
+message SyncPVPCommonMsg {
+    optional int32 pvpId = 1;    //PVP的Id 包括玩家和怪物的
+	optional int32 operType = 2;  // 1表示使用护盾， 2表示护盾消失
+}
+
+//PVP过程中的一些状态
+message SyncPVPStateMsg {
+	optional int32 pvpState = 1;  //PVP过程的一些状态  1表示太极启动了
+}
+
+message SyncPVPAIMsg {
+	optional bool isStartAI = 1;   //true表示开启AI  false表示关闭AI
+}
+
+message DiceInfoMsg {
+	optional int32 quality = 1;		//骰子的品质，即颜色 1为白色 2为灰色 3为棕色 4为绿色
+	optional int32 pointNum = 2;    //骰子的点数
+}
+
+message PVPRandomDiceMsg {
+	repeated DiceInfoMsg diceInfoList = 1;   //骰子信息列表
+	optional int32 itemIndex = 2;            //最终获得物品的索引
+}
+
+//发送PVP的战报给客户端
+message PvpBattleResultMsg {
+	optional int32 isWin = 1;   				//PVP战斗是否胜利  1表示胜利  2表示失败
+    repeated PlayerMsg pvpPlayerList = 2;  		//PVP的玩家列表
+	optional int32 rewardExp = 3;				//奖励的经验
+	optional int32 rewardGold = 4;				//奖励的金币
+	repeated int32 rewardItemIdList = 5;        //奖励物品Id的列表
+	repeated int32 randomItemIdList = 6;        //随机骰子获得的物品列表
+	optional bool isLevelUp = 7;                //是否升级
+}
+
+//同步玩家的坐标位置和方向
+message SyncPositionMsg {
+	optional int32 pvpId = 1;
+	optional float x = 2;
+	optional float y = 3;
+	optional float z = 4;
+	optional int32 direct = 5;
+}
+
+//同步加载进度
+message SyncProgressMsg {
+	optional int64 userId = 1;    //玩家Id
+	optional int32 progress = 2;  //加载的进度值
+}
+
+//同步技能
+message SyncUseSkillLinkMsg {
+	optional float myPosX = 1;
+	optional float myPosY = 2;
+	optional float myPosZ = 3;
+	optional int32 pvpId = 4;
+	optional bool result = 5;
+	optional int32 seed = 6;
+	optional int32 skillDir = 7;
+	optional int32 skillId = 8;
+	optional float skilltargetP_x = 9;
+	optional float skilltargetP_z = 10;
+	optional int32 targetId = 11;
+}
+
+message SyncPVPMasterChangeMsg {
+	optional int64 masterId = 1;  //PVP过程中BOSS的房主Id更改
+}
+
+//场景玩家的消息
+message ScenePlayerInfoMsg {
+    optional PlayerMsg playerMsg = 1; 	//玩家信息
+	optional float posX = 2; 	    	//所在位置x
+	optional float posY = 3;	    	//所在位置y
+	optional float posZ = 4;		 	//所在位置Z
+	optional float direct = 5;     		//方向
+}
+
+//进入某个场景的消息
+message EnterSceneMsg {
+	optional int32 sceneType = 1;   //场景的类型
+	optional float posX = 2; 	    //所在位置x
+	optional float posY = 3;	    //所在位置y
+	optional float posZ = 4;		//所在位置Z
+	optional float direct = 5;     	//方向
+}
+
+//主城玩家移动消息
+message MainCityMoveMsg {
+	optional int64 userId = 1;   		//玩家Id
+	optional float posX = 2; 	    	//所在位置x
+	optional float posY = 3;	    	//所在位置y
+	optional float posZ = 4;		 	//所在位置Z
+	optional float direct = 5;     		//方向
+}
+
+message ScenePlayerListMsg {
+	repeated ScenePlayerInfoMsg playerList = 1;  //场景玩家列表信息
+}
+
+//玩家离开主城
+message LeaveMainCityMsg {
+	optional int64 userId = 1;		//离开主城的玩家Id
+}
+
+//玩家加入队伍
+message TeamJoinMsg_CS {
+	optional int64 teamId = 1;			// 队伍Id
+}
+
+//玩家的信息
+message TeamMemberMsg {				
+	optional int64 userId = 1;			// 玩家ID
+	optional string nickName = 2;       //玩家名字 
+	optional int32 templateId = 3;		// 职业ID
+	optional int32 level = 4;			// 等级
+}
+
+// 一条队伍记录的信息
+message TeamInfoMsg {
+	optional int64 leaderId = 1;				//队长ID		
+	repeated TeamMemberMsg TeamMemberList = 2;	//队员信息
+}
+
+message TeamCommonMsg {
+	optional int64 userId = 1;					//玩家的Id
+}
+
+// 查看队伍
+message TeamViewMsg {
+	optional int64 teamId = 1;
+	optional TeamMemberMsg leaderInfo = 2;
+	optional int32 teamMemberNum = 3;
+}
+
+message TeamViewListMsg {
+	repeated TeamViewMsg teamViewList = 1;		//玩家看队伍列表的消息
+}
+
+//队伍消息
+message TeamMsg {
+	optional TeamViewListMsg  totalTeamList = 1;      //如果没有队伍，则读取这个字段信息，所有队伍的信息列表
+	optional TeamInfoMsg teamInfo = 2;                //如果有队伍，则读取这个字段的信息，队伍的信息
+}
+
+message TeamSynMessageMsg_CSC {
+	optional int32 taskId = 2;			// 任务Id
+}
+
+//好友相关的信息
+message FriendMsg {
+	repeated PlayerMsg friendList = 1;         //好友列表
+	optional int32 friendCount = 2;            //好友的上限个数
+	repeated PlayerMsg enemyList = 3;		   //仇敌列表
+	optional int32 enemyCount = 4;			   //仇敌的上限个数
+	repeated PlayerMsg battleFriendList = 5;   //战友列表
+	optional int32 battleFriendCount = 6;      //战友的上限个数
+}
+
+//添加一个好友
+message AddFriendMsg {
+	optional int64 userId = 1;      //角色的Id
+}
+
+//删除一个好友
+message DeleteFriendMsg {
+	optional int32 operType = 1;    //删除类型  1删除好友 2删除仇敌 3删除战友
+	optional int64 userId = 2;      //角色的Id
+}
+
+//根据角色名字搜索某个玩家或者好友
+message SearchFriendInfoMsg {
+    optional string userName = 1;  //角色的名字
+}
+
+message SearchNearUserInfoMsg {
+    repeated PlayerMsg userInfoList = 1;  //搜索附近玩家列表信息
+}
+
+//公会创建
+message GuildCreateMsg {      
+	optional string guildName = 1; 	     //公会名字
+	optional string guildSlogan = 2;	 //公会公告
+	optional int32 guildEmblem = 3; 	 //公会会徽
+}
+
+//公会中使用的一些共用PB
+message GuildCommonMsg {
+    optional string guildName = 1; 		//公会名称  搜索公会和发送邀请玩家加入公会
+    optional int32 pageNum = 2; 		//请求页码   同步公会列表给客户端用到
+    optional int64 guildId = 3;  		//客户端请求查看某个公会的具体信息、玩家申请加入某个公会、创建公会成功之后返回公会Id给客户端
+    optional int64 userId = 4;          //同意玩家加入公会的申请返回
+    optional string userName = 5;       //邀请某个玩家加入公会，根据名字
+    optional string guildSlogan = 6;    //公会公告信息
+    optional bool isSuccess = 7;        //判断成功还是失败
+    optional int32 techId = 8;          //玩家默认选择的公会科技Id
+    optional int32 donateType = 9;      //公会捐献类型，1为金币捐献，2为钻石捐献
+}
+
+//公会申请信息
+message GuildApplyMsg {
+	optional int64 userId = 1; 			//玩家Id
+	optional string userName = 2; 		//玩家名称
+	optional int32 vipLv = 3;			//VIP等级
+	optional int32 playerLv = 4; 		//玩家等级
+	optional int32 jobId = 5;     		//玩家的职业Id
+	optional int32 fightStrength = 6;   //玩家战斗力
+	optional int32 logoutTime = 7;      //玩家登出时间
+}
+
+message GuildApplyListMsg {
+	repeated GuildApplyMsg guildApplyList = 1;	//公会申请列表
+}
+
+message GuildAcceptApplyMsg {
+	repeated int64 userIdList = 1;      //已经被同意加入工会申请玩家列表 
+}
+
+//公会成员信息
+message GuildMemberMsg {
+	optional int64 userId = 1; 			//玩家Id
+	optional string userName = 2; 		//玩家名称
+	optional int32 vipLv = 3;			//VIP等级
+	optional int32 jobId = 4;     		//公会成员的职业Id
+	optional int32 power = 5; 			//公会职位
+	optional int32 playerLv = 6; 		//玩家等级
+	optional int32 fightStrength = 7;   //玩家战斗力
+	optional int32 contribution = 8;    //玩家贡献度
+	optional int32 logoutTime = 9;      //玩家登出时间
+}
+
+message GuildMemberListMsg {
+	repeated GuildMemberMsg guildMemList = 1;	//公会成员列表信息
+}
+
+//公会信息和公会成员列表
+message GuildMsg {
+	optional GuildInfoMsg guildInfo = 1;               //公会信息
+	optional GuildMemberListMsg guildMemberInfo = 2;   //公会成员列表信息
+}
+
+//公会信息
+message GuildInfoMsg {
+	optional int64 guildId = 1 [default = -1]; 				//公会Id
+	optional string guildName = 2 [default = "-1"]; 		//公会名称
+	optional int32 guildEmblem = 3 [default = -1];			//公会会徽
+	optional int32 totalExp = 4 [default = -1]; 			//公会总的经验值
+	optional int32 memberCount = 5 [default = -1]; 			//公会人数
+	optional string guildSlogan = 6 [default = "-1"];       //公会公告
+	optional int32 guildLv = 7 [default = -1];          	//公会的等级
+	optional int32 applyState = 8 [default = -1];           //标记是否已申请公会
+	optional string guildLeaderName = 9 [default = "-1"];   //公会会长名字
+	optional int32 guildLeaderLv = 10 [default = -1];   	//公会等级
+	optional int32 createTime = 11 [default = -1];   		//公会创建时间
+}
+
+message GuildListMsg {
+	repeated GuildInfoMsg guildList = 1;	//公会列表信息
+	optional int32 guildCount = 2;          //公会总数
+	optional int32 applyCount = 3;          //玩家已经申请过公会的数量
+}
+
+//公会事件信息
+message GuildEventMsg {
+	optional string eventDesc = 1; 	//事件描述
+	optional int32 eventTime = 2;	//事件发生时间
+}
+
+message GuildEventListMsg {
+	repeated GuildEventMsg guildEventList = 1;	// 公会事件列表
+}
+
+//公会科技信息
+message GuildTechMsg {
+	optional int32 techId = 1; 			//科技Id
+	optional int32 techLv = 2;			//科技等级
+	optional int32 contribution = 3; 	//科技贡献度
+}
+
+message GuildTechListMsg {
+	repeated GuildTechMsg guildTechList = 1;	//公会科技列表信息
+}
+
+//邮件附件奖励
+message MailAttachInfoMsg {
+	optional int32 itemId = 1;         //物品的Id
+	optional int32 itemCount = 2;	   //物品的数量
+}
+
+//邮件信息
+message MailInfoMsg {
+	optional int64 mailId = 1; 						//邮件Id
+	optional string mailTitle = 2;					//邮件标题
+	optional string mailContent = 3; 				//邮件内容
+	repeated MailAttachInfoMsg mailAttachList = 4; 	//邮件附件物品奖励
+	optional int32 mailType = 5;            		//邮件类型
+	optional int32 mailState = 6; 					//邮件状态
+	optional int32 sendTime = 7; 		    		//发送邮件时间
+}
+
+message MailInfoListMsg {
+	repeated MailInfoMsg mailInfo = 1;	// 邮件列表信息
+}
+
+//邮件公共PB
+message MailCommonMsg {
+	optional int64 mailId = 1; 				//邮件Id
+	optional int32 mailType = 2;            //一键领取某一页标签的所有邮件附件奖励
+}
+
+message MailTotalAttackMsg {
+    repeated int64 mailIdList = 1;     //领取所有附件成功的邮件Id列表
+}
+
+//GM命令消息
+message GMOrderMsg {
+    repeated string gmContent = 1;  //GM命令内容
+}
+
+//聊天消息
+message ChatMsg {
+	optional int32 chatType = 1;   			//聊天类型  1世界频道  2队伍频道 3氏族频道 4私聊
+	optional int64 chatUserId = 2;  		//聊天内容发送者的玩家Id
+	optional string chatUserName = 3;     	//聊天内容发送的玩家名字
+	optional string content = 4;   			//聊天内容
+	optional ItemInfoMsg itemInfo = 5; 		//道具的内容
+	optional int64 toUserId = 6;            //私聊玩家的Id
+	optional string toUserName = 7;         //私聊玩家的名字
+}
+
+message BlackInfoMsg {
+	optional string userName = 1;           //黑名单玩家的名字
+}
+
+message BlackInfoListMsg {
+	repeated string blackInfoList = 1;  //黑名单玩家列表
+}
