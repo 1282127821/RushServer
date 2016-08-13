@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="1-create-packet" name="Light" basedir="../.">
+    <description>Light</description>
+    <echo>build light deploy files</echo>
+    <echo>${basedir}</echo>
+
+    <property name="is-debug" value="on"/>
+    <property name="java-version" value="1.6"/>
+    <property name="app-version" value="0.1"/>
+    <property name="webapp-version" value="0.1"/>
+    <property name="charge-version" value="0.1"/>
+    <property name="exclude-svn" value="**/*.svn/*.*"/>
+    <property name="all" value="*">
+    </property>
+
+    <property name="app" value="${basedir}/Deploy/app"/>
+    <property name="castleserver" value="${basedir}/Deploy/app/castleserver"/>
+    <property name="gatewayserver" value="${basedir}/Deploy/app/gatewayserver"/>
+    <property name="webapp" value="${basedir}/Deploy/webapp"/>
+    <property name="chargeapp" value="${basedir}/Deploy/chargeapp"/>
+    <property name="config" value="${basedir}/Lib/config"/>
+    <property name="libs" value="Lib"/>
+    <property name="util" value="Util"/>
+    <property name="entity" value="Entity"/>
+    <property name="dao" value="Dao"/>
+    <property name="baseServer" value="BaseServer"/>
+    <property name="castleServer" value="CastleServer"/>
+    <property name="gatewayServer" value="Gateway"/>
+    <property name="pbprotocol" value="PBProtocol"/>
+    <property name="web" value="Web"/>
+    <property name="charge" value="Charge"/>
+
+    <property name="patchCharge" value="${basedir}/Deploy/patch/Charge"/>
+    <property name="crossserver" value="${basedir}/Deploy/app/crossServer"/>
+    <property name="crossServer" value="CrossServer"/>
+    <property name="patchCross" value="${basedir}/Deploy/patch/CrossServer"/>
+    <mkdir dir="${patchCross}/server"/>
+    <mkdir dir="${patchCross}/server/app"/>
+    <mkdir dir="${patchCross}/server/config"/>
+    <mkdir dir="${patchCross}/server/app/crossserver1"/>
+    <mkdir dir="${patchCross}/server/app/crossserver2"/>
+    <mkdir dir="${patchCross}/server/app/crossserver3"/>
+    <mkdir dir="${patchCross}/server/app/crossserver4"/>
+    <mkdir dir="${patchCross}/server/app/crossserver5"/>
+
+    <mkdir dir="${patchCharge}/server"/>
+    <mkdir dir="${patchCharge}/server/chargeapp"/>
+    <mkdir dir="${patchCharge}/server/chargeapp/web"/>
+    <mkdir dir="${patchCharge}/server/chargeapp/web/WEB-INF"/>
+    <mkdir dir="${patchCharge}/server/chargeapp/web/config"/>
+    <mkdir dir="${patchCharge}/server/chargeapp/web/WEB-INF/lib"/>
+
+    <!-- 备份目录 -->
+    <property name="patch" value="${basedir}/Deploy/patch"/>
+    <property name="patchApp" value="${basedir}/Deploy/patch/GameServer"/>
+
+    <!-- 运行目录 -->
+    <property name="serverApp" value="/game"/>
+
+    <!-- 清除历史版本 -->
+    <target name="clean">
+        <delete dir="${app}"/>
+        <delete dir="${webapp}"/>
+        <delete dir="${chargeapp}"/>
+        <delete dir="${toolsapp}"/>
+        <delete dir="${patchApp}"/>
+        <delete dir="${patchCross}"/>
+        <delete dir="${patchCharge}"/>
+        <delete dir="${util}/bin"/>
+        <delete dir="${entity}/bin"/>
+        <delete dir="${dao}/bin"/>
+        <delete dir="${baseServer}/bin"/>
+        <delete dir="${castleServer}/bin"/>
+        <delete dir="${gatewayServer}/bin"/>
+        <delete dir="${pbprotocol}/bin"/>
+        <delete dir="${web}/build/classes"/>
+        <delete dir="${charge}/build/classes"/>
+        <delete dir="${crossServer}/bin"/>
+    </target>
+
+    <!-- 建立编译所需bin目录结构 -->
+    <target name="mk-dir-bin">
+        <mkdir dir="${util}/bin"/>
+        <mkdir dir="${entity}/bin"/>
+        <mkdir dir="${dao}/bin"/>
+        <mkdir dir="${baseServer}/bin"/>
+        <mkdir dir="${castleServer}/bin"/>
+        <mkdir dir="${gatewayServer}/bin"/>
+        <mkdir dir="${pbprotocol}/bin"/>
+        <mkdir dir="${web}/build/classes"/>
+        <mkdir dir="${charge}/build/classes"/>
+        <mkdir dir="${crossServer}/bin"/>
+    </target>
+
+    <!-- 建立部署所需要的目录结构 -->
+    <target name="init">
+        <mkdir dir="${app}"/>
+        <mkdir dir="${app}/config"/>
+
+        <mkdir dir="${app}/gatewayserver"/>
+        <mkdir dir="${app}/gatewayserver/lib"/>
+        <mkdir dir="${app}/gatewayserver/config"/>
+
+        <mkdir dir="${app}/castleserver"/>
+        <mkdir dir="${app}/castleserver/lib"/>
+        <mkdir dir="${app}/castleserver/config"/>
+        <mkdir dir="${app}/castleserver/map"/>
+
+        <mkdir dir="${app}/bin1"/>
+        <mkdir dir="${app}/bin2"/>
+
+        <mkdir dir="${webapp}"/>
+        <mkdir dir="${webapp}/WEB-INF/lib"/>
+
+        <mkdir dir="${chargeapp}"/>
+        <mkdir dir="${chargeapp}/WEB-INF/lib"/>
+
+        <mkdir dir="${toolsapp}"/>
+        <mkdir dir="${toolsapp}/lib"/>
+
+        <mkdir dir="${patch}"/>
+        <mkdir dir="${patchApp}"/>
+        <mkdir dir="${patchApp}/server"/>
+        <mkdir dir="${patchApp}/server/app"/>
+        <mkdir dir="${patchApp}/server/app/config"/>
+        <mkdir dir="${patchApp}/server/app/crossserver1"/>
+        <mkdir dir="${patchApp}/server/app/crossserver1/lib"/>
+        <mkdir dir="${patchApp}/server/app/crossserver1/config"/>
+        <mkdir dir="${patchApp}/server/app/crossserver2"/>
+        <mkdir dir="${patchApp}/server/app/crossserver2/lib"/>
+        <mkdir dir="${patchApp}/server/app/crossserver2/config"/>
+        <mkdir dir="${patchApp}/server/app/castleserver"/>
+        <mkdir dir="${patchApp}/server/app/castleserver/lib"/>
+        <mkdir dir="${patchApp}/server/app/castleserver/config"/>
+        <mkdir dir="${patchApp}/server/webapp"/>
+        <mkdir dir="${patchApp}/server/chargeapp"/>
+        <mkdir dir="${patchApp}/server/app/gateway1"/>
+        <mkdir dir="${patchApp}/server/app/gateway1/lib"/>
+        <mkdir dir="${patchApp}/server/app/gateway2"/>
+        <mkdir dir="${patchApp}/server/app/gateway2/lib"/>
+        <mkdir dir="${patchApp}/server/app/gateway3"/>
+        <mkdir dir="${patchApp}/server/app/gateway3/lib"/>
+        <mkdir dir="${patchApp}/server/webapp/web"/>
+        <mkdir dir="${patchApp}/server/webapp/resource"/>
+        <mkdir dir="${patchApp}/server/webapp/client"/>
+        <mkdir dir="${patchApp}/server/webapp/web/WEB-INF"/>
+        <mkdir dir="${patchApp}/server/webapp/web/WEB-INF/lib"/>
+    </target>
+
+    <!-- 编译项目各个模块 -->
+    <target name="compile-basic" depends="mk-dir-bin,init">
+        <javac srcdir="${util}/src" destdir="${util}/bin" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+        <javac srcdir="${baseServer}/src;${util}/src;${dao}/src;${pbprotocol}/src;${entity}/src" destdir="${baseServer}/bin" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+        <javac srcdir="${entity}/src;${util}/src" destdir="${entity}/bin" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+        <javac srcdir="${dao}/src;${entity}/src;${util}/src" destdir="${dao}/bin" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <target name="compile-castleserver" depends="compile-basic">
+        <javac srcdir="${castleServer}/src" destdir="${castleServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <target name="compile-gatewayserver" depends="compile-basic">
+        <javac srcdir="${gatewayServer}/src" destdir="${gatewayServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <target name="compile-pbprotocol" depends="compile-basic">
+        <javac srcdir="${pbprotocol}/src" destdir="${pbprotocol}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <!--notice: compile depend on libs/lib-->
+    <target name="compile-web" depends="compile-basic">
+        <javac srcdir="${web}/src;${dao}/src;${entity}/src;${util}/src" destdir="${web}/build/classes" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <target name="compile-charge">
+        <javac srcdir="${charge}/src" destdir="${charge}/build/classes" bootclasspath="${java.home}/lib/rt.jar:${java.home}/lib/jce.jar" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+
+    <target name="compile-tools" depends="compile-basic">
+        <javac srcdir="${tools}/src" destdir="${tools}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <path id="lib.path">
+        <fileset dir="${libs}/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- 部署项目各个模块 -->
+    <target name="deploy-basic" depends="compile-basic,cp-bin">
+        <jar basedir="${util}/bin" destfile="${libs}/lib/light_util_${app-version}.jar"/>
+
+        <!-- 编译非使用远程核心库包 baseserver.jar包 -->
+        <jar basedir="${baseServer}/bin" destfile="${libs}/lib/light_baseserver_${app-version}.jar"/>
+        <jar basedir="${entity}/bin" destfile="${libs}/lib/light_entity_${app-version}.jar"/>
+        <jar basedir="${dao}/bin" destfile="${libs}/lib/light_dao_${app-version}.jar"/>
+        <jar basedir="${pbprotocol}/bin" destfile="${libs}/lib/light_pb_${app-version}.jar"/>
+        <copy todir="${app}/config">
+            <fileset dir="${libs}/config"/>
+        </copy>
+    </target>
+
+    <target name="cp-bin">
+        <copy todir="${app}/bin1">
+            <fileset dir="${baseServer}/bin"/>
+        </copy>
+        <move todir="${app}/bin2/com/star/light/mina/codec/protobuf/">
+            <fileset file="${app}/bin1/com/star/light/mina/codec/protobuf/ProtobufDecoder.class"/>
+        </move>
+        <move todir="${app}/bin2/com/star/light/mina/codec/protobuf/">
+            <fileset file="${app}/bin1/com/star/light/mina/codec/protobuf/ProtobufEncoder.class"/>
+        </move>
+    </target>
+
+    <target name="deploy-castleserver" depends="deploy-basic, compile-castleserver">
+        <copy file="${libs}/config/log4j.properties" todir="${castleserver}/config/"/>
+        <jar basedir="${castleServer}/bin" destfile="${castleserver}/lib/light_castleserver_${app-version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.star.light.CastleServer"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="deploy-gatewayserver" depends="deploy-basic, compile-gatewayserver">
+        <copy file="${libs}/config/log4j.properties" todir="${gatewayserver}/config/"/>
+        <jar basedir="${gatewayServer}/bin" destfile="${gatewayserver}/lib/light_gatewayserver_${app-version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.star.light.GatewayServer"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="deploy-webapp" depends="deploy-basic, compile-web">
+        <copy file="${libs}/lib/light_baseserver_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_util_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_entity_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_dao_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_pb_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${web}/WebContent/WEB-INF/web.xml" todir="${webapp}/WEB-INF/"/>
+        <jar basedir="${web}/build/classes" destfile="${webapp}/WEB-INF/lib/light_web_${app-version}.jar"/>
+        <copy todir="${webapp}">
+            <fileset dir="${web}/WebContent"/>
+        </copy>
+    </target>
+
+    <target name="deploy-chargeapp" depends="deploy-basic, compile-charge">
+        <copy file="${charge}/web/WEB-INF/web.xml" todir="${chargeapp}/WEB-INF/"/>
+        <jar basedir="${charge}/build/classes" destfile="${chargeapp}/WEB-INF/lib/light_charge_${app-version}.jar"/>
+        <copy todir="${chargeapp}">
+            <fileset dir="${charge}/web"/>
+        </copy>
+        <copy todir="${chargeapp}">
+            <fileset dir="${charge}/config"/>
+        </copy>
+    </target>
+
+    <!--start compile cross -->
+    <target name="deploy-crossserver" depends="deploy-basic, compile-crossserver">
+        <copy file="${libs}/config/log4j.properties" todir="${crossserver}/config/"/>
+        <jar basedir="${crossServer}/bin" destfile="${crossserver}/lib/light_crossserver_${app-version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.star.light.CrossServer"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="compile-crossserver" depends="compile-basic">
+        <javac srcdir="${crossServer}/src" destdir="${crossServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}" includeantruntime="on" classpathref="lib.path"/>
+    </target>
+    <!--end test cross -->
+
+    <!-- 部署整个项目-->
+    <target name="2-deploy-all" depends="clean,init,mk-dir-bin,deploy-castleserver,deploy-gatewayserver,deploy-webapp,deploy-crossserver,deploy-chargeapp">
+        <copy file="${web}/WebContent/WEB-INF/web.xml" todir="${webapp}/WEB-INF/"/>
+        <copy file="${charge}/web/WEB-INF/web.xml" todir="${chargeapp}/WEB-INF/"/>
+    </target>
+
+    <target name="1-create-packet" depends="2-deploy-all" description="生成补丁包">
+        <!-- 部署到运行环境目录-->
+		<copy todir="${serverApp}/server/app/commonlib">
+            <fileset dir="${libs}/lib"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/castleserver/lib">
+            <fileset dir="${castleserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/gateway1/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/gateway2/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/gateway3/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+
+        <copy todir="${serverApp}/server/webapp/web/WEB-INF/lib">
+            <fileset dir="${webapp}/WEB-INF/lib" includes="light_*.jar"/>
+        </copy>
+
+        <copy todir="${patchApp}/server/chargeapp/web/WEB-INF/lib">
+            <fileset dir="${chargeapp}/WEB-INF/lib" includes="light_*.jar"/>
+        </copy>
+
+        <copy file="${webapp}/WEB-INF/web.xml" todir="${serverApp}/server/webapp/web/WEB-INF"/>
+        <copy file="${chargeapp}/WEB-INF/web.xml" todir="${patchApp}/server/chargeapp/web/WEB-INF"/>
+
+        <copy todir="${serverApp}/server/app/crossserver1/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/crossserver2/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/crossserver3/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/crossserver4/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${serverApp}/server/app/crossserver5/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+
+        <!-- 部署到备份目录-->
+		<copy todir="${patchApp}/server/app/commonlib">
+            <fileset dir="${libs}/lib"/>
+        </copy>
+        <copy todir="${patchApp}/server/app/castleserver/lib">
+            <fileset dir="${castleserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchApp}/server/app/gateway1/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchApp}/server/app/gateway2/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchApp}/server/app/gateway3/lib">
+            <fileset dir="${gatewayserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchApp}/server/webapp/web/WEB-INF/lib">
+            <fileset dir="${webapp}/WEB-INF/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchCharge}/server/chargeapp/web/WEB-INF/lib">
+            <fileset dir="${chargeapp}/WEB-INF/lib" includes="light_*.jar"/>
+        </copy>
+
+        <copy file="${webapp}/WEB-INF/web.xml" todir="${patchApp}/server/webapp/web/WEB-INF"/>
+        <copy file="${chargeapp}/WEB-INF/web.xml" todir="${patchCharge}/server/chargeapp/web/WEB-INF"/>
+        <copy file="${chargeapp}/sdkconf.properties" todir="${patchCharge}/server/chargeapp/web/config"/>
+
+		<copy todir="${patchCross}/server/app/commonlib">
+            <fileset dir="${libs}/lib"/>
+        </copy>
+        <copy todir="${patchCross}/server/app/crossserver1/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchCross}/server/app/crossserver2/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchCross}/server/app/crossserver3/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchCross}/server/app/crossserver4/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+        <copy todir="${patchCross}/server/app/crossserver5/lib">
+            <fileset dir="${crossserver}/lib" includes="light_*.jar"/>
+        </copy>
+    </target>
+</project>

@@ -1,0 +1,5 @@
+blessquality	blesslevel1	blesslevel2	blesslevel3	blesslevel4	material1	material1num	material2	material2num	
+1	7	6	5	4	31003	10	31002	10
+2	13	11	10	8	31004	10	31002	20
+3	17	16	15	12	31005	10	31002	40
+4	20	20	20	20	31006	10	31002	80

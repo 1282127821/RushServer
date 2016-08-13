@@ -1,0 +1,2 @@
+LoadingMessageID	Info	
+1	当玩家进入战斗后，会有3秒的战前等待

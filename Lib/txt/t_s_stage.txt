@@ -1,0 +1,6 @@
+stageId	stagetype	exp	money	dropid	stagemap	stageMonsterNodeId	stageMonsterCharId	
+1001	5	280	500	10001	mission_014	1024	50005
+1002	5	450	960	10011	mission_011	1024	40005
+9997	3	0	0	0	mission_014_1		
+9998	2	0	0	0	mission_015	1024,1025	10,11
+9999	1	0	0	0	mission_016	1024,1025,1026,1027,1028,1029,1030	14,11,15,14,16,12,13

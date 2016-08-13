@@ -1,0 +1,36 @@
+SkillID	SkillName	SkillWeight	SkillIconID	ActionLabel	Job	skillCD	SkillType	SkillDicRangeEf	SkillDicRangeEf_Fail	SkillRangeEf	SkillRangeEf_Fail	isNormalAtk	isSecondLinkAtk	isOneTargetAtk	SkillDistance	totalHit	SkillTime	AttackNum	AttackNumAdded	AttackNumDBAdd	Hatred	HitPowerData	HitCountData	summonMonstersId	BuffId	SkillBuffIconID	UnlockLevel	UpgradeCost	SkillLink	SkillIconName	SkillMP	Describe	
+400111	Boss01技能1	1	400111	Skill_01	0	0	1					0	0	0	3	347	2000	200	2	0	0	1	1	0	0	0	0	0	0	NULL	7	xxx2
+400121	Boss01技能2	20	400121	Skill_02	0	60000	1					0	0	0	50	252	2000	150	2	0	0	1	1	0	0	0	0	0	0	NULL	8	xxx3
+400131	Boss01技能3	30	400131	Skill_03	0	40000	1					0	0	0	50	95	2000	50	2	0	0	1	1	0	0	0	0	0	0	NULL	9	xxx4
+400141	Boss01技能4	40	400141	Skill_04	0	35000	1					0	0	0	50	100	2000	10	2	0	0	1	1	0	0	0	0	0	0	NULL	10	xxx5
+400151	Boss01技能5	50	400151	Skill_05	0	60000	1					0	0	0	50	75	2000	75	2	0	0	1	1	0	0	0	0	0	0	NULL	11	xxx6
+400201	Boss01InGame技能	30	400201	InGame	0	0	1					0	0	0	50	78	2000	50	2	0	0	1	1	0	0	0	0	0	0	NULL	13	xxx8
+500101	Boss02普攻1	1	500101	Attack_01	0	0	1					1	0	1	3	75	2000	50	2	0	0	1	1	0	0	0	0	0	0	NULL	6	xxx1
+500111	Boss02技能1	50	500111	Skill_01	0	10000	1					0	0	0	3	200	2000	200	2	0	0	1	1	0	0	0	0	0	0	NULL	7	xxx2
+500121	Boss02技能2	50	500121	Skill_02	0	20000	1					0	0	0	50	150	2000	150	2	0	0	1	1	0	0	0	0	0	0	NULL	8	xxx3
+500131	Boss02技能3	50	500131	Skill_03	0	0	1					0	0	0	50	50	2000	50	2	0	0	1	1	0	3001	0	0	0	0	NULL	9	xxx4
+500141	Boss02技能4	50	500141	Skill_04	0	25000	1					0	0	0	50	200	2000	200	2	0	0	1	1	0	0	0	0	0	0	NULL	10	xxx5
+500151	Boss02技能5	40	500151	Skill_05	0	20000	1					0	0	0	50	50	2000	75	2	0	0	1	1	0	0	0	0	0	0	NULL	11	xxx6
+5001611	Boss02技能6吟唱	30	500161	Skill_06_Sing	0	0	1					0	0	0	50	0	2000	0	0	0	0	1	1	0	0	0	0	0	0	NULL	12	xxx7
+500161	Boss02技能6	30	500161	Skill_06	0	0	1					0	0	0	50	50	2000	50	2	0	0	1	1	0	0	0	0	0	0	NULL	13	xxx8
+500171	Boss02技能7	50	500171	Skill_07	0	0	1					0	0	0	50	50	2000	100	2	0	0	1	1	0	3	0	0	0	0	NULL	14	xxx9
+500181	Boss02技能8	50	500181	Skill_08	0	0	1					0	0	0	50	50	2000	250	2	0	0	1	1	0	0	0	0	0	0	NULL	15	xxx10
+500201	Boss02InGame技能	50	500201	InGame	0	0	1					0	0	0	50	50	2000	50	2	0	0	1	1	0	5001	0	0	0	0	NULL	16	xxx11
+600101	冰法普攻1	50	600101	Attack_01	1	0	1					1	0	1	3	50	300	50	2	0	0	1	1	0	0	0	0	0	0	NULL	17	xxx12
+600102	冰法普攻2	50	600101	Attack_02	1	0	1					1	1	1	3	50	300	50	2	0	0	1	1	0	0	0	0	0	0	NULL	18	xxx13
+600103	冰法普攻2	50	600101	Attack_03	1	0	1					1	1	1	3	90	300	50	2	0	0	3	1	0	0	0	0	0	0	NULL	19	xxx14
+600111	寒冰箭	10	600111	Skill_01	1	10000	2	XuanZe01	XuanZe03	loli@Skill_01_2	loli@Skill_01_3	0	0	0	50	135	300	50	2	0	0	3	1	0	0	0	0	1000	0	skill_icon_3|skill_icon_8	20	xxx15
+600121	急冻光束	10	600121	Skill_02	1	10000	2	XuanZe01	XuanZe03	loli@Skill_01_2	loli@Skill_01_3	0	0	0	50	150	300	50	2	0	0	4	3	0	0	0	0	2000	0	skill_icon_1|skill_icon_6	21	xxx16
+600131	暴风雪	10	600131	Skill_03	1	10000	1					0	0	0	50	150	300	50	2	0	0	4	3	0	0	0	0	3000	0	skill_icon_2|skill_icon_7	22	xxx17
+600141	冰盾术	10	600141	Skill_04	1	30000	1					0	0	0	50	150	300	50	2	0	0	4	3	0	1	0	0	3000	0	skill_icon_0|skill_icon_11	22	xxx17
+600201	冰法InGame技能	10	600201	InGame	1	0	1					0	0	0	5	0	300	0	0	0	0	0	1	0	0	0	0	0	0	NULL	0	xxx17
+700101	战士普攻1	50	700101	Attack_01	2	0	1					1	0	1	3	50	300	50	2	0	0	1	1	0	0	0	0	0	0	NULL	23	xxx18
+700102	战士普攻2	50	700101	Attack_02	2	0	1					1	1	1	3	50	300	50	2	0	0	1	1	0	0	0	0	0	0	NULL	24	xxx19
+700103	战士普攻2	50	700101	Attack_03	2	0	1					1	1	1	3	90	300	50	2	0	0	3	1	0	0	0	0	0	0	NULL	25	xxx20
+700111	战士技能1	10	700111	Skill_01	2	10000	1					0	0	0	5	135	300	50	2	0	0	3	1	0	0	0	0	1000	0	NULL	26	xxx21
+700121	战士技能2	10	700121	Skill_02	2	10000	1					0	0	0	5	150	300	50	2	0	0	4	3	0	0	0	0	2000	0	NULL	27	xxx22
+7001211	战士技能2吟唱	10	700121	Skill_02_Sing	2	10000	1					0	0	0	5	0	300	0	0	0	0	0	0	0	0	0	0	0	0	NULL	28	xxx23
+700131	战士技能3	10	700131	Skill_03	2	10000	1					0	0	0	5	150	300	50	2	0	0	4	3	0	0	0	0	0	0	NULL	29	xxx24
+700141	战士技能4	10	700141	Skill_04	2	10000	1					0	0	0	5	150	300	50	2	0	0	4	3	0	0	0	0	0	0	NULL	30	xxx25
+700151	战士技能5	10	700151	Skill_05	2	10000	1					0	0	0	5	150	300	50	2	0	0	4	3	0	0	0	0	0	0	NULL	31	xxx26
+700201	男刀InGame技能	10	700201	InGame	1	0	1					0	0	0	5	0	300	0	0	0	0	0	1	0	0	0	0	0	0	NULL	0	xxx17

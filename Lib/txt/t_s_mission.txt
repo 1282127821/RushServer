@@ -1,0 +1,6 @@
+ID	Type	Mission_level	Name	Target	ExpReward	GoldReward	ItemidReward	ItemnumberReward	Description	Story	introduction	stageId	
+1	1	1	讨伐长右	monster_icon_2|sp_monster_1	260	1200	11001	1	上长右山，与大妖长右一战，为村民复仇。	十里地外的杏花村，被大妖长右引发的洪水淹没，几十户人无一存活。人族的勇士，为了人族的兴衰，拿起你武器和智慧，打倒长右吧！	长右 天地灵猴，生于长右山灵密之地，因妖月现世而心智狂乱。擅水、土。	1001
+2	2	1	探寻石猴	monster_icon_1|sp_monster2	380	1360	11002	1	去废弃的古庙，探索石猴雕像。	山上废弃的古庙，供奉着长右一族的古老雕像，被人传说总有人在此消失，请去探索一番，找出问题的所在。	灵隐雕像，受丛林灵猴供拜而产生灵智，庇佑猴族。身躯巨大坚硬，力量强横。	1002
+3	3	20	讨伐黑妖	monster_icon_2|sp_monster_1	420	1500	11003	1				1003
+4	4	50	探索古庙	monster_icon_1|sp_monster2	460	1650	11004	1				1004
+5	5	50	探访老将	monster_icon_2|sp_monster_1	500	1800	11005	1				1005

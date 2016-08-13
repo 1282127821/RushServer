@@ -1,0 +1,86 @@
+{
+	"designcfg": "E:/ARPG/Lib/txt/",
+	"isgm": "1",
+	"serverindex": "1",
+	"webpath": "E:/ARPG/Web/config/web.properties",
+	"sdkpath": "E:/ARPG/Web/config/sdkconf.properties",
+	
+	"accountserver":
+	{
+		"logpath": "E:/tbgame/server/Web/config/log4j.properties",
+		"ip": "192.168.1.227",
+		"port": "8888",
+		"adminPort": "5100"
+	},
+	
+	"gameserver":
+	{
+		"logpath": "E:/tbgame/server/GameServer/config/log4j.properties",
+		"ip": "192.168.1.227",
+		"port": "5000",
+		"adminPort": "5100"
+	},
+	
+	"gateway":
+	[
+		{
+			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
+			"ip": "192.168.1.227",
+			"port": "6000",
+			"adminPort": "6100"
+		},
+		
+		{
+			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
+			"ip": "192.168.1.227",
+			"port": "5000",
+			"adminPort": "5100"
+		},
+		
+		{
+			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
+			"ip": "192.168.1.227",
+			"port": "5000",
+			"adminPort": "5100"
+		},
+	],
+	
+	"maindb": 
+	{
+		"dbname": "db_star_0001",
+		"ip": "192.168.1.227",
+		"port": "3306",
+		"username": "root",
+		"password": "123456"
+	},
+	
+	"logdb": 
+	{
+		"dbname": "db_log_0001",
+		"ip": "192.168.1.227",
+		"port": "3306",
+		"username": "root",
+		"password": "123456"
+	},
+
+	"crossserver":
+	[
+		{
+			"ip": "192.168.0.118",
+			"port": "5000",
+			"adminPort": "5100"
+		},
+		
+		{
+			"ip": "192.168.0.118",
+			"port": "5000",
+			"adminPort": "5100"
+		},
+		
+		{
+			"ip": "192.168.0.118",
+			"port": "5000",
+			"adminPort": "5100"
+		},
+	]
+}

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="1-create-packet" name="Light" basedir="../.">
+    <description>Light</description>
+    <echo>build light deploy files</echo>
+    <echo>${basedir}</echo>
+
+    <property name="is-debug" value="on"/>
+    <property name="java-version" value="1.8"/>
+    <property name="app-version" value="0.1"/>
+    <property name="webapp-version" value="0.1"/>
+    <property name="exclude-svn" value="**/*.svn/*.*"/>
+    <property name="all" value="*">
+    </property>
+
+    <property name="app" value="${basedir}/Deploy/app"/>
+    <property name="castleserver" value="${basedir}/Deploy/app/castleserver"/>
+    <property name="gatewayserver" value="${basedir}/Deploy/app/gatewayserver"/>
+    <property name="webapp" value="${basedir}/Deploy/webapp"/>
+    <property name="devpconfig" value="D:/star/server/branches/Workspace"/>
+    <property name="config" value="${basedir}/Lib/config"/>
+    <property name="libs" value="Lib"/>
+    <property name="util" value="Util"/>
+    <property name="baseServer" value="BaseServer"/>
+    <property name="castleServer" value="CastleServer"/>
+    <property name="gatewayServer" value="Gateway"/>
+    <property name="pbprotocol" value="PBProtocol"/>
+    <property name="web" value="Web"/>
+    <property name="patch" value="${basedir}/Deploy/patch"/>
+    <property name="patchApp" value="${basedir}/Deploy/patch/GameServer"/>
+    <!-- 清除历史版本 -->
+    <target name="clean">
+        <delete dir="${app}"/>
+        <delete dir="${webapp}"/>
+        <delete dir="${patch}"/>
+    </target>
+
+    <!-- 建立部署所需要的目录结构 -->
+    <target name="init" depends="clean">
+        <mkdir dir="${app}"/>
+        <mkdir dir="${app}/config"/>
+        <mkdir dir="${app}/gatewayserver"/>
+        <mkdir dir="${app}/gatewayserver/lib"/>
+        <mkdir dir="${app}/gatewayserver/config"/>
+        <mkdir dir="${app}/castleserver"/>
+        <mkdir dir="${app}/castleserver/lib"/>
+        <mkdir dir="${app}/castleserver/config"/>
+        <mkdir dir="${app}/bin1"/>
+        <mkdir dir="${app}/bin2"/>
+
+        <mkdir dir="${webapp}"/>
+        <mkdir dir="${webapp}/WEB-INF/lib"/>
+
+        <mkdir dir="${patch}"/>
+        <mkdir dir="${patchApp}"/>
+        <mkdir dir="${patchApp}/server"/>
+        <mkdir dir="${patchApp}/server/app"/>
+        <mkdir dir="${patchApp}/server/app/config"/>
+        <mkdir dir="${patchApp}/server/app/castleserver"/>
+        <mkdir dir="${patchApp}/server/app/castleserver/lib"/>
+        <mkdir dir="${patchApp}/server/app/castleserver/config"/>
+        <mkdir dir="${patchApp}/server/webapp"/>
+        <mkdir dir="${patchApp}/server/app/gateway1"/>
+        <mkdir dir="${patchApp}/server/app/gateway1/lib"/>
+        <mkdir dir="${patchApp}/server/app/gateway2"/>
+        <mkdir dir="${patchApp}/server/app/gateway2/lib"/>
+        <mkdir dir="${patchApp}/server/app/gateway3"/>
+        <mkdir dir="${patchApp}/server/app/gateway3/lib"/>
+        <mkdir dir="${patchApp}/server/webapp/web"/>
+        <mkdir dir="${patchApp}/server/webapp/web/WEB-INF"/>
+        <mkdir dir="${patchApp}/server/webapp/web/WEB-INF/lib"/>
+    </target>
+
+    <!-- 编译项目各个模块 -->
+    <target name="compile-basic">
+        <javac srcdir="${util}/src" destdir="${util}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+        <javac srcdir="${baseServer}/src" destdir="${baseServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <target name="compile-castleserver" depends="compile-basic">
+        <javac srcdir="${castleServer}/src" destdir="${castleServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+
+    <target name="compile-gatewayserver" depends="compile-basic">
+        <javac srcdir="${gatewayServer}/src" destdir="${gatewayServer}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <target name="compile-pbprotocol" depends="compile-basic">
+        <javac srcdir="${pbprotocol}/src" destdir="${pbprotocol}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <target name="compile-web" depends="compile-basic">
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="${devpconfig}/Lib/deploy_config/WebConfig.properties" value="/game/server/webapp/web/config/config.properties"/>
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="${devpconfig}/Web/WebContent/xml/dirty.txt" value="/game/server/webapp/web/xml/dirty.txt"/>
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="${devpconfig}/Web/WebContent/xml/Order.xml" value="/game/server/webapp/resource/Order.xml"/>
+        <javac srcdir="${web}/src" destdir="${web}/build/classes" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <target name="compile-tools" depends="compile-basic">
+        <javac srcdir="${tools}/src" destdir="${tools}/bin" source="${java-version}" target="${java-version}" debug="${is-debug}"/>
+    </target>
+
+    <!-- 部署项目各个模块 -->
+    <target name="deploy-basic" depends="compile-basic,cp-bin">
+        <jar basedir="${util}/bin" destfile="${libs}/lib/light_util_${app-version}.jar"/>
+        <!-- 编译核心库包 baseserver.jar包 -->
+        <jar basedir="${baseServer}/bin" destfile="${libs}/lib/light_baseserver_${app-version}.jar"/>
+        <jar basedir="${entity}/bin" destfile="${libs}/lib/light_entity_${app-version}.jar"/>
+        <jar basedir="${dao}/bin" destfile="${libs}/lib/light_dao_${app-version}.jar"/>
+        <jar basedir="${pbprotocol}/bin" destfile="${libs}/lib/light_pb_${app-version}.jar"/>
+        <copydir src="${libs}/config" dest="${app}/config">
+        </copydir>
+    </target>
+
+    <target name="cp-bin">
+        <copydir dest="${app}/bin1" src="${baseServer}/bin">
+        </copydir>
+        <move todir="${app}/bin2/com/star/light/mina/codec/protobuf/">
+            <fileset file="${app}/bin1/com/star/light/mina/codec/protobuf/ProtobufDecoder.class"/>
+        </move>
+        <move todir="${app}/bin2/com/star/light/mina/codec/protobuf/">
+            <fileset file="${app}/bin1/com/star/light/mina/codec/protobuf/ProtobufEncoder.class"/>
+        </move>
+    </target>
+
+    <target name="deploy-castleserver" depends="deploy-basic, compile-castleserver">
+        <copydir src="${libs}/lib" dest="${castleserver}/lib" excludes="${exclude-svn}"/>
+        <copy file="${libs}/config/log4j.properties" todir="${castleserver}/config/"/>
+        <jar basedir="${castleServer}/bin" destfile="${castleserver}/lib/light_castleserver_${app-version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.star.light.CastleServer"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="deploy-gatewayserver" depends="deploy-basic, compile-gatewayserver">
+        <copydir src="${libs}/lib" dest="${gatewayserver}/lib" excludes="${exclude-svn}"/>
+        <copy file="${libs}/config/log4j.properties" todir="${gatewayserver}/config/"/>
+        <jar basedir="${gatewayServer}/bin" destfile="${gatewayserver}/lib/light_gatewayserver_${app-version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.star.light.GatewayServer"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="deploy-webapp" depends="deploy-basic, compile-web">
+        <copy file="${libs}/lib/light_baseserver_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_util_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_entity_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_dao_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_pb_${app-version}.jar" todir="${webapp}/WEB-INF/lib"/>
+        <copy file="${web}/WebContent/WEB-INF/web.xml" todir="${webapp}/WEB-INF/"/>
+        <jar basedir="${web}/build/classes" destfile="${webapp}/WEB-INF/lib/light_web_${app-version}.jar"/>
+        <copydir src="${web}/WebContent" dest="${webapp}" excludes="${exclude-svn}"/>
+    </target>
+
+    <target name="deploy-testpools" depends="deploy-basic, compile-web">
+        <copy file="${libs}/lib/light_baseserver_${app-version}.jar" todir="${testpools}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_util_${app-version}.jar" todir="${testpools}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_entity_${app-version}.jar" todir="${testpools}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_dao_${app-version}.jar" todir="${testpools}/WEB-INF/lib"/>
+        <copy file="${libs}/lib/light_pb_${app-version}.jar" todir="${testpools}/WEB-INF/lib"/>
+        <copy file="TestPools/WebContent/WEB-INF/web.xml" todir="${testpools}/WEB-INF/"/>
+        <copy file="TestPools/config/db.properties" todir="${testpools}/config/"/>
+        <jar basedir="TestPools/build/classes" destfile="${testpools}/WEB-INF/lib/light_testpool_${app-version}.jar"/>
+        <copydir src="TestPools/WebContent" dest="${testpools}" excludes="${exclude-svn}"/>
+    </target>
+
+    <!-- 部署整个项目 -->
+    <target name="2-deploy-all" depends="clean,deploy-castleserver,deploy-gatewayserver,deploy-webapp,deploy-clientserver,deploy-crossserver,deploy-chargeapp">
+        <copy file="${web}/WebContent/WEB-INF/web.xml" todir="${webapp}/WEB-INF/"/>
+    </target>
+
+    <target name="1-create-packet" depends="2-deploy-all" description="生成补丁包">
+        <copydir includes="light_*.jar" src="${castleserver}/lib" dest="${patchApp}/server/app/castleserver/lib"/>
+        <copydir includes="light_*.jar" src="${gatewayserver}/lib" dest="${patchApp}/server/app/gateway/lib"/>
+        <copydir includes="light_*.jar" src="${webapp}/WEB-INF/lib" dest="${patchApp}/server/webapp/web/WEB-INF/lib"/>
+        <copy file="${webapp}/WEB-INF/web.xml" todir="${patchApp}/server/webapp/web/WEB-INF"/>
+        <replace file="${patchApp}/server/webapp/web/WEB-INF/web.xml" token="/game/server/webapp/web/config/config.properties" value="/game/server/webapp/web/config/config.properties"/>
+        <replace file="${patchApp}/server/webapp/web/WEB-INF/web.xml" token="/game/server/webapp/web/xml/dirty.txt" value="/game/server/webapp/web/xml/dirty.txt"/>
+    </target>
+
+    <!-- 项目开发 -->
+    <target name="develop" description="项目开发">
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="/game/server/webapp/web/config/config.properties" value="${devpconfig}/Lib/deploy_config/WebConfig.properties"/>
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="/game/server/webapp/web/xml/dirty.txt" value="${devpconfig}/Web/WebContent/xml/dirty.txt"/>
+        <replace file="${web}/WebContent/WEB-INF/web.xml" token="/game/server/webapp/resource/Order.xml" value="${devpconfig}/Web/WebContent/xml/Order.xml"/>
+    </target>
+
+</project>

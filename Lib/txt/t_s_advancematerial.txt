@@ -1,0 +1,5 @@
+rarelevel	materialid	normalmaterial	highmaterialid	highmaterial	
+1	31007	4	31008	8
+2	31007	3	31008	6
+3	31007	2	31008	3
+4	31007	0	31008	0

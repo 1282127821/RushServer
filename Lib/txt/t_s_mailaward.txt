@@ -1,0 +1,4 @@
+mailid	mailtype	sender	des	award1type	awar1value	award2type	awar2value	
+100001	1	SK运营团队	夏日福利，清爽在这里！	1	10000	11015	1
+200001	2	背包管理员	由于您的背包已满，本次{副本名}副本奖励寄存在这里				
+300001	3	大冒险活动	{活动名}感谢您的参与，这是您的奖励，下次见！	3	1000	11016	1

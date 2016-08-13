@@ -1,0 +1,16 @@
+charModelID	ResObj	modelName	CharType	BuildingType	MonsterName	Icon	BornSuperArmor	Speed	LiveGroove	HealthBar	BodySize	ModelRadius	SkillIdList	aiModel	attackTime	isHatred	attPriorityType	attMonsterType	isAirMonster	patorlingViewRadius	patorlingViewAngle	warningViewRadius	traceDistance	SkillTime	Message	lifetime	headerOffset	
+1	bingfa	bingfa	0	0	冰法	icon_HeroHead2	1	3	1	0	0	.4	600101,600102,600103,600111,600121,600131,600141,600201	AIPatrolMonster	500	0	2	1	0	4	180	1000	1000	0	冰法	0	1.4
+2	nandao	nandao	0	0	男刀	icon_HeroHead	1	3	1	0	0	.4	700101,700102,700103,700111,700121,7001211,700131,700141,700151,700201	AIPatrolMonster	500	0	2	1	0	4	180	3	5.5	0	男刀	0	0
+10	npc_qiantai	npc_qiantai	7	0	前台	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	前台	0	0
+11	npc_cangku	npc_cangku	7	0	仓库	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	仓库	0	0
+12	npc_blacksmith	npc_blacksmith	7	0	铁匠铺老板	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	铁匠铺老板	0	0
+13	npc_nvzhanshi	npc_nvzhanshi	7	0	女战士	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	女战士	0	0
+14	npc_magichouse	npc_magichouse	7	0	幻屋老板	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	幻屋老板	0	0
+15	npc_alcaldesister	npc_alcaldesister	7	0	镇长姐姐	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	镇长姐姐	0	0
+16	npc_cungu	npc_cungu	7	0	村姑	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	村姑	0	0
+17	npc_exchangeboss	npc_exchangeboss	7	0	交易所老板	icon_HeroHead	1	3	1	0	0	.4	600101	AIStaticNPC	500	0	2	1	0	4	180	3	5.5	0	交易所老板	0	0
+20	bingfaLogin	bingfaLogin	0	0	登录场景专用冰法	icon_HeroHead2	1	3	1	0	0	.4	600101	AIPatrolMonster	500	0	2	1	0	4	180	3	5.5	0	登录场景专用冰法	0	0
+40000	boss_02	boss_02	8	0	BOSS02	boss_02	5	2.5	1	3	3	1.35	400111,400121,400131,400141,400151,400201	AIStoneMan	500	0	2	1	0	5	180	5	100	0	BOSS02	0	20
+50000	boss_01	boss_01	8	0	BOSS01	boss_01	5	2.5	1	3	3	1.35	500101,500111,500121,500131,500141,500151,5001611,500161,500171,500181,500201	AIPatrolMonster	500	0	2	1	0	5	180	5	100	0	BOSS01	0	1.7
+60000	bingfa	bingfa	0	0	冰法	bingfa	1	3	1	0	0	.4	600101,600102,600103,600111,600121	AIPatrolMonster	500	0	2	1	0	4	180	3	5.5	0	冰法	0	0
+70000	nandao	nandao	0	0	战士	nandao	1	3	1	0	0	.4	700101,700102,700103,700111,700121,7001211,700131,700141,700151,700201	AIPatrolMonster	500	0	2	1	0	4	180	3	5.5	0	男刀	0	0
