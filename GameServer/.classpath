@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Lib/lib/fastjson-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/Lib/lib/protobuf-java-2.6.1.jar"/>
+	<classpathentry kind="lib" path="/Lib/lib/mina-core-2.0.13.jar"/>
+	<classpathentry kind="lib" path="/Lib/lib/bonecp-0.7.1-fixed.jar"/>
+	<classpathentry kind="lib" path="/Lib/lib/mysql-connector-java-5.1.39-bin.jar"/>
+	<classpathentry kind="lib" path="/Lib/lib/HikariCP-2.4.6.jar" sourcepath="/Lib/libsrc/HikariCP-HikariCP-2.4.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GameCore"/>
+	<classpathentry kind="lib" path="/Lib/lib/guava-19.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

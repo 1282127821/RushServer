@@ -1,0 +1,42 @@
+package com.star.light.socket.cmd.pvp;
+
+import java.util.List;
+
+import com.star.light.player.GamePlayer;
+import com.star.light.room.Room;
+import com.star.light.room.RoomBossInfo;
+import com.star.light.room.RoomPlayer;
+import com.star.light.socket.PBMessage;
+import com.star.light.socket.cmd.NetCmd;
+import com.star.light.util.GameLog;
+
+import tbgame.pbmessage.GamePBMsg.SyncPVPCommonMsg;
+
+public class PVPPlayerDie implements NetCmd {
+
+	public void execute(GamePlayer player, PBMessage packet) throws Exception {
+		Room room = player.getRoom();
+		if (room != null) {
+			SyncPVPCommonMsg netMsg = SyncPVPCommonMsg.parseFrom(packet.getMsgBody());
+			RoomBossInfo roomBossInfo = room.roomBossInfo;
+			if (roomBossInfo.pvpId == netMsg.getPvpId()) {
+				// 判断房间里面是否有跟自己敌对阵营的玩家 包括BOSS也需要判断 需要设置房间玩家的状态为死亡
+				if (roomBossInfo.bossMasterId == player.getUserId()) {
+					GameLog.info("LZGLZG PVPPlayerDie BOSS Die " + netMsg.getPvpId());
+					roomBossInfo.isDead = true;
+					room.isPVPEnd();
+				}
+			} else {
+				List<RoomPlayer> roomPlayerList = room.getTotalRoomPlayer();
+				for (RoomPlayer roomPlayer : roomPlayerList) {
+					if (roomPlayer.pvpId == netMsg.getPvpId()) {
+						GameLog.info("LZGLZG PVPPlayerDie PlayerDie " + netMsg.getPvpId());
+						roomPlayer.isDead = true;
+						room.isPVPEnd();
+						break;
+					}
+				}
+			}
+		}
+	}
+}
