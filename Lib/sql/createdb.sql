@@ -19,7 +19,7 @@ CREATE TABLE `tbl_account` (
   `GameId` int(11) DEFAULT '0' COMMENT '游戏Id',
   `DelCDTime` int(11) DEFAULT '0' COMMENT '删号冷却时间',
   PRIMARY KEY (`AccountId`),
-  UNIQUE KEY `AName` (`AccountName`),
+  UNIQUE KEY `AName` (`AccountName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账号信息';
 
 -- ----------------------------
@@ -211,7 +211,7 @@ CREATE TABLE `tbl_mail` (
   `MailId` bigint(20) NOT NULL COMMENT '邮件Id',
   `UserId` bigint(20) NOT NULL COMMENT '玩家Id',
   `MailTitle` varchar(40) DEFAULT NULL COMMENT '邮件标题',
-  `MailContent varchar(400) DEFAULT NULL COMMENT '邮件内容',
+  `MailContent` varchar(400) DEFAULT NULL COMMENT '邮件内容',
   `MailAttach` varchar(400) DEFAULT NULL COMMENT '邮件附件内容',
   `MailState` tinyint(3) DEFAULT '0' COMMENT '邮件状态',
   `MailType` tinyint(3) DEFAULT '0' COMMENT '邮件类型',
