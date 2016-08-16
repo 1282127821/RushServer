@@ -153,12 +153,10 @@ public class LinkedClient {
 	 * 发送数据包
 	 */
 	public void send(PBMessage packet) {
-		if (session == null || !session.isConnected()) {
-			return;
-		}
-
 		try {
-			session.write(packet);
+			if (session != null && session.isConnected()) {
+				session.write(packet);
+			}
 		} catch (Exception e) {
 			GameLog.warn("session write error . packet : " + packet.toString(), e);
 		}

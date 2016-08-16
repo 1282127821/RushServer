@@ -15,9 +15,9 @@ public interface DbMessageType {
 	String Connect_TimeOut = "连接数据库超时";
 	String Connect_Create = "创建连接数据库出错！请检查配置文件";
 
-	String Pool_Info = "当前连接池信息";
-	String Pool_Del = "从连接也中删除一个无效连接";
-	String Pool_Release = "无法撤销下列JDBC驱动程序的注册";
+//	String Pool_Info = "当前连接池信息";
+//	String Pool_Del = "从连接也中删除一个无效连接";
+//	String Pool_Release = "无法撤销下列JDBC驱动程序的注册";
 
 	String Sql_Error = "当前Sql语句出错";
 	String Sql_Batch = "批处理Sql语句出错";

@@ -19,7 +19,6 @@ public class AbstractActionQueue implements ActionQueue {
 		this.queue = queue;
 	}
 
-
 	public ActionQueue getActionQueue() {
 		return this;
 	}

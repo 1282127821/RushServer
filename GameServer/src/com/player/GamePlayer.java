@@ -508,10 +508,10 @@ public class GamePlayer {
 	/**
 	 * 发送消息包
 	 */
-	public void sendPacket(short codeId, Builder<?> messageBuilder) {
-		PBMessage packet = new PBMessage(codeId);
-		if (messageBuilder != null) {
-			packet.setMessage(messageBuilder.build());
+	public void sendPacket(short msgId, Builder<?> msgBuilder) {
+		PBMessage packet = new PBMessage(msgId);
+		if (msgBuilder != null) {
+			packet.setMessage(msgBuilder.build());
 		}
 
 		sendPacket(packet);

@@ -1,12 +1,11 @@
 package com.game;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.util.GameLog;
 
@@ -16,19 +15,27 @@ public class PlayerInfoDao extends MainDBDao {
 	private static final String deletePlayerSql = "update tbl_playerinfo set IsDelete = true where UserId = ?;";
 	
 	public boolean addPlayerInfo(PlayerInfo info) {
+		Connection conn = openConn();
+		if (conn == null) {
+			return false;
+		}
+		
 		boolean result = false;
-		if (info != null && info.beginAdd()) {
-			Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-			long userId = info.getUserId();
-			int index = 1;
-			params.put(index++, new DbParameter(userId));
-			params.put(index++, new DbParameter(info.getAccountId()));
-			params.put(index++, new DbParameter(info.getUserName()));
-			params.put(index++, new DbParameter(info.getJobId()));
-			params.put(index++, new DbParameter(info.getCreateTime()));
-			params.put(index++, new DbParameter(info.getPlayerLv()));
-			result = execNoneQuery(insertSql, params);
-			info.commitAdd(info.getUserId(), result);
+		PreparedStatement pstmt = null;
+		long userId = info.getUserId();
+		try {
+			pstmt = conn.prepareStatement(insertSql);
+			pstmt.setLong(1, userId);
+			pstmt.setLong(2, info.getAccountId());
+			pstmt.setString(3, info.getUserName());
+			pstmt.setInt(4, info.getJobId());
+			pstmt.setInt(5, info.getCreateTime());
+			pstmt.setInt(6, info.getPlayerLv());
+			result = pstmt.executeUpdate() > -1;
+		} catch (Exception ex) {
+			GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+		} finally {
+			closeConn(conn, pstmt);
 		}
 		return result;
 	}
@@ -41,10 +48,7 @@ public class PlayerInfoDao extends MainDBDao {
 			info.setAccountId(rs.getLong("accountId"));
 			info.setUserName(rs.getString("UserName"));
 			info.setJobId(rs.getInt("JobId"));
-//			info.setNoviceProcess(rs.getInt("NoviceProcess"));
 			info.setPlayerLv(rs.getInt("PlayerLv"));
-//			info.setFightStrength(rs.getInt("FightStrength"));
-//			info.setExp(rs.getInt("PlayerExp"));
 		} catch (Exception e) {
 			info = null;
 			GameLog.error("执行出错" + sql, e);
@@ -53,15 +57,20 @@ public class PlayerInfoDao extends MainDBDao {
 	}
 
 	public List<PlayerInfo> getTotalPlayerInfo(long accoutId) {
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(accoutId));
-		PreparedStatement pstmt = execQuery(selectAllSql, params);
+		List<PlayerInfo> playerInfoList = new ArrayList<PlayerInfo>();
+		Connection conn = openConn();
+		if (conn == null) {
+			return playerInfoList;
+		}
+		
 		ResultSet rs = null;
-		List<PlayerInfo> playerInfos = new ArrayList<PlayerInfo>();
+		PreparedStatement pstmt = null;
 		try {
+			pstmt = conn.prepareStatement(selectAllSql);
+			pstmt.setLong(1, accoutId);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				playerInfos.add(getPlayerInfo(rs, selectAllSql));
+				playerInfoList.add(getPlayerInfo(rs, selectAllSql));
 			}
 		} catch (SQLException e) {
 			GameLog.error("执行出错" + selectAllSql, e);
@@ -69,12 +78,27 @@ public class PlayerInfoDao extends MainDBDao {
 			closeConn(pstmt, rs);
 		}
 
-		return playerInfos;
+		return playerInfoList;
 	}
 	
 	public boolean deletePlayer(long userId) {
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(userId));
-		return execNoneQuery(deletePlayerSql, params);
+		Connection conn = openConn();
+		if (conn == null) {
+			return false;
+		}
+			
+		boolean result = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(deletePlayerSql);
+			pstmt.setLong(1, userId);
+			result = pstmt.executeUpdate() > -1;
+		} catch (Exception ex) {
+			GameLog.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
+		} finally {
+			closeConn(conn, pstmt);
+		}
+		
+		return result;
 	}
 }

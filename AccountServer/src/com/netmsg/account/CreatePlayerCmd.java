@@ -1,7 +1,6 @@
 package com.netmsg.account;
 
 import com.BaseServer;
-import com.game.DBOption;
 import com.game.DaoMgr;
 import com.game.JobType;
 import com.game.NetMsg;
@@ -38,7 +37,6 @@ public class CreatePlayerCmd implements NetMsg {
 			playerInfo.setJobId(jobType);
 			playerInfo.setCreateTime(TimeUtil.getSysCurSeconds());
 			playerInfo.setPlayerLv(1);
-			playerInfo.setOp(DBOption.Insert);
 			boolean result = DaoMgr.playerInfoDao.addPlayerInfo(playerInfo);
 			if (result) {
 				

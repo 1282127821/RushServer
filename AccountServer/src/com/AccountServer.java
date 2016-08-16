@@ -1,9 +1,5 @@
 package com;
 
-import org.apache.log4j.PropertyConfigurator;
-
-import com.BaseServer;
-import com.game.Config;
 import com.game.NetMsgMgr;
 import com.game.PBDecoder;
 import com.game.PBEncoder;
@@ -23,10 +19,10 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
 public class AccountServer extends BaseServer {
-	private static AccountServer gatewayServer = new AccountServer();
+	private static AccountServer accountServer = new AccountServer();
 
 	public static AccountServer getInstance() {
-		return gatewayServer;
+		return accountServer;
 	}
 
 	public boolean init() {
@@ -36,7 +32,7 @@ public class AccountServer extends BaseServer {
 		
 		initNet();
 //		NetConfig.getInstance().init();
-		PropertyConfigurator.configure(Config.getPath("log4j.path")); // 初始化log日志
+//		PropertyConfigurator.configure(Config.getPath("log4j.path")); // 初始化log日志
 //		if (!DBPoolMgr.getInstaqnce().initMainDB(NetConfig.getInstance().getNetConfigXml(ServerType.MAINDB, 0))) {
 //			Log.error("初始化DB连接池失败！");
 //			System.exit(-1);

@@ -23,9 +23,9 @@ public final class NetMsgMgr {
 	 * 加载网络消息集合
 	 */
 	public boolean init() {
-		registerNetMsg(Protocol.C_S_ACCOUNT_LOGIN, new AccountLoginCmd());
-		registerNetMsg(Protocol.C_S_CREATE_PLAYER, new CreatePlayerCmd());
-		registerNetMsg(Protocol.C_S_DELETE_PLAYER, new DelPlayerCmd());
+		registerNetMsg(Protocol.C2S_ACCOUNT_LOGIN, new AccountLoginCmd());
+		registerNetMsg(Protocol.C2S_CREATE_PLAYER, new CreatePlayerCmd());
+		registerNetMsg(Protocol.C2S_DELETE_PLAYER, new DelPlayerCmd());
 		return true;
 	}
 

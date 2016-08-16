@@ -1,10 +1,9 @@
 package com.game;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.util.GameLog;
 import com.util.TimeUtil;
@@ -16,55 +15,70 @@ public class AccountDao extends MainDBDao {
 	private static final String updateLoginSql = "update tbl_account set LastLoginDate = ?, LoginCount = ?, LoginIp = ?, DeleteCoolTime = ?,LastLogOutDate= ? where AccountId = ?;";
 
 	public boolean addAccount(Account info) {
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(info.getAccountId()));
-		params.put(2, new DbParameter(info.getAccountName()));
-		params.put(3, new DbParameter(TimeUtil.getSysteCurTime()));
-		params.put(4, new DbParameter(info.getLoginIP()));
-		params.put(6, new DbParameter(TimeUtil.getSysteCurTime()));
-		params.put(7, new DbParameter(info.getImei()));
-		params.put(8, new DbParameter(info.getModel()));
-		params.put(9, new DbParameter(info.getBrand()));
-		params.put(10, new DbParameter(info.getGameId()));
-		return execNoneQuery(insertSql, params);
+		Connection conn = openConn();
+		if (conn == null) {
+			return false;
+		}
+		
+		boolean result = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(insertSql);
+			pstmt.setLong(1, info.getAccountId());
+			pstmt.setString(2, info.getAccountName());
+			pstmt.setTimestamp(3, TimeUtil.getSysteCurTime());
+			pstmt.setString(4, info.getLoginIP());
+			pstmt.setTimestamp(5, TimeUtil.getSysteCurTime());
+			pstmt.setString(6, info.getImei());
+			pstmt.setString(7, info.getModel());
+			pstmt.setString(8, info.getBrand());
+			pstmt.setInt(9, info.getGameId());
+			result = pstmt.executeUpdate() > -1;
+		} catch (Exception ex) {
+			GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+		} finally {
+			closeConn(conn, pstmt);
+		}
+		
+		return result;
 	}
 
 	public Account getAccount(String accountName) {
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(accountName));
-		PreparedStatement pstmt = execQuery(selectAccountNameSql, params);
-		return getAccount(pstmt);
-	}
-
-	private Account getAccount(PreparedStatement pstmt) {
-		ResultSet rs = null;
-		Account info = null;
-		if (pstmt != null) {
-			try {
-				rs = pstmt.executeQuery();
-				if (rs.last()) {
-					info = new Account();
-					info.setAccountId(rs.getLong("AccountId"));
-					info.setAccountName(rs.getString("AccountName"));
-					info.setCreateTime(rs.getInt("CreateTime"));
-					info.setLoginTime(rs.getInt("LoginTime"));
-					info.setLogoutTime(rs.getInt("LogoutTime"));
-					info.setLoginCount(rs.getInt("LoginCount"));
-					info.setLoginIP(rs.getString("LoginIp"));
-					info.setForbidReason(rs.getString("ForbidReason"));
-					info.setForbidExpireTime(rs.getInt("ForbidExpirtTime"));
-					info.setModel(rs.getString("Model"));
-					info.setBrand(rs.getString("Brand"));
-					info.setGameId(rs.getInt("GameId"));
-					info.setDelCDTime(rs.getInt("DelCDTime"));
-				}
-			} catch (SQLException e) {
-				info = null;
-				GameLog.error("执行出错", e);
-			} finally {
-				closeConn(pstmt, rs);
-			}
+		Connection conn = openConn();
+		if (conn == null) {
+			return null;
 		}
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		Account info = null;
+		try {
+			pstmt = conn.prepareStatement(selectAccountNameSql);
+			pstmt.setString(1, accountName);
+			rs = pstmt.executeQuery();
+			if (rs.last()) {
+				info = new Account();
+				info.setAccountId(rs.getLong("AccountId"));
+				info.setAccountName(rs.getString("AccountName"));
+				info.setCreateTime(rs.getInt("CreateTime"));
+				info.setLoginTime(rs.getInt("LoginTime"));
+				info.setLogoutTime(rs.getInt("LogoutTime"));
+				info.setLoginCount(rs.getInt("LoginCount"));
+				info.setLoginIP(rs.getString("LoginIp"));
+				info.setForbidReason(rs.getString("ForbidReason"));
+				info.setForbidExpireTime(rs.getInt("ForbidExpirtTime"));
+				info.setModel(rs.getString("Model"));
+				info.setBrand(rs.getString("Brand"));
+				info.setGameId(rs.getInt("GameId"));
+				info.setDelCDTime(rs.getInt("DelCDTime"));
+			}
+		} catch (SQLException e) {
+			info = null;
+			GameLog.error("执行出错", e);
+		} finally {
+			closeConn(pstmt, rs);
+		}
+		
 		return info;
 	}
 
@@ -73,22 +87,54 @@ public class AccountDao extends MainDBDao {
 //			account.setLoginTime(TimeUtil.getSysCurSeconds());
 //			account.setLoginCount(account.getLoginCount() + 1);
 //		}
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(account.getLoginTime()));
-		params.put(2, new DbParameter(account.getLoginCount()));
-		params.put(3, new DbParameter(account.getLoginIP()));
-		params.put(4, new DbParameter(account.getDelCDTime()));
-		params.put(5, new DbParameter(account.getLogoutTime()));
-		params.put(6, new DbParameter(account.getAccountId()));
-		return execNoneQuery(updateLoginSql, params);
+		
+		Connection conn = openConn();
+		if (conn == null) {
+			return false;
+		}
+			
+		boolean result = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(updateLoginSql);
+			pstmt.setLong(1, account.getLoginTime());
+			pstmt.setInt(2, account.getLoginCount());
+			pstmt.setString(3, account.getLoginIP());
+			pstmt.setInt(4, account.getDelCDTime());
+			pstmt.setInt(5, account.getLogoutTime());
+			pstmt.setLong(6, account.getAccountId());
+			
+			result = pstmt.executeUpdate() > -1;
+		} catch (Exception ex) {
+			GameLog.error("调用Sql语句   " + updateLoginSql + "出错", ex);
+		} finally {
+			closeConn(conn, pstmt);
+		}
+		
+		return result;
 	}
 
-	public boolean forbidAccount(long accountId, int forbidExpirtTime, String forbidReason, String forbidOperator) {
-		Map<Integer, DbParameter> params = new HashMap<Integer, DbParameter>();
-		params.put(1, new DbParameter(forbidExpirtTime));
-		params.put(2, new DbParameter(forbidReason));
-		params.put(3, new DbParameter(forbidOperator));
-		params.put(4, new DbParameter(accountId));
-		return execNoneQuery(forbidSql, params);
+	public boolean forbidAccount(long accountId, int forbidExpiretTime, String forbidReason, String forbidOperator) {
+		Connection conn = openConn();
+		if (conn == null) {
+			return false;
+		}
+			
+		boolean result = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(forbidSql);
+			pstmt.setLong(1, accountId);
+			pstmt.setInt(2, forbidExpiretTime);
+			pstmt.setString(3, forbidReason);
+			pstmt.setString(4, forbidOperator);
+			result = pstmt.executeUpdate() > -1;
+		} catch (Exception ex) {
+			GameLog.error("调用Sql语句   " + forbidSql + "出错", ex);
+		} finally {
+			closeConn(conn, pstmt);
+		}
+		
+		return result;
 	}
 }

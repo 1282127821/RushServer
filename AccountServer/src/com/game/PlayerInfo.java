@@ -1,11 +1,9 @@
 package com.game;
 
-import com.game.DBObject;
-
 /**
  * 玩家详细信息
  */
-public class PlayerInfo extends DBObject {
+public class PlayerInfo {
 	/**
 	 * 玩家的Id
 	 */

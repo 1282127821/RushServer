@@ -43,7 +43,7 @@ public class AccountServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		PBMessage packet = (PBMessage) msg;
-		short msgId = packet.getCodeId();
+		short msgId = packet.getMsgId();
 		NetMsg netMsg = netInstance.getNetMsg(msgId);
 		if (netMsg == null) {
 			GameLog.error("not found cmd , code: 0x" + Integer.toHexString(msgId));

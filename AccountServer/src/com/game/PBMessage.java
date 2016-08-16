@@ -3,8 +3,6 @@ package com.game;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import com.google.protobuf.Message;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -13,62 +11,29 @@ import io.netty.buffer.Unpooled;
  **/
 public class PBMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final short HEADER_LEN = 17; // 这个数据主要是指包头的大小
-	public static final short HEADER = 0x71ab;
-	
-	public static final String KEY = "LAOZHONGGU_RUSH_9999";
+	public static final short HEADER_LEN = 4; // 这个数据主要是指包头的大小
+
+	public static final String KEY = "LAOZHONGGU_RUSH_123456";
 	public static final byte[] KEY_BYTE = KEY.getBytes();
 
 	/** 以下字段如果有更改大小，请务必修改包头的大小 */
-	/**
-	 * 包头
-	 */
-	private short header = HEADER;
-
 	/**
 	 * 数据包长度
 	 */
 	private short len;
 
 	/**
-	 * 校验和(udp 包，该字段使用包序号)
-	 */
-	private short checksum;
-
-	/**
 	 * 协议号
 	 */
-	private short codeId;
-
-	/**
-	 * 玩家ID
-	 */
-	private long userId;
+	private short msgId;
 
 	/**
 	 * 消息内容
 	 */
-	private byte[] msgBody;
+	private byte[] msgContent;
 
-	/**
-	 * Protocol Buffer的Proto内容
-	 */
-	private Message message;
-
-	private PBMessage() {
-	}
-
-	public PBMessage(short codeId) {
-		this(codeId, -1);
-	}
-
-	public PBMessage(short codeId, long userId) {
-		this.codeId = codeId;
-		this.userId = userId;
-	}
-
-	public short getHeader() {
-		return header;
+	public PBMessage(short msgId) {
+		this.msgId = msgId;
 	}
 
 	public short getLen() {
@@ -79,77 +44,41 @@ public class PBMessage implements Serializable {
 		this.len = len;
 	}
 
-	public short getChecksum() {
-		return checksum;
+	public short getMsgId() {
+		return msgId;
 	}
 
-	public void setChecksum(short checksum) {
-		this.checksum = checksum;
-	}
-
-	public short getCodeId() {
-		return codeId;
-	}
-
-	public void setCodeId(short codeId) {
-		this.codeId = codeId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public long getUserId() {
-		return userId;
+	public void setMsgId(short msgId) {
+		this.msgId = msgId;
 	}
 
 	public byte[] getMsgBody() {
-		return msgBody;
+		return msgContent;
 	}
 
-	public void setMsgBody(byte[] msgBody) {
-		this.msgBody = msgBody;
-	}
-
-	public Message getMessage() {
-		return message;
-	}
-
-	public void setMessage(Message message) {
-		this.message = message;
+	public void setMsgBody(byte[] msgContent) {
+		this.msgContent = msgContent;
 	}
 
 	public void readHeader(ByteBuf in) {
-		in.readShort();
 		len = in.readShort();
-		checksum = in.readShort();
-		codeId = in.readShort();
-		userId = in.readLong();
+		msgId = in.readShort();
 	}
 
 	public void writeHeader(int len, ByteBuf out) {
-		out.writeShort(PBMessage.HEADER);
 		out.writeShort(len);
-		out.writeShort(checksum);
-		out.writeShort(codeId);
-		out.writeLong(userId);
+		out.writeShort(msgId);
 	}
 
 	/**
 	 * 只设置数据体
 	 */
-	public void writeBodyBytes(byte[] bodyBytes, int len) {
+	public void writeBodyBytes(byte[] msgData, int len) {
 		ByteBuf out = Unpooled.buffer(len + HEADER_LEN);
-		writeHeader(len + HEADER_LEN, out);
-		out.writeBytes(bodyBytes, 0, len);
-		msgBody = out.array();
-	}
-
-	/**
-	 * 创建空消息(避免外部实例化)
-	 */
-	public static PBMessage buildPBMessage() {
-		return new PBMessage();
+		out.writeShort(len + HEADER_LEN);
+		out.writeShort(msgId);
+		out.writeBytes(msgData, 0, len);
+		this.msgContent = out.array();
 	}
 
 	public short calcChecksum(byte[] data) {
@@ -162,30 +91,26 @@ public class PBMessage implements Serializable {
 		return (short) (val & 0x7F7F);
 	}
 
-	public void clearCheckSum() {
-		checksum = 0;
-	}
 
 	public String headerToStr() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("userId : ").append(userId);
-		sb.append(", code : ").append(Integer.toHexString(codeId));
+		sb.append(", msgId : ").append(Integer.toHexString(msgId));
 		sb.append(", len : ").append(len);
-		sb.append(", checksum : ").append(checksum);
 		return sb.toString();
 	}
 
 	/**
 	 * 位加密
 	 */
-	public static byte[] encryptForDis (byte[] bytes){
-		byte[] mes = new byte[KEY_BYTE.length+bytes.length];
-		System.arraycopy(KEY_BYTE,0,mes,0,KEY_BYTE.length);
-		System.arraycopy(bytes,0,mes,KEY_BYTE.length,bytes.length);
+	public static byte[] encryptForDis(byte[] bytes) {
+		byte[] mes = new byte[KEY_BYTE.length + bytes.length];
+		System.arraycopy(KEY_BYTE, 0, mes, 0, KEY_BYTE.length);
+		System.arraycopy(bytes, 0, mes, KEY_BYTE.length, bytes.length);
 
 		byte buff;
-		for(int i=0; i<mes.length; i+=5){
-			if(i + 3 > mes.length - 1) break;
+		for (int i = 0; i < mes.length; i += 5) {
+			if (i + 3 > mes.length - 1)
+				break;
 			buff = (byte) ~mes[i + 2];
 			mes[i + 2] = mes[i + 3];
 			mes[i + 3] = buff;
@@ -196,25 +121,27 @@ public class PBMessage implements Serializable {
 	/**
 	 * 位解密
 	 */
-	public static byte[] decryptForDis (byte[] bytes){
+	public static byte[] decryptForDis(byte[] bytes) {
 		byte buff;
-		for(int i=0; i<bytes.length; i+=5){
-			if(i + 3 > bytes.length - 1) break;
+		for (int i = 0; i < bytes.length; i += 5) {
+			if (i + 3 > bytes.length - 1)
+				break;
 			buff = bytes[i + 2];
 			bytes[i + 2] = (byte) ~bytes[i + 3];
 			bytes[i + 3] = buff;
 		}
-		byte[] mes = new byte[bytes.length-KEY_BYTE.length];
-		System.arraycopy(bytes,KEY_BYTE.length,mes,0,bytes.length-KEY_BYTE.length);
+		byte[] mes = new byte[bytes.length - KEY_BYTE.length];
+		System.arraycopy(bytes, KEY_BYTE.length, mes, 0, bytes.length - KEY_BYTE.length);
 		return mes;
 	}
-	
+
 	public String detailToStr() {
-		if (msgBody == null) {
-			return null;
+		if (msgContent == null) {
+			return "";
 		}
+		
 		StringBuilder sb = new StringBuilder();
-		for (byte b : msgBody) {
+		for (byte b : msgContent) {
 			sb.append(b + ", ");
 		}
 		return headerToStr() + ", content : [" + sb.toString() + "]";
@@ -222,7 +149,6 @@ public class PBMessage implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PBMessage [bytes=" + Arrays.toString(msgBody) + ", checksum=" + checksum + ", codeId=" + codeId + ", header=" + header + ", len=" + len + ", message=" + message + ", userId=" + userId
-				+ "]";
+		return "PBMessage [bytes=" + Arrays.toString(msgContent)  + ", msgId = " + msgId + ", len = " + len + "]";
 	}
 }

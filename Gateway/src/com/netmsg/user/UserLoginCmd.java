@@ -3,7 +3,6 @@ package com.netmsg.user;
 import org.apache.mina.core.session.IoSession;
 
 import com.conn.ClientSet;
-import com.netmsg.MessageUtil;
 import com.netmsg.PBMessage;
 import com.pbmessage.GamePBMsg.LoginReqMsg;
 import com.protocol.Protocol;
@@ -27,6 +26,9 @@ public class UserLoginCmd implements NetCmd {
 		LoginReqMsg.Builder verifyMsg = LoginReqMsg.newBuilder();
 		verifyMsg.setToken(token);
 		verifyMsg.setAccountId(netMsg.getAccountId());
-		ClientSet.routeServer(MessageUtil.buildMessage(Protocol.C_S_PLAYER_KEY, userId, verifyMsg.build()));
+		
+		PBMessage keyMsg = new PBMessage(Protocol.C_S_PLAYER_KEY, userId);
+		keyMsg.setMessage(verifyMsg.build());
+		ClientSet.routeServer(keyMsg);
 	}
 }

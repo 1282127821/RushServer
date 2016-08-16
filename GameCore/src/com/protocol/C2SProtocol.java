@@ -12,17 +12,17 @@ public interface C2SProtocol {
 	/**
 	 *  账号登录
 	 */
-	short C_S_ACCOUNT_LOGIN = 0x0001;
+	short C2S_ACCOUNT_LOGIN = 0x0001;
 	
 	/**
 	 * 创建角色
 	 */
-	short C_S_CREATE_PLAYER = 0x0002;
+	short C2S_CREATE_PLAYER = 0x0002;
 	
 	/**
 	 * 删除角色
 	 */
-	short C_S_DELETE_PLAYER = 0x0003;
+	short C2S_DELETE_PLAYER = 0x0003;
 
 	/**
 	 * 验证用户key值

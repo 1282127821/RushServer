@@ -48,7 +48,7 @@ public final class AccountMgr {
 	 * 删除一个账号
 	 */
 	public void removeAccount(String accountName) {
-		Account account = getOnlineAccount(accountName);
+//		Account account = getOnlineAccount(accountName);
 //		if (user == null || session != user.getSession()) {
 //			GameLog.warn("客户端 当前用户已经从在线列表中清除了, userId : " + userId);
 //			return;
