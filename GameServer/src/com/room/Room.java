@@ -176,7 +176,7 @@ public class Room extends AbstractActionQueue {
 		for (RoomPlayer roomPlayer : roomPlayerList) {
 			GamePlayer roomGamePlayer = roomPlayer.player;
 			if (roomGamePlayer.getUserId() != userId && roomPlayer.pvpState == FightStatus.READY) {
-				netMsg.setCodeId(code);
+				netMsg.setMsgId(code);
 				roomGamePlayer.sendPacket(netMsg);
 			}
 		}

@@ -10,7 +10,7 @@ public final class AccountMgr {
 	/**
 	 * 在线账号列表
 	 */
-	private static ConcurrentHashMap<String, Account> onlineAccount = new ConcurrentHashMap<String, Account>();
+	private static ConcurrentHashMap<String, AccountInfo> onlineAccount = new ConcurrentHashMap<String, AccountInfo>();
 	
 	/**
 	 * 在线的channel列表
@@ -26,7 +26,7 @@ public final class AccountMgr {
 	/**
 	 * 获取一个在线账号
 	 */
-	public Account getOnlineAccount(String accountName) {
+	public AccountInfo getOnlineAccount(String accountName) {
 		return onlineAccount.get(accountName);
 	}
 	
@@ -38,7 +38,7 @@ public final class AccountMgr {
 	 * 添加一个账号
 	 */
 	public void addAccount(String accountName) {
-		Account account = new Account();
+		AccountInfo account = new AccountInfo();
 		account.setAccountName(accountName);
 		onlineAccount.put(accountName, account);
 //		session.setAttribute(LinkedClient.KEY_ID, userId);

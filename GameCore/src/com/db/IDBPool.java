@@ -1,10 +1,10 @@
-package com.game;
+package com.db;
 
 import java.sql.Connection;
 
 public interface IDBPool {
 	Connection getConnection();
 	void shutdown();
-	String getState();
-	int getCurConns();
+	String getPoolState();
+	boolean isConnect();
 }

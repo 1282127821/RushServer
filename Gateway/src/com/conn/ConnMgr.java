@@ -12,8 +12,8 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import com.BaseServer;
 import com.ServerInfo;
-import com.mina.ProtobufStrictCodecFactory;
-import com.mina.ProtobufStrictEncoder;
+import com.network.ProtobufStrictCodecFactory;
+import com.network.ProtobufStrictEncoder;
 import com.route.ClientRouteHandler;
 import com.util.GameLog;
 

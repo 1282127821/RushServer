@@ -1,5 +1,9 @@
 package com;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import com.db.DBPoolMgr;
 import com.game.NetMsgMgr;
 import com.game.PBDecoder;
 import com.game.PBEncoder;
@@ -26,13 +30,19 @@ public class AccountServer extends BaseServer {
 	}
 
 	public boolean init() {
+//		PropertyConfigurator.configure(Config.getPath("log4j.path")); // 初始化log日志
 		if (!initComponent(NetMsgMgr.getInstance().init(), "网络消息协议")) {
 			return false;
 		}
 		
+		System.out.println("LZGLZG CONNECTION_TIMEOUT  " + SECONDS.toMillis(30));
+		System.out.println("LZGLZG VALIDATION_TIMEOUT  " + SECONDS.toMillis(5));
+		System.out.println("LZGLZG IDLE_TIMEOUT  " + MINUTES.toMillis(10));
+		System.out.println("LZGLZG MAX_LIFETIME  " + MINUTES.toMillis(30));
 		initNet();
 //		NetConfig.getInstance().init();
-//		PropertyConfigurator.configure(Config.getPath("log4j.path")); // 初始化log日志
+		DBPoolMgr.getInstaqnce().initMainDB(BaseServer.serverCfgInfo.mainDb);
+
 //		if (!DBPoolMgr.getInstaqnce().initMainDB(NetConfig.getInstance().getNetConfigXml(ServerType.MAINDB, 0))) {
 //			Log.error("初始化DB连接池失败！");
 //			System.exit(-1);
@@ -71,9 +81,8 @@ public class AccountServer extends BaseServer {
 					p.addLast(new AccountServerHandler());
 				}
 			});
-
-			Channel ch = b.bind(netPort).sync().channel();
 			GameLog.info("启动登录服务器成功, port : " + netPort);
+			Channel ch = b.bind(netPort).sync().channel();
 			ch.closeFuture().sync();
 		} catch (Exception e) {
 			GameLog.error("启动登录服务器失败, port : " + netPort, e);
@@ -84,7 +93,6 @@ public class AccountServer extends BaseServer {
 		return true;
 	}
 	
-	@Override
 	public boolean stop() {
 		setTerminate(true);
 		System.exit(0);

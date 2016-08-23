@@ -14,12 +14,12 @@ import com.google.protobuf.AbstractMessage.Builder;
 import com.guild.Guild;
 import com.guild.GuildMgr;
 import com.mail.MailMgr;
-import com.mina.LinkedClient;
 import com.netmsg.AbstractCmdTaskQueue;
 import com.netmsg.CmdTask;
 import com.netmsg.CmdTaskQueue;
 import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
+import com.network.LinkedClient;
 import com.pbmessage.GamePBMsg.BlackInfoListMsg;
 import com.pbmessage.GamePBMsg.DiceInfoMsg;
 import com.pbmessage.GamePBMsg.PVPRandomDiceMsg;
@@ -511,7 +511,7 @@ public class GamePlayer {
 	public void sendPacket(short msgId, Builder<?> msgBuilder) {
 		PBMessage packet = new PBMessage(msgId);
 		if (msgBuilder != null) {
-			packet.setMessage(msgBuilder.build());
+//			packet.setMessage(msgBuilder.build());
 		}
 
 		sendPacket(packet);
@@ -522,7 +522,7 @@ public class GamePlayer {
 	 */
 	public void sendPacket(PBMessage packet) {
 		if (gateWayclient != null) {
-			packet.setUserId(playerInfo.getUserId());
+//			packet.setUserId(playerInfo.getUserId());
 			gateWayclient.send(packet);
 		} else {
 			GameLog.error("Can not found gateway connection , userId = " + getUserId() + " packet forward failed.");
@@ -540,14 +540,6 @@ public class GamePlayer {
 		}
 
 		sendPacket(Protocol.S_C_TIP_INFO, netMsg);
-	}
-
-	/**
-	 * 发送错误码
-	 */
-	public void sendErrorCode(short code, byte errCode) {
-		PBMessage pbMessage = new PBMessage(code, errCode);
-		sendPacket(pbMessage);
 	}
 
 	/**
@@ -940,8 +932,7 @@ public class GamePlayer {
 		for (int i = 0; i < 8; i++) {
 			int index = ThreadLocalRandom.current().nextInt(0, rewardItemList.size());
 			int itemId = rewardItemList.get(index);
-			randomItemIdList
-					.add(new PropertyInfo(itemId, ItemTemplateMgr.getInstance().getItemTempInfo(itemId).quality));
+			randomItemIdList.add(new PropertyInfo(itemId, ItemTemplateMgr.getInstance().getItemTempInfo(itemId).quality));
 			rewardItemList.remove(index);
 		}
 

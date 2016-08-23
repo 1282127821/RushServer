@@ -7,7 +7,7 @@
 	
 	"accountserver":
 	{
-		"logpath": "E:/tbgame/server/Web/config/log4j.properties",
+		"logpath": "E:/RushServer/trunk/Web/config/log4j.properties",
 		"ip": "192.168.1.227",
 		"port": "8888",
 		"adminPort": "5100"
@@ -15,7 +15,7 @@
 	
 	"gameserver":
 	{
-		"logpath": "E:/tbgame/server/GameServer/config/log4j.properties",
+		"logpath": "E:/RushServer/trunk/GameServer/config/log4j.properties",
 		"ip": "192.168.1.227",
 		"port": "5000",
 		"adminPort": "5100"
@@ -24,7 +24,7 @@
 	"gateway":
 	[
 		{
-			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
+			"logpath": "E:/RushServer/trunk/Gateway/config/log4j.properties",
 			"ip": "192.168.1.227",
 			"port": "6000",
 			"adminPort": "6100"

@@ -1,9 +1,9 @@
 package com.user;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.netmsg.PBMessage;
 
+import io.netty.channel.Channel;
+
 public interface NetCmd  {
-	void execute(IoSession session, PBMessage packet) throws Exception;
+	void execute(Channel channel, PBMessage packet) throws Exception;
 }

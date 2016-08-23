@@ -1,7 +1,5 @@
 package com.netmsg.user;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.netmsg.MessageUtil;
 import com.netmsg.PBMessage;
 import com.pbmessage.GamePBMsg.SyncServerTimeMsg;
@@ -12,8 +10,10 @@ import com.user.UserMgr;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
+import io.netty.channel.Channel;
+
 public class SyncServerTimeCmd implements NetCmd {
-	public void execute(IoSession session, PBMessage packet) throws Exception {
+	public void execute(Channel channel, PBMessage packet) throws Exception {
 		long userId = packet.getUserId();
 		User user = UserMgr.getOnlineUser(userId);
 		if (user == null) {

@@ -1,5 +1,8 @@
 package com.util;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 public final class StringUtil {
 	/**
 	 * 判断字符串是否为 null 或者 空串
@@ -40,6 +43,9 @@ public final class StringUtil {
 	}
 
 	public static void main(String[] args) {
-	
+		System.out.println("LZGLZG CONNECTION_TIMEOUT  " + SECONDS.toMillis(30));
+		System.out.println("LZGLZG VALIDATION_TIMEOUT  " + SECONDS.toMillis(5));
+		System.out.println("LZGLZG IDLE_TIMEOUT  " + MINUTES.toMillis(10));
+		System.out.println("LZGLZG MAX_LIFETIME  " + MINUTES.toMillis(30));
 	}
 }

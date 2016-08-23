@@ -19,7 +19,7 @@ public class DeleteFriend implements NetCmd {
 			player.getFriendMgr().deleteBattleFriend(userId);
 		}
 
-		packet.setCodeId(Protocol.S_C_DEL_FRIEND);
+		packet.setMsgId(Protocol.S_C_DEL_FRIEND);
 		player.sendPacket(packet);
 	}
 }

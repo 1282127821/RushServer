@@ -10,7 +10,7 @@ public class DeleteBlackUser implements NetCmd {
 	public void execute(GamePlayer player, PBMessage packet) throws Exception {
 		BlackInfoMsg netMsg = BlackInfoMsg.parseFrom(packet.getMsgBody());
 		player.deleteBlackUser(netMsg.getUserName());
-		packet.setCodeId(Protocol.S_C_DELETE_BLACK_USER);
+		packet.setMsgId(Protocol.S_C_DELETE_BLACK_USER);
 		player.sendPacket(packet);
 	}
 }

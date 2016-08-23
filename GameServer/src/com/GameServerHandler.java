@@ -1,9 +1,5 @@
 package com;
 
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IoSession;
-
-import com.mina.LinkedClient;
 import com.netmsg.CmdExecutor;
 import com.netmsg.NetCmd;
 import com.netmsg.NetMsgMgr;
@@ -12,41 +8,39 @@ import com.player.GamePlayer;
 import com.player.WorldMgr;
 import com.util.GameLog;
 
-public class GameServerHandler extends IoHandlerAdapter {
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+
+public class GameServerHandler extends ChannelInboundHandlerAdapter {
 	public static CmdExecutor executor = new CmdExecutor(8, 64, 5, "GameServerHandler");
-	private static NetMsgMgr netInstance = NetMsgMgr.getInstance();
-
-	@Override
-	public void sessionOpened(IoSession session) throws Exception {
-		GameLog.info(toMessage("recieved a gateway connect from " + session.getRemoteAddress().toString()));
-	}
-
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-		if (session.getAttribute(LinkedClient.KEY_CLIENT) != null) {
-			GatewayLinkMgr.getInstance().removeLinkedClient(session);
-			GameLog.error(toMessage("close the connection to gateway disconnected. session : " + session.getRemoteAddress().toString()));
-		}
-	}
+	private static final NetMsgMgr netInstance = NetMsgMgr.getInstance();
 	
 	@Override
-	public void messageReceived(IoSession session, Object message) throws Exception {
-		PBMessage packet = (PBMessage) message;
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		GameLog.info("有新的客户端连接进来，客户端的IP地址为:   " + ctx.channel().remoteAddress());
+		ctx.fireChannelActive();
+	}
+
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		PBMessage packet = (PBMessage) msg;
 		// TODO:LZGLZG网络消息协议应该在网关层被截获，能够到这里的必然是已有的
-		NetCmd netCmd = netInstance.getNetCmd(packet.getCodeId());
+		NetCmd netCmd = netInstance.getNetCmd(packet.getMsgId());
+		long userId = 0;//packet.getUserId();
 		if (netCmd == null) {
-			GameLog.error("not found cmd , code: 0x" + Integer.toHexString(packet.getCodeId()) + " , userId : " + packet.getUserId());
+			GameLog.error("not found cmd , code: 0x" + Integer.toHexString(packet.getMsgId()) + " , userId : " + userId);
 			return;
 		}
 
-		long userId = packet.getUserId();
 		if (userId > 0) {
 			try {
 				GamePlayer player = WorldMgr.getOnlinePlayer(userId);
 				if (player == null) {
 					player = WorldMgr.getPlayer(userId);
 					if (player == null) {
-						GameLog.error("code " + packet.getCodeId() + " not found player " + userId + ",can not continue execute.");
+						GameLog.error("code " + packet.getMsgId() + " not found player " + userId + ",can not continue execute.");
 						return;
 					}
 				}
@@ -56,14 +50,50 @@ public class GameServerHandler extends IoHandlerAdapter {
 			}
 		} else {
 //			executor.enDefaultQueue(netCmd, packet);
-			GatewayLinkMgr.getInstance().addGameLinkedClient(session, packet);
+//			GatewayLinkMgr.getInstance().addGameLinkedClient(ctx.channel(), packet);
 		}
 	}
-	
+
 	@Override
-	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		session.closeNow();
-		GameLog.error(toMessage("caught exception that close the connection to gateway disconnected. session : " + session.getRemoteAddress().toString()), cause);
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		/* 心跳处理 */
+		if (evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			if (event.state() == IdleState.READER_IDLE) {
+				/* 读超时 */
+				GameLog.info("READER_IDLE 读超时");
+				ctx.disconnect();
+			} else if (event.state() == IdleState.WRITER_IDLE) {
+				/* 写超时 */
+				GameLog.info("WRITER_IDLE 写超时");
+			} else if (event.state() == IdleState.ALL_IDLE) {
+				/* 总超时 */
+				GameLog.info("ALL_IDLE 总超时");
+			}
+		}
+	}
+
+	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		ctx.flush();
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+		cause.printStackTrace();
+		GameLog.error(toMessage("caught exception that close the connection to gateway disconnected. session : " + ctx.channel().remoteAddress().toString()), cause);
+		ctx.close();
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) {
+		GameLog.info("客户端断开连接，客户端的IP地址为:   " + ctx.channel().remoteAddress().toString());
+		ctx.close();
+		
+//		if (session.getAttribute(LinkedClient.KEY_CLIENT) != null) {
+//			GatewayLinkMgr.getInstance().removeLinkedClient(session);
+//			GameLog.error(toMessage("close the connection to gateway disconnected. session : " + session.getRemoteAddress().toString()));
+//		}
 	}
 
 	private String toMessage(String msg) {

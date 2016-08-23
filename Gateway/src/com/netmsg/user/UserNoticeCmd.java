@@ -1,7 +1,5 @@
 package com.netmsg.user;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.netmsg.MessageUtil;
 import com.netmsg.PBMessage;
 import com.pbmessage.GamePBMsg.KickOutPlayerMsg;
@@ -10,15 +8,17 @@ import com.user.NetCmd;
 import com.user.User;
 import com.user.UserMgr;
 
+import io.netty.channel.Channel;
+
 public class UserNoticeCmd implements NetCmd {
-	public void execute(IoSession session, PBMessage packet) {
+	public void execute(Channel channel, PBMessage packet) {
 		long userId = packet.getUserId();
 		User user = UserMgr.getOnlineUser(userId);
 		if (user != null) {
 			KickOutPlayerMsg.Builder kickMsg = KickOutPlayerMsg.newBuilder();
 			kickMsg.setKickOutType(2);
 			user.sendToClient(MessageUtil.buildMessage(Protocol.S_C_KICK_PLAYER, kickMsg));
-			UserMgr.removeOnline(userId, user.getSession());
+			UserMgr.removeOnline(userId, user.getChannel());
 		}
 	}
 }

@@ -3,7 +3,7 @@ package com.netmsg.account;
 import java.util.List;
 
 import com.BaseServer;
-import com.game.Account;
+import com.game.AccountInfo;
 import com.game.AccountMgr;
 import com.game.DaoMgr;
 import com.game.NetMsg;
@@ -23,7 +23,7 @@ public class AccountLoginCmd implements NetMsg {
 	public void execute(Channel channel, PBMessage packet) throws Exception {
 		AccountLoginMsg netMsg = AccountLoginMsg.parseFrom(packet.getMsgBody());
 		String accountName = netMsg.getAccountName();
-		Account account = AccountMgr.getInstance().getOnlineAccount(accountName);
+		AccountInfo account = AccountMgr.getInstance().getOnlineAccount(accountName);
 		if (account != null) {
 			try {
 				KickOutPlayerMsg.Builder kickMsg = KickOutPlayerMsg.newBuilder();
@@ -82,7 +82,7 @@ public class AccountLoginCmd implements NetMsg {
 		}
 
 		// 创建账号
-		Account dbAccount = getAccountInfo(accountName, loginIp, imei, model, brand, gameId);
+		AccountInfo dbAccount = getAccountInfo(accountName, loginIp, imei, model, brand, gameId);
 		if (dbAccount != null) {
 			accountLogin(dbAccount);
 		}
@@ -111,8 +111,8 @@ public class AccountLoginCmd implements NetMsg {
 	/**
 	 * 获取账号信息，如果不存在则往数据库里面插入一个新的账号信息
 	 */
-	public static Account getAccountInfo(String accountName, String loginIP, String imei, String model, String brand, String gameId) {
-		Account info = DaoMgr.accountDao.getAccount(accountName);
+	public static AccountInfo getAccountInfo(String accountName, String loginIP, String imei, String model, String brand, String gameId) {
+		AccountInfo info = DaoMgr.accountDao.getAccount(accountName);
 		if (info != null) {
 			info.setLoginIP(loginIP);
 			boolean result = DaoMgr.accountDao.updateLoginAccount(info);
@@ -121,7 +121,7 @@ public class AccountLoginCmd implements NetMsg {
 				return null;
 			}
 		} else {
-			info = new Account();
+			info = new AccountInfo();
 			info.setAccountId(BaseServer.IDWORK.nextId());
 			info.setAccountName(accountName);
 			info.setLoginIP(loginIP);
@@ -143,7 +143,7 @@ public class AccountLoginCmd implements NetMsg {
 	/**
 	 * 显示玩家
 	 */
-	private void accountLogin(Account account) {
+	private void accountLogin(AccountInfo account) {
 		AccountLoginResultMsg.Builder netMsg = AccountLoginResultMsg.newBuilder();
 		int forbidExpireTime = account.getForbidExpireTime();
 		// 检查玩家是否被禁号

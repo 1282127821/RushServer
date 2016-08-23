@@ -1,19 +1,20 @@
 package com.user;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.netmsg.PBMessage;
 
+import io.netty.channel.Channel;
+
 public class User {
-	private IoSession session;
+	private Channel channel;
 	private final Object obj;
 	private long lastSyncTime;
 	private int acceleratCount;
 	private long accountId;
 
-	public User(long accountId, long userId, IoSession session) {
-		this.session = session;
-		this.session.setAttribute("userId", userId);
+	public User(long accountId, long userId, Channel channel) {
+		this.channel = channel;
+//		channel.attr(key);
+//		this.session.setAttribute("userId", userId);
 		obj = new Object();
 		lastSyncTime = 0;
 		acceleratCount = 0;
@@ -28,12 +29,12 @@ public class User {
 		this.accountId = accountId;
 	}
 
-	public void setSession(IoSession session) {
-		this.session = session;
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
 
-	public IoSession getSession() {
-		return session;
+	public Channel getChannel() {
+		return channel;
 	}
 
 	public long getLastSyncTime() {
@@ -49,9 +50,9 @@ public class User {
 	}
 
 	public void sendToClient(PBMessage packet) {
-		if (session != null && !session.isClosing()) {
+		if (channel != null && channel.isActive()) {
 			synchronized (obj) {
-				session.write(packet);
+				channel.writeAndFlush(packet);
 			}
 		}
 	}

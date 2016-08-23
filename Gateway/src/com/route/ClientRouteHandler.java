@@ -4,7 +4,7 @@ import org.apache.mina.core.session.IoSession;
 
 import com.GatewayServer;
 import com.conn.SessionType;
-import com.mina.LinkedClient;
+import com.network.LinkedClient;
 import com.user.UserMgr;
 import com.util.GameLog;
 

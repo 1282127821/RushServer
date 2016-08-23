@@ -1,9 +1,9 @@
 package com.netmsg.player;
 
 import com.GatewayLinkMgr;
-import com.mina.LinkedClient;
 import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
+import com.network.LinkedClient;
 import com.pbmessage.GamePBMsg.LoginReqMsg;
 import com.pbmessage.GamePBMsg.PlayerCheckMsg;
 import com.player.GamePlayer;
@@ -16,7 +16,8 @@ public class UserValidateCmd implements NetCmd {
 	public void execute(GamePlayer player, PBMessage packet) throws Exception {
 		LoginReqMsg loginReq = LoginReqMsg.parseFrom(packet.getMsgBody());
 		String token = loginReq.getToken();
-		long userId = packet.getUserId();
+		// TODO:LZGLZG 这里需要修改
+		long userId = 0;//packet.getUserId();
 		long accountId = loginReq.getAccountId();
 		boolean result = true;
 		if (!token.equalsIgnoreCase(LoginMgr.getKey(accountId))) {

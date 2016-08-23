@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.BaseServer;
+import com.db.DBOption;
 import com.guild.GuildMgr;
 import com.netmsg.PBMessage;
 import com.netmsg.player.GamePlayerDisposeCmd;
+import com.protocol.Protocol;
 import com.util.GameLog;
 import com.util.StringUtil;
 import com.util.TimeUtil;
@@ -22,6 +25,57 @@ public class WorldMgr {
 	public static AtomicInteger onlineCount = new AtomicInteger(0);
 	private static Players players = new Players();
 
+	/**
+	 * 创建角色
+	 */
+	public long createPlayer(long accountId, String userName, int jobId, String site) {
+		try {
+			long userId = BaseServer.IDWORK.nextId();
+			PlayerInfo playerInfo = new PlayerInfo();
+			playerInfo.setUserId(userId);
+			playerInfo.setAccountId(accountId);
+			playerInfo.setUserName(userName);
+			playerInfo.setJobId(jobId);
+			playerInfo.setCreateTime(TimeUtil.getSysCurSeconds());
+			playerInfo.setPlayerLv(1);
+			playerInfo.setOp(DBOption.INSERT);
+			boolean result = DaoMgr.playerInfoDao.addPlayerInfo(playerInfo);
+			if (result) {
+				return userId;
+			}
+		} catch (Exception e) {
+			GameLog.error(String.format("accountId:%s userName: %s jobId %s", accountId, userName, jobId), e);
+		}
+		return -1;
+	}
+
+	/**
+	 * 删除角色
+	 */
+	public boolean deletePlayer(long userId, long accountId) {
+		try {
+			GamePlayer player = WorldMgr.getPlayer(userId);
+			if (player.isOnline()) {
+				player.sendPacket(Protocol.G_DELETE_USER, null);
+			}
+			
+			return DaoMgr.playerInfoDao.deletePlayer(userId);
+		} catch (Exception e) {
+			GameLog.error(String.format("删除角色错误 accountId:%s userid %s", accountId, userId), e);
+		}
+		return true;
+	}
+
+	// 检测登陆
+	public LoginMsg checkLogin(String name) {
+		return LoginMgr.checkLogin(name);
+	}
+
+	// 检测在线
+	public boolean checkOnline(long userId, String key) {
+		return LoginMgr.checkOnline(userId, key);
+	}
+	
 	/**
 	 * 获取一个用户，不管用户在不在线，包括从数据库中获取一个玩家，使用的时候应该注意需求
 	 */
@@ -104,7 +158,7 @@ public class WorldMgr {
 	}
 
 	public static void disposePlayer(GamePlayer player) {
-		PBMessage pkg = new PBMessage((short) 0, player.getUserId());
+		PBMessage pkg = new PBMessage((short) 0);
 		player.enqueue(new GamePlayerDisposeCmd(), pkg);
 	}
 

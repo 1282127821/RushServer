@@ -220,7 +220,7 @@ public class Team extends AbstractActionQueue {
 		for (GamePlayer gamePlayer : teamMemberList) {
 			if (gamePlayer != null) {
 				if (gamePlayer.getUserId() != userId) {
-					netMsg.setCodeId(code);
+					netMsg.setMsgId(code);
 					gamePlayer.sendPacket(netMsg);
 				}
 			}

@@ -2,7 +2,7 @@ package com.game;
 
 import io.netty.channel.Channel;
 
-public class Account {
+public class AccountInfo {
 	/**
 	 * 账号Id
 	 */

@@ -3,7 +3,7 @@ package com.game;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.game.DBPoolMgr;
+import com.db.DBPoolMgr;
 import com.util.GameLog;
 
 public class TimerTaskMgr {

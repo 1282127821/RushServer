@@ -1,13 +1,13 @@
 package com;
 
-import org.apache.mina.core.session.IoSession;
-
 import com.google.protobuf.AbstractMessage.Builder;
-import com.mina.LinkedClient;
 import com.netmsg.PBMessage;
+import com.network.LinkedClient;
 import com.pbmessage.GamePBMsg.LoadMsg;
 import com.util.GameLog;
 import com.util.ServerType;
+
+import io.netty.channel.Channel;
 
 /**
  * 管理网关服务器的连接
@@ -24,13 +24,13 @@ public final class GatewayLinkMgr {
 	/**
 	 * GateWayServer连接到GameServer
 	 */
-	public void addGameLinkedClient(IoSession session, PBMessage packet) throws Exception {
+	public void addGameLinkedClient(Channel channel, PBMessage packet) throws Exception {
 		LoadMsg msg = LoadMsg.parseFrom(packet.getMsgBody());
-		LinkedClient client = new LinkedClient(ServerType.GATEWAY, msg.getAddress(), msg.getPort(), null);
-		client.setSession(session);
-		session.setAttribute(LinkedClient.KEY_CLIENT, client);
-		GameLog.info("GateWayServer连接到GameServer, addLinkedClient: " + client.toString());
+		LinkedClient client = new LinkedClient(ServerType.GATEWAY, msg.getAddress(), msg.getPort());
+		client.setChannel(channel);
 		//TODO:LZGLZG以后有多个网关之后需要重新修改
+//		session.setAttribute(LinkedClient.KEY_CLIENT, client);
+		GameLog.info("GateWayServer连接到GameServer, addLinkedClient: " + client.toString());
 		gateWay = client;
 	}
 
@@ -44,21 +44,22 @@ public final class GatewayLinkMgr {
 	/**
 	 * 删除指定的连接
 	 */
-	public void removeLinkedClient(IoSession session) {
-		LinkedClient client = (LinkedClient) session.getAttribute(LinkedClient.KEY_CLIENT);
-		if (client == null) {
-			return;
-		}
-		gateWay = null;
+	public void removeLinkedClient(Channel channel) {
+		//TODO:LZGLZG这里需要修改
+//		LinkedClient client = (LinkedClient) session.getAttribute(LinkedClient.KEY_CLIENT);
+//		if (client == null) {
+//			return;
+//		}
+//		gateWay = null;
 	}
 	
 	/**
 	 * 发送到所有网关连接
 	 */
 	public void sendAll(short code, Builder<?> messageBuilder) {
-		PBMessage packet = new PBMessage(code, -1);
+		PBMessage packet = new PBMessage(code);
 		if (messageBuilder != null) {
-			packet.setMessage(messageBuilder.build());
+//			packet.setMessage(messageBuilder.build());
 		}
 		gateWay.send(packet);
 	}

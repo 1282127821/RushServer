@@ -19,7 +19,7 @@ import com.util.TimeUtil;
 public class ChatCmd implements NetCmd {
 	public void execute(GamePlayer player, PBMessage packet) throws Exception {
 		ChatMsg netMsg = ChatMsg.parseFrom(packet.getMsgBody());
-		packet.setCodeId(Protocol.S_C_CHAT);
+		packet.setMsgId(Protocol.S_C_CHAT);
 		String userName = player.getUserName();
 		int chatType = netMsg.getChatType();
 		if (chatType == ChatType.WORLD) {

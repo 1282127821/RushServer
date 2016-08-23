@@ -2,10 +2,11 @@ package com;
 
 import java.time.Clock;
 
-import com.BaseServer;
 import com.db.DBPoolMgr;
 import com.guild.GuildMgr;
 import com.netmsg.NetMsgMgr;
+import com.network.PBDecoder;
+import com.network.PBEncoder;
 import com.player.DaoMgr;
 import com.player.LoginMgr;
 import com.player.WorldMgr;
@@ -30,8 +31,18 @@ import com.table.MainTaskInfoMgr;
 import com.table.RewardInfoMgr;
 import com.table.SkillTemplateMgr;
 import com.util.GameLog;
-import com.webservice.CastleWS;
-import com.webservice.YiShiWSServer;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 
 public final class GameServer extends BaseServer {
 	private static GameServer gameServer = new GameServer();
@@ -137,6 +148,35 @@ public final class GameServer extends BaseServer {
 		return true;
 	}
 
+	private boolean initNetwork() {
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
+		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		int netPort = 1001;
+		try {
+			ServerBootstrap b = new ServerBootstrap();
+			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
+				@Override
+				public void initChannel(SocketChannel ch) throws Exception {
+					ChannelPipeline p = ch.pipeline();
+					p.addLast(new LoggingHandler(LogLevel.INFO));
+					p.addLast(new PBDecoder());
+					p.addLast(new PBEncoder());
+					p.addLast(new IdleStateHandler(60 * 2, 0, 0));
+					p.addLast(new GameServerHandler());
+				}
+			});
+			GameLog.info("启动登录服务器成功, port : " + netPort);
+			Channel ch = b.bind(netPort).sync().channel();
+			ch.closeFuture().sync();
+		} catch (Exception e) {
+			GameLog.error("启动登录服务器失败, port : " + netPort, e);
+		} finally {
+			workerGroup.shutdownGracefully();
+			bossGroup.shutdownGracefully();
+		}
+		return true;
+	}
+	
 	@Override
 	public boolean start() {
 		if (!super.start()) {
@@ -147,10 +187,7 @@ public final class GameServer extends BaseServer {
 			return false;
 		}
 		
-		int gmState = BaseServer.serverCfgInfo.isGM;
-		if (gmState == 1) {
-			gmIsOpen = true;
-		}
+		gmIsOpen = BaseServer.serverCfgInfo.isGM == 1;
 
 		DBPoolMgr.getInstaqnce().initMainDB(BaseServer.serverCfgInfo.mainDb);
 		DBPoolMgr.getInstaqnce().initLogDB(BaseServer.serverCfgInfo.logDb);
@@ -163,24 +200,21 @@ public final class GameServer extends BaseServer {
 			return false;
 		}
 
-		if (!initMina(new GameServerHandler(), BaseServer.serverCfgInfo.gameServer)) {
+		if (!initNetwork()) {
 			return false;
 		}
 
-		YiShiWSServer.getInstance().start();
 		TimerTaskMgr.init();
 		MinListenMgr.getInstance().init();
 		setTerminate(false);
 		return true;
 	}
 
-	@Override
 	public boolean stop() {
-		CastleWS.isClose = true;
 		WorldMgr.save();
 		RoomMgr.getInstance().stop();
 		MinListenMgr.getInstance().stop();
-		return super.stop();
+		return true;
 	}
 	
 	public static void main(String[] args) {

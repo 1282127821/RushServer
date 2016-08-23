@@ -2,9 +2,9 @@ package com.conn;
 
 import com.BaseServer;
 import com.ServerInfo;
-import com.mina.LinkedClient;
 import com.netmsg.MessageUtil;
 import com.netmsg.PBMessage;
+import com.network.LinkedClient;
 import com.pbmessage.GamePBMsg.LoadMsg;
 import com.protocol.Protocol;
 import com.route.ServerRouteHandler;

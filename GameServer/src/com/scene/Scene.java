@@ -117,7 +117,7 @@ public class Scene {
 			
 			GamePlayer gamePlayer = scenePlayer.gamePlayer;
 			if (gamePlayer.getUserId() != userId) {
-				netMsg.setCodeId(code);
+				netMsg.setMsgId(code);
 				gamePlayer.sendPacket(netMsg);
 			}
 		}

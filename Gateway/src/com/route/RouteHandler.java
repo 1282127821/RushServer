@@ -44,7 +44,7 @@ public abstract class RouteHandler extends IoHandlerAdapter {
 //		GameLog.error("Session Type : " + session.getAttribute(LinkedClient.SESSION_TYPE));
 		PBMessage packet = (PBMessage) message;
 		long userId = packet.getUserId();
-		short code = packet.getCodeId();
+		short code = packet.getMsgId();
 		if (code > 0 && code < 5000) {
 			routeClient(userId, packet);
 		} else if (code > 5001 && code < 10000) {
@@ -80,7 +80,7 @@ public abstract class RouteHandler extends IoHandlerAdapter {
 	private void routeClient(long userId, PBMessage packet) {
 		User user = UserMgr.getOnlineUser(userId);
 		if (user == null) {
-			GameLog.error("找不到对应的用户, userId: " + userId + ", code: " + packet.getCodeId());
+			GameLog.error("找不到对应的用户, userId: " + userId + ", code: " + packet.getMsgId());
 			return;
 		}
 		

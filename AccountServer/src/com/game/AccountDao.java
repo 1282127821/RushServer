@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.db.MainDBDao;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
@@ -14,7 +15,7 @@ public class AccountDao extends MainDBDao {
 	private static final String forbidSql = "update tbl_account set LastLockoutDate = NOW(), ForbidReason = ?, IsForbid = ?, ForbidExpirtDate = ?, ForbidOperator = ? where AccountId = ?;";
 	private static final String updateLoginSql = "update tbl_account set LastLoginDate = ?, LoginCount = ?, LoginIp = ?, DeleteCoolTime = ?,LastLogOutDate= ? where AccountId = ?;";
 
-	public boolean addAccount(Account info) {
+	public boolean addAccount(AccountInfo info) {
 		Connection conn = openConn();
 		if (conn == null) {
 			return false;
@@ -43,7 +44,7 @@ public class AccountDao extends MainDBDao {
 		return result;
 	}
 
-	public Account getAccount(String accountName) {
+	public AccountInfo getAccount(String accountName) {
 		Connection conn = openConn();
 		if (conn == null) {
 			return null;
@@ -51,13 +52,13 @@ public class AccountDao extends MainDBDao {
 		
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		Account info = null;
+		AccountInfo info = null;
 		try {
 			pstmt = conn.prepareStatement(selectAccountNameSql);
 			pstmt.setString(1, accountName);
 			rs = pstmt.executeQuery();
 			if (rs.last()) {
-				info = new Account();
+				info = new AccountInfo();
 				info.setAccountId(rs.getLong("AccountId"));
 				info.setAccountName(rs.getString("AccountName"));
 				info.setCreateTime(rs.getInt("CreateTime"));
@@ -82,7 +83,7 @@ public class AccountDao extends MainDBDao {
 		return info;
 	}
 
-	public boolean updateLoginAccount(Account account) {
+	public boolean updateLoginAccount(AccountInfo account) {
 //		if (!TimeUtil.dateCompare(account.getLastLoginDate())) {
 //			account.setLoginTime(TimeUtil.getSysCurSeconds());
 //			account.setLoginCount(account.getLoginCount() + 1);

@@ -4,7 +4,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.mina.LinkedClient;
+import com.network.LinkedClient;
 import com.util.GameLog;
 
 /**

@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.mina.core.session.IoSession;
-
-import com.conn.ClientSet;
-import com.mina.LinkedClient;
 import com.netmsg.PBMessage;
-import com.protocol.Protocol;
 import com.util.GameLog;
+
+import io.netty.channel.Channel;
 
 public final class UserMgr {
 	public static boolean isRecord = false;
@@ -19,7 +16,7 @@ public final class UserMgr {
 	 */
 	private static ConcurrentHashMap<Long, User> onlineUser = new ConcurrentHashMap<Long, User>();
 	private static ConcurrentHashMap<Long, User> onlineAccount = new ConcurrentHashMap<Long, User>();
-	private static ConcurrentHashMap<Long, IoSession> tempSessionMap = new ConcurrentHashMap<Long, IoSession>();
+	private static ConcurrentHashMap<Long, Channel> tempChannelMap = new ConcurrentHashMap<Long, Channel>();
 	private static ConcurrentHashMap<Long, Boolean> listenUserId = new ConcurrentHashMap<Long, Boolean>();
 	private static boolean isRecordDetail = false;
 	private static boolean plugswitch = true; // 外挂掉线开关
@@ -41,37 +38,38 @@ public final class UserMgr {
 	/**
 	 * 添加一个玩家到在线列表中
 	 */
-	public static void addOnline(long accountId, long userId, IoSession session) {
-		User user = new User(accountId, userId, session);
+	public static void addOnline(long accountId, long userId, Channel channel) {
+		User user = new User(accountId, userId, channel);
 		onlineUser.put(userId, user);
 		onlineAccount.put(accountId, user);
-		session.removeAttribute(LinkedClient.TEMP_SESSION_USER_ID);
-		session.removeAttribute(LinkedClient.TEMP_SESSION_KEY);
-		session.setAttribute(LinkedClient.KEY_ID, userId);
+//		session.removeAttribute(LinkedClient.TEMP_SESSION_USER_ID);
+//		session.removeAttribute(LinkedClient.TEMP_SESSION_KEY);
+//		session.setAttribute(LinkedClient.KEY_ID, userId);
 
 		// 发送消息到客户端,通知成功登陆网关
-		user.sendToClient(new PBMessage(Protocol.S_C_LOGIN_GATEWAY, userId));
+//		user.sendToClient(new PBMessage(Protocol.S_C_LOGIN_GATEWAY, userId));
 	}
 
 	/**
 	 * 从在线列表中移除一个玩家
 	 */
-	public static void removeOnline(long userId, IoSession session) {
+	public static void removeOnline(long userId, Channel channel) {
 		User user = getOnlineUser(userId);
-		if (user == null || session != user.getSession()) {
+		if (user == null || channel != user.getChannel()) {
 			GameLog.warn("客户端 当前用户已经从在线列表中清除了, userId : " + userId);
 			return;
 		}
+		
 		// 通知其他服务器
 		onlineUser.remove(userId);
 		onlineAccount.remove(user.getAccountId());
 
-		ClientSet.routeServer(new PBMessage(Protocol.C_S_PLAYER_LOGOUT, userId));
+//		ClientSet.routeServer(new PBMessage(Protocol.C_S_PLAYER_LOGOUT, userId));
 
 		// 关闭Socket
-		IoSession uerSession = user.getSession();
-		if (uerSession != null) {
-			uerSession.closeNow();
+		Channel userChannel = user.getChannel();
+		if (userChannel != null) {
+			userChannel.close();
 		}
 	}
 
@@ -83,7 +81,7 @@ public final class UserMgr {
 		totalOnlineUser.addAll(onlineUser.values());
 		for (User onlineUser : totalOnlineUser) {
 			if (onlineUser != null) {
-				onlineUser.getSession().write(message);
+				onlineUser.getChannel().writeAndFlush(message);
 			}
 		}
 	}
@@ -91,34 +89,39 @@ public final class UserMgr {
 	/**
 	 * 保存未经过验证的session对象
 	 */
-	public static void addTempSession(long userId, String key, IoSession session) {
-		session.setAttribute(LinkedClient.TEMP_SESSION_KEY, key);
-		session.setAttribute(LinkedClient.TEMP_SESSION_USER_ID, userId);
-		tempSessionMap.put(userId, session);
+	public static void addTempChannel(long userId, String key, Channel channel) {
+//		session.setAttribute(LinkedClient.TEMP_SESSION_KEY, key);
+//		session.setAttribute(LinkedClient.TEMP_SESSION_USER_ID, userId);
+		tempChannelMap.put(userId, channel);
 	}
 
 	/**
 	 * 移除未经过验证的session对象
 	 */
-	public static IoSession removeTempSession(long userId, String token) {
-		IoSession temp = tempSessionMap.get(userId);
-		if (temp != null && temp.getAttribute(LinkedClient.TEMP_SESSION_KEY) != null) {
-			String beforeToken = (String) temp.getAttribute(LinkedClient.TEMP_SESSION_KEY);
-			if (beforeToken.equalsIgnoreCase(token)) {
-				return tempSessionMap.remove(userId);
-			}
-		} else {
-			GameLog.error("removeTempSession temp ==null");
+	public static Channel removeTempChannel(long userId, String token) {
+		Channel channel = tempChannelMap.get(userId);
+		if (channel != null) {
+			return tempChannelMap.remove(userId);
 		}
+		
+		// TODO:LZGLZG 这里需要修改
+//		if (channel != null && temp.getAttribute(LinkedClient.TEMP_SESSION_KEY) != null) {
+//			String beforeToken = (String) temp.getAttribute(LinkedClient.TEMP_SESSION_KEY);
+//			if (beforeToken.equalsIgnoreCase(token)) {
+//				return tempChannelMap.remove(userId);
+//			}
+//		} else {
+//			GameLog.error("removeTempSession temp ==null");
+//		}
 		return null;
 	}
 
 	/**
 	 * 移除未经过验证的session对象
 	 */
-	public static IoSession removeTempSession(long userId, IoSession session) {
-		IoSession temp = tempSessionMap.get(userId);
-		return temp == session ? tempSessionMap.remove(userId) : null;
+	public static Channel removeTempSession(long userId, Channel session) {
+		Channel temp = tempChannelMap.get(userId);
+		return temp == session ? tempChannelMap.remove(userId) : null;
 	}
 
 	/**
@@ -169,13 +172,13 @@ public final class UserMgr {
 	 */
 	public static void stop() {
 		try {
-			for (IoSession temp : tempSessionMap.values()) {
-				temp.closeNow();
+			for (Channel channel : tempChannelMap.values()) {
+				channel.close();
 			}
 
 			for (Entry<Long, User> entry : onlineUser.entrySet()) {
-				User temp = entry.getValue();
-				temp.getSession().closeNow();
+				User user = entry.getValue();
+				user.getChannel().close();
 			}
 		} catch (Exception e) {
 			GameLog.error("Client set close client session exception.");
