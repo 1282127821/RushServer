@@ -55,7 +55,7 @@ public class GuildEventDao extends MainDBDao {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(deleteEventByTimeSql);
-			pstmt.setInt(1, TimeUtil.getSysCurSeconds() - 5 * TimeUtil.SECONDOFPERDAY);
+			pstmt.setInt(1, TimeUtil.getSysCurSeconds() - 5 * TimeUtil.SECOND_PER_DAY);
 			pstmt.executeUpdate();
 		} catch (Exception ex) {
 			GameLog.error("调用Sql语句   " + deleteEventByTimeSql + "出错", ex);

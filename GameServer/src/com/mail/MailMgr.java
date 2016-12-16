@@ -22,7 +22,8 @@ import com.table.ResourceInfo;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
-public class MailMgr {
+public class MailMgr
+{
 	private GamePlayer player;
 
 	/**
@@ -30,7 +31,8 @@ public class MailMgr {
 	 */
 	private List<MailInfo> mailList;
 
-	public MailMgr(GamePlayer player) {
+	public MailMgr(GamePlayer player)
+	{
 		this.player = player;
 		this.mailList = new ArrayList<MailInfo>();
 	}
@@ -38,14 +40,18 @@ public class MailMgr {
 	/**
 	 * 从数据库中加载邮件列表
 	 */
-	public void loadFromDB() {
+	public void loadFromDB()
+	{
 		DaoMgr.mailDao.getMailInfo(player.getUserId(), mailList);
-		if (mailList.size() <= 0) {
+		if (mailList.size() <= 0)
+		{
 			int[] aryItemId = new int[] { 31009, 31010, 31011, 31012, 31012, 31012, 31012, 31011, 31009, 31010, };
 			int[] aryItemCount = new int[] { 10, 10, 10, 10, 10, 1, 1, 1, 1, 1 };
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 5; i++)
+			{
 				List<ResourceInfo> mailAttach = new ArrayList<ResourceInfo>(2);
-				for (int j = 0; j < 2; j++) {
+				for (int j = 0; j < 2; j++)
+				{
 					mailAttach.add(new ResourceInfo(aryItemId[i * 2 + j], aryItemCount[i * 2 + j]));
 				}
 				addMail(MailType.ANNOUNCE, "公告邮件", "公告邮件的道具奖励", mailAttach);
@@ -58,8 +64,10 @@ public class MailMgr {
 	/**
 	 * 添加一封邮件到List
 	 */
-	public MailInfo addMail(short mailType, String mailTitle, String mailContent, List<ResourceInfo> mailAttach) {
-		if (getMailCountByType(mailType) >= GameConst.MAX_MAIL_COUNT) {
+	public MailInfo addMail(short mailType, String mailTitle, String mailContent, List<ResourceInfo> mailAttach)
+	{
+		if (getMailCountByType(mailType) >= GameConst.MAX_MAIL_COUNT)
+		{
 			deleteLongTimeMail();
 		}
 
@@ -79,9 +87,11 @@ public class MailMgr {
 	/**
 	 * 发送邮件列表给客户端
 	 */
-	public void sendTotalMail() {
+	public void sendTotalMail()
+	{
 		MailInfoListMsg.Builder netMsg = MailInfoListMsg.newBuilder();
-		for (MailInfo mailInfo : mailList) {
+		for (MailInfo mailInfo : mailList)
+		{
 			netMsg.addMailInfo(packOneMailInfo(mailInfo));
 		}
 		player.sendPacket(Protocol.S_C_TOTAL_MAIL_LIST, netMsg);
@@ -90,13 +100,15 @@ public class MailMgr {
 	/**
 	 * 打包一封邮件
 	 */
-	private MailInfoMsg.Builder packOneMailInfo(MailInfo mailInfo) {
+	private MailInfoMsg.Builder packOneMailInfo(MailInfo mailInfo)
+	{
 		MailInfoMsg.Builder infoMsg = MailInfoMsg.newBuilder();
 		infoMsg.setMailId(mailInfo.getMailId());
 		infoMsg.setMailTitle(mailInfo.getMailTitle());
 		infoMsg.setMailBody(mailInfo.getMailContent());
 		List<ResourceInfo> mailAttachList = mailInfo.getMailAttach();
-		for (ResourceInfo info : mailAttachList) {
+		for (ResourceInfo info : mailAttachList)
+		{
 			MailAttachInfoMsg.Builder attachMsg = MailAttachInfoMsg.newBuilder();
 			attachMsg.setItemId(info.resourceId);
 			attachMsg.setItemCount(info.count);
@@ -108,10 +120,13 @@ public class MailMgr {
 		return infoMsg;
 	}
 
-	public int getMailCountByType(short mailType) {
+	public int getMailCountByType(short mailType)
+	{
 		int mailCount = 0;
-		for (MailInfo info : mailList) {
-			if (info.getMailType() == mailType) {
+		for (MailInfo info : mailList)
+		{
+			if (info.getMailType() == mailType)
+			{
 				mailCount++;
 			}
 		}
@@ -122,9 +137,12 @@ public class MailMgr {
 	/**
 	 * 根据邮件Id获得一封邮件
 	 */
-	private MailInfo getMailInfoById(long mailId) {
-		for (MailInfo info : mailList) {
-			if (info.getMailId() == mailId) {
+	private MailInfo getMailInfoById(long mailId)
+	{
+		for (MailInfo info : mailList)
+		{
+			if (info.getMailId() == mailId)
+			{
 				return info;
 			}
 		}
@@ -134,20 +152,26 @@ public class MailMgr {
 	/**
 	 * 获取所有邮件的附件
 	 */
-	public void getTotalMailAttach(int mailType) {
+	public void getTotalMailAttach(int mailType)
+	{
 		MailTotalAttackMsg.Builder netMsg = MailTotalAttackMsg.newBuilder();
 		Iterator<MailInfo> iter = mailList.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			MailInfo mailInfo = iter.next();
-			if (mailType != mailInfo.getMailType()) {
+			if (mailType != mailInfo.getMailType())
+			{
 				continue;
 			}
-			
+
 			int result = getMailAttach(mailInfo);
-			if (result == 2) {
+			if (result == 2)
+			{
 				netMsg.addMailIdList(mailInfo.getMailId());
 				iter.remove();
-			} else if (result == 1){
+			}
+			else if (result == 1)
+			{
 				player.sendTips(1018);
 				break;
 			}
@@ -156,11 +180,14 @@ public class MailMgr {
 		player.sendPacket(Protocol.S_C_GET_ALL_MAIL_ATTACH, netMsg);
 	}
 
-	private int getMailAttach(MailInfo mailInfo) {
-		if (mailInfo != null && mailInfo.getMailState() == MailState.NOTGET && mailInfo.getMailAttach().size() > 0) {
+	private int getMailAttach(MailInfo mailInfo)
+	{
+		if (mailInfo != null && mailInfo.getMailState() == MailState.NOTGET && mailInfo.getMailAttach().size() > 0)
+		{
 			List<ResourceInfo> mailAttach = mailInfo.getMailAttach();
 			int freeCount = player.getPropMgr().getFreeGridCount(BagType.PACKAGE);
-			if (mailAttach.size() > freeCount) {
+			if (mailAttach.size() > freeCount)
+			{
 				return 1;
 			}
 
@@ -168,7 +195,8 @@ public class MailMgr {
 			mailInfo.setMailState(MailState.DELETE);
 			player.getPropMgr().addPropOrRes(mailAttach, ItemChangeType.MAIL_ATTACH, DiamondChangeType.MAIL_ATTACH);
 			mailAttach.clear();
-			if (DaoMgr.mailDao.deleteMailInfo(mailInfo.getMailId())) {
+			if (DaoMgr.mailDao.deleteMailInfo(mailInfo.getMailId()))
+			{
 				return 2;
 			}
 		}
@@ -179,46 +207,57 @@ public class MailMgr {
 	/**
 	 * 获取某封邮件的附件
 	 */
-	public void getOneMailAttach(long mailId) {
+	public void getOneMailAttach(long mailId)
+	{
 		MailInfo mailInfo = getMailInfoById(mailId);
 		int result = getMailAttach(mailInfo);
-		if (result == 2) {
+		if (result == 2)
+		{
 			MailCommonMsg.Builder netMsg = MailCommonMsg.newBuilder();
 			netMsg.setMailId(mailId);
 			mailList.remove(mailInfo);
 			player.sendPacket(Protocol.S_C_GET_ONE_MAIL_ATTACH, netMsg);
-		} else if (result == 1) {
+		}
+		else if (result == 1)
+		{
 			player.sendTips(1031);
 		}
 	}
 
-	private void deleteLongTimeMail() {
+	private void deleteLongTimeMail()
+	{
 		List<MailInfo> copyList = new ArrayList<MailInfo>(mailList);
 		int time = Integer.MAX_VALUE;
 		MailInfo delMailInfo = null;
-		for (MailInfo mailInfo : copyList) {
-			if (mailInfo.getSendTime() < time && mailInfo.getMailState() != MailState.DELETE) {
+		for (MailInfo mailInfo : copyList)
+		{
+			if (mailInfo.getSendTime() < time && mailInfo.getMailState() != MailState.DELETE)
+			{
 				delMailInfo = mailInfo;
 				time = mailInfo.getSendTime();
 			}
 		}
-		
-		if (delMailInfo != null) {
+
+		if (delMailInfo != null)
+		{
 			mailList.remove(delMailInfo);
 			DaoMgr.mailDao.deleteMailInfo(delMailInfo.getMailId());
 		}
 	}
-	
+
 	/**
 	 * 从内存中卸载玩家的邮件数据
 	 */
-	public void unloadData() {
+	public void unloadData()
+	{
 		// 过期
 		List<MailInfo> copyList = new ArrayList<MailInfo>(mailList);
 		Iterator<MailInfo> iter = copyList.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			MailInfo mailInfo = iter.next();
-			if (mailInfo.isOverdue()) {
+			if (mailInfo.isOverdue())
+			{
 				iter.remove();
 				DaoMgr.mailDao.deleteMailInfo(mailInfo.getMailId());
 			}
@@ -228,22 +267,29 @@ public class MailMgr {
 	/**
 	 * 将邮件信息保存到数据库
 	 */
-	public void saveToDB() {
+	public void saveToDB()
+	{
 		long userId = 0;
-		try {
+		try
+		{
 			userId = player.getUserId();
 			List<MailInfo> copy = new ArrayList<MailInfo>(mailList);
 			// TODO LZGLZG保存邮件的时候需要处理已经过期的邮件,即需要删掉过期邮件
-			for (MailInfo info : copy) {
-				if (info.getOp() == DBOption.INSERT) {
+			for (MailInfo info : copy)
+			{
+				if (info.getOp() == DBOption.INSERT)
+				{
 					DaoMgr.mailDao.addMailInfo(userId, info);
 				}
 
-				if (info.getOp() == DBOption.UPDATE) {
+				if (info.getOp() == DBOption.UPDATE)
+				{
 					DaoMgr.mailDao.updateMailInfo(userId, info);
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			GameLog.error("保存玩家邮件信息出错, UserId:  " + userId, e);
 		}
 	}

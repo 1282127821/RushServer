@@ -20,18 +20,20 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 
-public class AccountServerHandler extends ChannelInboundHandlerAdapter {
+public class AccountServerHandler extends ChannelInboundHandlerAdapter
+{
 	private static final AttributeKey<Long> CHANNEL_ID = AttributeKey.valueOf("ChannelId");
 	private static final AtomicLong PLAYER_SESSION = new AtomicLong(1000);
-	
+
 	private static LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
 	private static RejectedExecutionHandler handler = new ThreadPoolExecutor.DiscardPolicy();
 	private static ThreadPoolExecutor pool = new ThreadPoolExecutor(4, 8, 5, TimeUnit.MINUTES, workQueue, handler);
 
 	private static final NetMsgMgr netInstance = NetMsgMgr.getInstance();
-	
+
 	@Override
-	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+	public void channelActive(ChannelHandlerContext ctx) throws Exception
+	{
 		Channel channel = ctx.channel();
 		GameLog.info("有新的客户端连接进来，客户端的IP地址为:   " + channel.remoteAddress());
 		long channelId = PLAYER_SESSION.getAndIncrement();
@@ -41,37 +43,49 @@ public class AccountServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
+	{
 		PBMessage packet = (PBMessage) msg;
 		short msgId = packet.getMsgId();
 		NetMsg netMsg = netInstance.getNetMsg(msgId);
-		if (netMsg == null) {
+		if (netMsg == null)
+		{
 			GameLog.error("not found cmd , code: 0x" + Integer.toHexString(msgId));
 			return;
 		}
-		
+
 		// TODO:LZGLZG
-		try {
+		try
+		{
 			pool.execute(new CmdTask(netMsg, ctx.channel(), packet));
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			GameLog.error("msgId:  " + msgId + ", 执行出现异常:", e);
 		}
 	}
 
 	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception
+	{
 		/* 心跳处理 */
-		if (evt instanceof IdleStateEvent) {
+		if (evt instanceof IdleStateEvent)
+		{
 			IdleStateEvent event = (IdleStateEvent) evt;
-			if (event.state() == IdleState.READER_IDLE) {
+			if (event.state() == IdleState.READER_IDLE)
+			{
 				/* 读超时 */
 				GameLog.info("READER_IDLE 读超时");
 				ctx.disconnect();
-			} else if (event.state() == IdleState.WRITER_IDLE) {
+			}
+			else if (event.state() == IdleState.WRITER_IDLE)
+			{
 				/* 写超时 */
 				GameLog.info("WRITER_IDLE 写超时");
-			} else if (event.state() == IdleState.ALL_IDLE) {
+			}
+			else if (event.state() == IdleState.ALL_IDLE)
+			{
 				/* 总超时 */
 				GameLog.info("ALL_IDLE 总超时");
 			}
@@ -79,18 +93,21 @@ public class AccountServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
-	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
+	{
 		ctx.flush();
 	}
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+	{
 		cause.printStackTrace();
 		ctx.close();
 	}
 
 	@Override
-	public void channelInactive(ChannelHandlerContext ctx) {
+	public void channelInactive(ChannelHandlerContext ctx)
+	{
 		GameLog.info("客户端断开连接，客户端的IP地址为:   " + ctx.channel().remoteAddress());
 		ctx.close();
 	}

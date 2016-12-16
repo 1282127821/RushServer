@@ -32,7 +32,7 @@ public final class NetMsgMgr {
 	private void registerNetMsg(short codeId, NetMsg netMsg) {
 		if (netMsgMap.containsKey(codeId)) {
 			GameLog.error("网络协议号重复:  0x: " + Integer.toHexString(codeId));
-			System.exit(0);
+			System.exit(1);
 		}
 		
 		netMsgMap.put(codeId, netMsg);

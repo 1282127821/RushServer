@@ -7,7 +7,8 @@ import com.util.GameLog;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public class DBPool implements IDBPool {
+public class DBPool implements IDBPool
+{
 	private HikariDataSource dbPool = null;
 
 	/**
@@ -17,9 +18,9 @@ public class DBPool implements IDBPool {
 	 * <property name="driverClassName" value="${db.driverClass}" /> --> <!--
 	 * 无需指定，除非系统无法自动识别 --> <property name="jdbcUrl" value=
 	 * "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8"
-	 * /> <property name="username" value="${db.username}" /> <property name=
-	 * "password" value="${db.password}" /> <!-- 连接只读数据库时配置为true， 保证安全 -->
-	 * <property name="readOnly" value="false" /> <!--
+	 * /> <property name="username" value="${db.username}" />
+	 * <property name= "password" value="${db.password}" /> <!--
+	 * 连接只读数据库时配置为true， 保证安全 --> <property name="readOnly" value="false" /> <!--
 	 * 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 -->
 	 * <property name="connectionTimeout" value="30000" /> <!--
 	 * 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 -->
@@ -28,17 +29,15 @@ public class DBPool implements IDBPool {
 	 * wait_timeout参数（show variables like '%timeout%';） -->
 	 * <property name="maxLifetime" value="1800000" /> <!--
 	 * 连接池中允许的最大连接数。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count)
-	 * --> <property name="maximumPoolSize" value="15" /> </bean>
-	 * A typical MySQL configuration for HikariCP might look something like this:
-	   dataSourceClassName=com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-	   dataSource.url=jdbc:mysql://localhost/database
-	   dataSource.user=test
-	   dataSource.password=test
-	   dataSource.cachePrepStmts=true
-	   dataSource.prepStmtCacheSize=250
-	   dataSource.prepStmtCacheSqlLimit=2048
+	 * --> <property name="maximumPoolSize" value="15" /> </bean> A typical
+	 * MySQL configuration for HikariCP might look something like this:
+	 * dataSourceClassName=com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+	 * dataSource.url=jdbc:mysql://localhost/database dataSource.user=test
+	 * dataSource.password=test dataSource.cachePrepStmts=true
+	 * dataSource.prepStmtCacheSize=250 dataSource.prepStmtCacheSqlLimit=2048
 	 */
-	public DBPool(String dbJdbcUrl, String dbUserName, String dbPassWord, String poolName, int minConn, int maxConn) throws Exception {
+	public DBPool(String dbJdbcUrl, String dbUserName, String dbPassWord, String poolName, int minConn, int maxConn) throws Exception
+	{
 		HikariConfig config = new HikariConfig();
 		config.setDriverClassName("com.mysql.jdbc.Driver");
 		config.setJdbcUrl(dbJdbcUrl);
@@ -52,40 +51,50 @@ public class DBPool implements IDBPool {
 		dbPool = new HikariDataSource(config);
 	}
 
-	public void shutdown() {
-		if (dbPool != null) {
+	public void shutdown()
+	{
+		if (dbPool != null)
+		{
 			dbPool.close();
 		}
 	}
 
-	public HikariDataSource getDBPool() {
+	public HikariDataSource getDBPool()
+	{
 		return dbPool;
 	}
-	
-	public String getPoolState() {
-//		StringBuilder sb = new StringBuilder();
-//		try {
-//			sb.append("total:" + connectionPool.getTotalCreatedConnections()).append(",");
-//			sb.append("used:" + connectionPool.getTotalLeased()).append(",");
-//			sb.append("free:" + connectionPool.getTotalFree());
-//		} catch (Exception e) {
-//			GameLog.error("Pool Error", e);
-//		}
-//		return sb.toString();
+
+	public String getPoolState()
+	{
+		// StringBuilder sb = new StringBuilder();
+		// try {
+		// sb.append("total:" +
+		// connectionPool.getTotalCreatedConnections()).append(",");
+		// sb.append("used:" + connectionPool.getTotalLeased()).append(",");
+		// sb.append("free:" + connectionPool.getTotalFree());
+		// } catch (Exception e) {
+		// GameLog.error("Pool Error", e);
+		// }
+		// return sb.toString();
 		// TODO:LZGLZG 这里打印结果看看
 		return dbPool.toString();
-	} 
+	}
 
-	public Connection getConnection() {
-		try {
+	public Connection getConnection()
+	{
+		try
+		{
 			return dbPool.getConnection();
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
 			GameLog.error("获取数据库连接失败", e);
 			return null;
 		}
 	}
 
-	public boolean isConnect() {
+	public boolean isConnect()
+	{
 		return dbPool != null ? dbPool.isClosed() : false;
 	}
 }

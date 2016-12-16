@@ -54,7 +54,8 @@ import com.team.Team;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
-public class GamePlayer {
+public class GamePlayer
+{
 	/**
 	 * 当前的任务Id
 	 */
@@ -95,6 +96,11 @@ public class GamePlayer {
 	 */
 	public int chatTime;
 
+	/**
+	 * 
+	 */
+	private int serverIndex;
+
 	private CmdTaskQueue cmdTaskQueue;
 	private Object lock;
 	private LockData loadLock = new LockData();
@@ -112,106 +118,127 @@ public class GamePlayer {
 	private int[] aryGreen = new int[] { 1, 1, 1, 1, 1, 1 };
 	private int[] aryGold = new int[] { 1, 0, 0, 1, 1, 1 };
 
-	public GamePlayer() {
+	public GamePlayer()
+	{
 		cmdTaskQueue = new AbstractCmdTaskQueue(GameServerHandler.executor);
 		changeCount = new AtomicInteger(0);
 	}
 
-	public boolean isSyncScene() {
+	public boolean isSyncScene()
+	{
 		return sceneType == SceneType.MAIN_CITY;
 	}
 
-	public long getUserId() {
+	public long getUserId()
+	{
 		return playerInfo.getUserId();
 	}
 
-	public String getUserName() {
+	public String getUserName()
+	{
 		return playerInfo.getUserName();
 	}
 
-	public Room getRoom() {
+	public Room getRoom()
+	{
 		return room;
 	}
 
-	public void setRoom(Room room) {
+	public void setRoom(Room room)
+	{
 		this.room = room;
 	}
 
-	public Team getTeam() {
+	public Team getTeam()
+	{
 		return team;
 	}
 
-	public void setTeam(Team team) {
+	public void setTeam(Team team)
+	{
 		this.team = team;
 	}
 
-	public long getTeamId() {
+	public long getTeamId()
+	{
 		return team != null ? team.getTeamId() : 0;
 	}
 
 	/**
 	 * 获取玩家的等级
 	 */
-	public int getPlayerLv() {
+	public int getPlayerLv()
+	{
 		return playerInfo.getPlayerLv();
 	}
 
-	public long getGuildId() {
+	public long getGuildId()
+	{
 		return playerInfo.getGuildId();
 	}
 
-	public void setGuildId(long guildId) {
+	public void setGuildId(long guildId)
+	{
 		playerInfo.setGuildId(guildId);
 		syncPlayerProperty(false);
 	}
 
-	public boolean isOpenGuild() {
+	public boolean isOpenGuild()
+	{
 		return playerInfo.getPlayerLv() >= ConfigMgr.openGuildLv;
 	}
 
 	/**
 	 * 获取用户状态
 	 */
-	public int getPlayerState() {
+	public int getPlayerState()
+	{
 		return playerInfo.getPlayerState();
 	}
 
 	/**
 	 * 判断玩家是否在线
 	 */
-	public boolean isOnline() {
+	public boolean isOnline()
+	{
 		return getPlayerState() == PlayerState.ONLINE;
 	}
 
 	/**
 	 * 获取用户战斗力
 	 */
-	public int getFightStrength() {
+	public int getFightStrength()
+	{
 		return playerInfo.getFightStrength();
 	}
 
 	/**
 	 * 获取用户登陆时间
 	 */
-	public int getLoginTime() {
+	public int getLoginTime()
+	{
 		return playerInfo.getLoginTime();
 	}
 
-	public short getFightStatus() {
+	public short getFightStatus()
+	{
 		return fightStatus;
 	}
 
-	public void setFightStatus(short fightStatus) {
+	public void setFightStatus(short fightStatus)
+	{
 		this.fightStatus = fightStatus;
 	}
 
-	public void addBlackUser(String userName) {
+	public void addBlackUser(String userName)
+	{
 		List<String> blackUser = playerInfo.getBlackUserList();
 		blackUser.add(userName);
 		playerInfo.setBlackUserList(blackUser);
 	}
 
-	public void deleteBlackUser(String userName) {
+	public void deleteBlackUser(String userName)
+	{
 		List<String> blackUser = playerInfo.getBlackUserList();
 		blackUser.remove(userName);
 		playerInfo.setBlackUserList(blackUser);
@@ -220,10 +247,12 @@ public class GamePlayer {
 	/**
 	 * 发送黑名单列表给玩家
 	 */
-	public void sendTotalBlackUser() {
+	public void sendTotalBlackUser()
+	{
 		BlackInfoListMsg.Builder netMsg = BlackInfoListMsg.newBuilder();
 		List<String> blackUser = playerInfo.getBlackUserList();
-		for (String userName : blackUser) {
+		for (String userName : blackUser)
+		{
 			netMsg.addBlackInfoList(userName);
 		}
 
@@ -233,10 +262,13 @@ public class GamePlayer {
 	/**
 	 * 根据名字判断该玩家是否在黑名单中
 	 */
-	public boolean isBlackUser(String userName) {
+	public boolean isBlackUser(String userName)
+	{
 		List<String> blackUser = playerInfo.getBlackUserList();
-		for (String name : blackUser) {
-			if (name.equals(userName)) {
+		for (String name : blackUser)
+		{
+			if (name.equals(userName))
+			{
 				return true;
 			}
 		}
@@ -247,17 +279,21 @@ public class GamePlayer {
 	/**
 	 * 添加属性给玩家
 	 */
-	public void addAttributeToPlayer() {
+	public void addAttributeToPlayer()
+	{
 		Prop[] aryEquip = propMgr.getAllProp(BagType.EQUIP_FENCE);
-		for (int index = 0, len = aryEquip.length; index < len; index++) {
+		for (int index = 0, len = aryEquip.length; index < len; index++)
+		{
 			Prop equip = aryEquip[index];
-			if (equip != null) {
+			if (equip != null)
+			{
 				addEquipAttribute(index, false);
 			}
 		}
 
 		CharacterInfo charInfo = CharacterInfoMgr.getInstance().getCharacterInfo(playerInfo.getJobId());
-		if (charInfo != null) {
+		if (charInfo != null)
+		{
 			fightInventory.addCharacterHP(charInfo.charHP);
 		}
 
@@ -269,12 +305,14 @@ public class GamePlayer {
 	/**
 	 * 给玩家增加等级的属性加成
 	 */
-	public void addLevelAttribute(boolean sendClient) {
-		LevelAttributeInfo levelAttributeInfo = LevelAttributeInfoMgr.getInstance()
-				.getLevelAttributeInfo(playerInfo.getJobId(), getPlayerLv());
-		if (levelAttributeInfo != null) {
+	public void addLevelAttribute(boolean sendClient)
+	{
+		LevelAttributeInfo levelAttributeInfo = LevelAttributeInfoMgr.getInstance().getLevelAttributeInfo(playerInfo.getJobId(), getPlayerLv());
+		if (levelAttributeInfo != null)
+		{
 			fightInventory.addLevelAttribute(levelAttributeInfo.attributeValue);
-			if (sendClient) {
+			if (sendClient)
+			{
 				fightInventory.syncFightAttribute();
 			}
 		}
@@ -283,27 +321,33 @@ public class GamePlayer {
 	/**
 	 * 增加装备属性给玩家
 	 */
-	public void addEquipAttribute(int posIndex, boolean isSyncClient) {
+	public void addEquipAttribute(int posIndex, boolean isSyncClient)
+	{
 		Prop equip = propMgr.getPropByPosIndex(BagType.EQUIP_FENCE, posIndex);
 		fightInventory.clearEquipAttribute(posIndex);
-		if (equip != null) {
+		if (equip != null)
+		{
 			int[] aryEquipAttribute = new int[FightAttributeType.COUNT];
 			PropertyInfo[] aryAttributeValue = equip.getItemTempInfo().aryAttributeValue;
-			for (int i = 0, len = aryAttributeValue.length; i < len; i++) {
+			for (int i = 0, len = aryAttributeValue.length; i < len; i++)
+			{
 				PropertyInfo propertyInfo = aryAttributeValue[i];
-				if (propertyInfo.type > 0) {
+				if (propertyInfo.type > 0)
+				{
 					aryEquipAttribute[propertyInfo.type] = propertyInfo.value;
 				}
 			}
-			
-			//祝福的属性
+
+			// 祝福的属性
 			aryEquipAttribute[aryAttributeValue[0].type] += equip.getBlessAttribute();
-			
-			//增加镶嵌的属性
+
+			// 增加镶嵌的属性
 			int[] aryInlay = equip.getPropInstance().getAryInlay();
-			for (int i = 0, len = aryInlay.length; i < len; ++i) {
+			for (int i = 0, len = aryInlay.length; i < len; ++i)
+			{
 				int inlayCardId = aryInlay[i];
-				if (inlayCardId > 0) {
+				if (inlayCardId > 0)
+				{
 					PropTemplate cardProp = ItemTemplateMgr.getInstance().getItemTempInfo(inlayCardId);
 					PropertyInfo propertyInfo = cardProp.aryAttributeValue[0];
 					aryEquipAttribute[propertyInfo.type] = propertyInfo.value;
@@ -313,56 +357,68 @@ public class GamePlayer {
 			fightInventory.addEquipAttribute(posIndex, aryEquipAttribute);
 		}
 
-		if (isSyncClient) {
+		if (isSyncClient)
+		{
 			fightInventory.syncFightAttribute();
 		}
 	}
 
-	public CmdTaskQueue getCmdTaskQueue() {
+	public CmdTaskQueue getCmdTaskQueue()
+	{
 		return cmdTaskQueue;
 	}
 
-	public void enqueue(NetCmd netCmd, PBMessage packet) {
+	public void enqueue(NetCmd netCmd, PBMessage packet)
+	{
 		cmdTaskQueue.enqueue(new CmdTask(this, netCmd, packet, cmdTaskQueue));
 	}
 
-	public FightInventory getFightInventory() {
+	public FightInventory getFightInventory()
+	{
 		return fightInventory;
 	}
 
-	public PlayerPropMgr getPropMgr() {
+	public PlayerPropMgr getPropMgr()
+	{
 		return propMgr;
 	}
 
-	public FightSkillMgr getSkillInventory() {
+	public FightSkillMgr getSkillInventory()
+	{
 		return fightSkillMgr;
 	}
 
-	public FriendMgr getFriendMgr() {
+	public FriendMgr getFriendMgr()
+	{
 		return friendMgr;
 	}
 
-	public MailMgr getMailMgr() {
+	public MailMgr getMailMgr()
+	{
 		return mailMgr;
 	}
 
-	public int getJobId() {
+	public int getJobId()
+	{
 		return playerInfo.getJobId();
 	}
 
 	/**
 	 * 获取玩家的Vip等级
 	 */
-	public int getVipLv() {
+	public int getVipLv()
+	{
 		return playerInfo.getVipLv();
 	}
 
 	/**
 	 * 同步公会的成员的信息
 	 */
-	public void syncGuildMemInfo(short propertyType, int propertyValue) {
+	public void syncGuildMemInfo(short propertyType, int propertyValue)
+	{
 		long guildId = getGuildId();
-		if (guildId > 0) {
+		if (guildId > 0)
+		{
 			GuildMgr.getInstance().syncGuildMemInfo(guildId, getUserId(), propertyType, propertyValue);
 		}
 	}
@@ -370,33 +426,41 @@ public class GamePlayer {
 	/**
 	 * 加载共享内存
 	 */
-	public boolean loadShareData(PlayerInfo playerInfo) {
+	public boolean loadShareData(PlayerInfo playerInfo)
+	{
 		this.playerInfo = playerInfo;
 		lock = new Object();
 		return true;
 	}
 
-	public void unLoadShareData() {
+	public void unLoadShareData()
+	{
 
 	}
 
 	/**
 	 * 加载用户私有数据
 	 */
-	public boolean loadPersonData() {
-		synchronized (lock) {
-			if (getPlayerState() != PlayerState.OFFLINE) {
+	public boolean loadPersonData()
+	{
+		synchronized (lock)
+		{
+			if (getPlayerState() != PlayerState.OFFLINE)
+			{
 				return false;
 			}
 		}
 		setPlayerState(PlayerState.ONLINE);
 		WorldMgr.onlineCount.incrementAndGet();
-		if (loadLock.beginLock()) {
-			try {
+		if (loadLock.beginLock())
+		{
+			try
+			{
 				fightInventory = new FightInventory(this);
 				checkLevel();
 
-				if (playerInfo.getDiamond() <= 0) {
+				if (playerInfo.getDiamond() <= 0)
+				{
 					addDiamond(10000, ItemChangeType.GMGET);
 					addGold(100000, ItemChangeType.GMGET);
 				}
@@ -417,11 +481,15 @@ public class GamePlayer {
 				// 必须保证在最后面，因为是统一计算玩家的属性和战斗力
 				addAttributeToPlayer();
 				save();
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				setPlayerState(PlayerState.OFFLINE);
 				GameLog.error(String.format("用户 userId = %s, nickName = %s:私有数据加载失败", getUserId(), getUserName()), e);
 				return false;
-			} finally {
+			}
+			finally
+			{
 				loadLock.commitLock();
 			}
 			return true;
@@ -432,9 +500,12 @@ public class GamePlayer {
 	/**
 	 * 从内存中把玩家的数据卸载掉
 	 */
-	public boolean unLoadPersonData() {
-		if (loadLock.beginLock()) {
-			try {
+	public boolean unLoadPersonData()
+	{
+		if (loadLock.beginLock())
+		{
+			try
+			{
 				setPlayerState(PlayerState.OFFLINE);
 				WorldMgr.onlineCount.decrementAndGet();
 				int logoutTime = TimeUtil.getSysCurSeconds();
@@ -442,32 +513,41 @@ public class GamePlayer {
 				syncGuildMemInfo(PlayerSynchType.LOGOUT_TIME, logoutTime);
 				unloadData();
 				save();
-				if (propMgr != null) {
+				if (propMgr != null)
+				{
 					propMgr.unloadData();
 					propMgr = null;
 				}
 
-				if (fightSkillMgr != null) {
+				if (fightSkillMgr != null)
+				{
 					fightSkillMgr.unloadData();
 					fightSkillMgr = null;
 				}
 
-				if (fightInventory != null) {
+				if (fightInventory != null)
+				{
 					fightInventory.unloadData();
 					fightInventory = null;
 				}
 
-				if (friendMgr != null) {
+				if (friendMgr != null)
+				{
 					friendMgr.unloadData();
 					friendMgr = null;
 				}
 
-				if (mailMgr != null) {
+				if (mailMgr != null)
+				{
 					mailMgr.unloadData();
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				GameLog.error("unload personal data error. userId : " + getUserId(), e);
-			} finally {
+			}
+			finally
+			{
 				loadLock.commitLock();
 			}
 			return true;
@@ -479,28 +559,37 @@ public class GamePlayer {
 	/**
 	 * 保存用户全部数据
 	 */
-	public void save() {
-		try {
-			if (playerInfo.getOp() == DBOption.UPDATE) {
+	public void save()
+	{
+		try
+		{
+			if (playerInfo.getOp() == DBOption.UPDATE)
+			{
 				DaoMgr.playerInfoDao.updatePlayerInfo(playerInfo);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			GameLog.error("保存玩家数据出错: UserId" + getUserId(), e);
 		}
 
-		if (propMgr != null) {
+		if (propMgr != null)
+		{
 			propMgr.saveToDB();
 		}
 
-		if (fightSkillMgr != null) {
+		if (fightSkillMgr != null)
+		{
 			fightSkillMgr.saveToDB(getJobId());
 		}
 
-		if (friendMgr != null) {
+		if (friendMgr != null)
+		{
 			friendMgr.saveToDB();
 		}
 
-		if (mailMgr != null) {
+		if (mailMgr != null)
+		{
 			mailMgr.saveToDB();
 		}
 	}
@@ -508,10 +597,12 @@ public class GamePlayer {
 	/**
 	 * 发送消息包
 	 */
-	public void sendPacket(short msgId, Builder<?> msgBuilder) {
+	public void sendPacket(short msgId, Builder<?> msgBuilder)
+	{
 		PBMessage packet = new PBMessage(msgId);
-		if (msgBuilder != null) {
-//			packet.setMessage(msgBuilder.build());
+		if (msgBuilder != null)
+		{
+			// packet.setMessage(msgBuilder.build());
 		}
 
 		sendPacket(packet);
@@ -520,11 +611,15 @@ public class GamePlayer {
 	/**
 	 * 发送消息包
 	 */
-	public void sendPacket(PBMessage packet) {
-		if (gateWayclient != null) {
-//			packet.setUserId(playerInfo.getUserId());
+	public void sendPacket(PBMessage packet)
+	{
+		if (gateWayclient != null)
+		{
+			// packet.setUserId(playerInfo.getUserId());
 			gateWayclient.send(packet);
-		} else {
+		}
+		else
+		{
 			GameLog.error("Can not found gateway connection , userId = " + getUserId() + " packet forward failed.");
 		}
 	}
@@ -532,10 +627,12 @@ public class GamePlayer {
 	/**
 	 * 发送各类提示信息给客户端
 	 */
-	public void sendTips(int tipId, Object... args) {
+	public void sendTips(int tipId, Object... args)
+	{
 		TipInfoMsg.Builder netMsg = TipInfoMsg.newBuilder();
 		netMsg.setTipId(tipId);
-		for (int index = 0; index < args.length; index++) {
+		for (int index = 0; index < args.length; index++)
+		{
 			netMsg.addContent(String.valueOf(args[index]));
 		}
 
@@ -545,13 +642,18 @@ public class GamePlayer {
 	/**
 	 * 每天重置玩家数据
 	 */
-	public void refershData(Date currentDate) {
-		try {
+	public void refershData(Date currentDate)
+	{
+		try
+		{
 			int intervalDay = TimeUtil.dataCompare5(new Date(playerInfo.getResetTime() * 1000L), currentDate);
-			if (intervalDay >= 1) {
+			if (intervalDay >= 1)
+			{
 				resetData();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			GameLog.error("重置玩家数据异常,  userId : " + getUserId() + ", userName : " + getUserName(), e);
 		}
 	}
@@ -559,15 +661,21 @@ public class GamePlayer {
 	/**
 	 * 每天固定时间重置玩家数据
 	 */
-	public void resetData() {
-		try {
+	public void resetData()
+	{
+		try
+		{
 			beginChanges();
 			playerInfo.setResetTime(TimeUtil.getSysCurSeconds());
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			String msg = "5点重置数据,userId :  " + getUserId() + ", userName : " + getUserName() + " , resetTime : "
 					+ TimeUtil.getDateFormat(new Date(playerInfo.getResetTime() * 1000L));
 			GameLog.error(msg, e);
-		} finally {
+		}
+		finally
+		{
 			commitChages(true);
 		}
 	}
@@ -575,26 +683,31 @@ public class GamePlayer {
 	/**
 	 * 提交打开
 	 */
-	public void beginChanges() {
+	public void beginChanges()
+	{
 		changeCount.incrementAndGet();
 	}
 
 	/**
 	 * 提交数据
 	 */
-	public void commitChages(boolean isAllSynch) {
+	public void commitChages(boolean isAllSynch)
+	{
 		int changes = changeCount.decrementAndGet();
-		if (changes < 0) {
+		if (changes < 0)
+		{
 			GameLog.error("changeCount Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n");
 			changeCount.set(0);
 		}
 
-		if (changes <= 0) {
+		if (changes <= 0)
+		{
 			sendPlayerInfo(isAllSynch);
 		}
 	}
 
-	public void sendPlayerInfo(boolean isAllSynch) {
+	public void sendPlayerInfo(boolean isAllSynch)
+	{
 		PlayerMsg.Builder playerInfoMsg = PlayerMsg.newBuilder();
 		initPlayerMsg(playerInfoMsg, isAllSynch);
 		sendPacket(Protocol.S_C_PLAYER_INFO, playerInfoMsg);
@@ -603,32 +716,37 @@ public class GamePlayer {
 	/**
 	 * 设置用户状态
 	 */
-	public void setPlayerState(short playerState) {
+	public void setPlayerState(short playerState)
+	{
 		playerInfo.setPlayerState(playerState);
 	}
 
 	/**
 	 * 获得玩家登出游戏时间
 	 */
-	public int getLogoutTime() {
+	public int getLogoutTime()
+	{
 		return playerInfo.getLogoutTime();
 	}
 
 	/**
 	 * 设置玩家登出游戏时间
 	 */
-	public void setLogoutTime(int logoutTime) {
+	public void setLogoutTime(int logoutTime)
+	{
 		playerInfo.setLogoutTime(logoutTime);
 	}
 
 	/**
 	 * 设置玩家登录游戏时间
 	 */
-	public void setLoginTime(int loginTime) {
+	public void setLoginTime(int loginTime)
+	{
 		playerInfo.setLoginTime(loginTime);
 	}
 
-	private void setPlayerLv(int playerLv) {
+	private void setPlayerLv(int playerLv)
+	{
 		playerInfo.setPlayerLv(playerLv);
 		syncPlayerProperty(false);
 	}
@@ -636,25 +754,30 @@ public class GamePlayer {
 	/**
 	 * 获取玩家所拥有的钻石
 	 */
-	public int getDiamond() {
+	public int getDiamond()
+	{
 		return playerInfo.getDiamond();
 	}
 
 	/**
 	 * 增加钻石
 	 */
-	public boolean addDiamond(int value, short changeType) {
+	public boolean addDiamond(int value, short changeType)
+	{
 		boolean isSuccess = false;
 		int srcDiamond = 0;
-		synchronized (lock) {
-			if (value > 0) {
+		synchronized (lock)
+		{
+			if (value > 0)
+			{
 				srcDiamond = playerInfo.getDiamond();
 				playerInfo.setDiamond(srcDiamond + value);
 				isSuccess = true;
 			}
 		}
 
-		if (isSuccess) {
+		if (isSuccess)
+		{
 			syncPlayerProperty(false);
 		}
 		return isSuccess;
@@ -663,17 +786,21 @@ public class GamePlayer {
 	/**
 	 * 移除钻石
 	 */
-	public boolean removeDiamond(int value, short changeType) {
+	public boolean removeDiamond(int value, short changeType)
+	{
 		boolean isSuccess = false;
 		int srcDiamond;
-		synchronized (lock) {
+		synchronized (lock)
+		{
 			srcDiamond = playerInfo.getDiamond();
-			if (value > 0 && value <= srcDiamond) {
+			if (value > 0 && value <= srcDiamond)
+			{
 				playerInfo.setDiamond(srcDiamond - value);
 				isSuccess = true;
 			}
 		}
-		if (isSuccess) {
+		if (isSuccess)
+		{
 			syncPlayerProperty(false);
 		}
 		return isSuccess;
@@ -682,20 +809,24 @@ public class GamePlayer {
 	/**
 	 * 获取玩家所拥有的金币
 	 */
-	public int getGold() {
+	public int getGold()
+	{
 		return playerInfo.getGold();
 	}
 
 	/**
 	 * 增加金币
 	 */
-	public int addGold(int value, short changeType) {
+	public int addGold(int value, short changeType)
+	{
 		int srcGold;
-		synchronized (lock) {
-			if (value <= 0) {
+		synchronized (lock)
+		{
+			if (value <= 0)
+			{
 				return 0;
 			}
-			
+
 			srcGold = playerInfo.getGold();
 			playerInfo.setGold(srcGold + value);
 		}
@@ -707,18 +838,22 @@ public class GamePlayer {
 	/**
 	 * 移除金币
 	 */
-	public boolean removeGold(int value, short changeType) {
+	public boolean removeGold(int value, short changeType)
+	{
 		boolean isSuccess = false;
 		int srcGold = 0;
-		synchronized (lock) {
+		synchronized (lock)
+		{
 			srcGold = playerInfo.getGold();
-			if (value > 0 && value <= srcGold) {
+			if (value > 0 && value <= srcGold)
+			{
 				playerInfo.setGold(srcGold - value);
 				isSuccess = true;
 			}
 		}
 
-		if (isSuccess) {
+		if (isSuccess)
+		{
 			syncPlayerProperty(false);
 		}
 		return isSuccess;
@@ -727,8 +862,10 @@ public class GamePlayer {
 	/**
 	 * 添加各类资源
 	 */
-	public void addResource(int resourceId, int resourceCount, short diamondType, short resourceType) {
-		switch (resourceId) {
+	public void addResource(int resourceId, int resourceCount, short diamondType, short resourceType)
+	{
+		switch (resourceId)
+		{
 		case PropType.GOLD:
 			addGold(resourceCount, resourceType);
 			break;
@@ -747,96 +884,120 @@ public class GamePlayer {
 		}
 	}
 
-	public void setVipLvl(int val) {
+	public void setVipLvl(int val)
+	{
 		playerInfo.setVipLv(val);
 		syncPlayerProperty(false);
 	}
 
-	public void updateFightStrength(int fightStrength) {
-		if (playerInfo.getFightStrength() != fightStrength) {
+	public void updateFightStrength(int fightStrength)
+	{
+		if (playerInfo.getFightStrength() != fightStrength)
+		{
 			playerInfo.setFightStrength(fightStrength);
 			syncPlayerProperty(false);
 		}
 	}
 
-	private void syncPlayerProperty(boolean isAllSynch) {
-		if (changeCount.get() <= 0) {
+	private void syncPlayerProperty(boolean isAllSynch)
+	{
+		if (changeCount.get() <= 0)
+		{
 			PlayerMsg.Builder playerInfoMsg = PlayerMsg.newBuilder();
 			initPlayerMsg(playerInfoMsg, isAllSynch);
 			sendPacket(Protocol.S_C_PLAYER_INFO, playerInfoMsg);
 		}
 	}
 
-	public void initPlayerMsg(PlayerMsg.Builder playerMsg, boolean isSynch) {
+	public void initPlayerMsg(PlayerMsg.Builder playerMsg, boolean isSynch)
+	{
 		playerMsg.setUserId(playerInfo.getUserId());
-		if (isSynch || playerInfo.isChange(PlayerSynchType.USERNAME)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.USERNAME))
+		{
 			playerMsg.setUserName(playerInfo.getUserName());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.JOB_ID)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.JOB_ID))
+		{
 			playerMsg.setJobId(playerInfo.getJobId());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.GOLD)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.GOLD))
+		{
 			playerMsg.setGold(playerInfo.getGold());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.DIAMOND)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.DIAMOND))
+		{
 			playerMsg.setDiamond(playerInfo.getDiamond());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.STATE)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.STATE))
+		{
 			playerMsg.setPlayerState(playerInfo.getPlayerState());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.LEVEL)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.LEVEL))
+		{
 			playerMsg.setPlayerLv(playerInfo.getPlayerLv());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.EXP)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.EXP))
+		{
 			playerMsg.setPlayerExp(playerInfo.getPlayerExp());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.NOVICE_PROCESS)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.NOVICE_PROCESS))
+		{
 			playerMsg.setNoviceProcess(playerInfo.getNoviceProcess());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.FIGHT_STRENGTH)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.FIGHT_STRENGTH))
+		{
 			playerMsg.setFightStrength(playerInfo.getFightStrength());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.POS_X)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.POS_X))
+		{
 			playerMsg.setPosX(playerInfo.getPosX());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.POS_Y)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.POS_Y))
+		{
 			playerMsg.setPosY(playerInfo.getPosY());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.DIRECT)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.DIRECT))
+		{
 			playerMsg.setDirection(playerInfo.getDirect());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.CURR_HP)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.CURR_HP))
+		{
 			playerMsg.setCurrHP(playerInfo.getCurrHP());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.MAX_HP)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.MAX_HP))
+		{
 			playerMsg.setMaxHP(playerInfo.getMaxHP());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.CURR_MP)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.CURR_MP))
+		{
 			playerMsg.setCurrMP(playerInfo.getCurrMP());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.MAX_MP)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.MAX_MP))
+		{
 			playerMsg.setMaxMP(playerInfo.getMaxMP());
 		}
 
-		if (isSynch || playerInfo.isChange(PlayerSynchType.GUILD_ID)) {
+		if (isSynch || playerInfo.isChange(PlayerSynchType.GUILD_ID))
+		{
 			long guildId = playerInfo.getGuildId();
 			playerMsg.setGuildId(guildId);
-			if (guildId > 0) {
+			if (guildId > 0)
+			{
 				playerMsg.setGuildName(GuildMgr.getInstance().getGuildNameById(guildId));
 			}
 		}
@@ -844,15 +1005,18 @@ public class GamePlayer {
 		playerInfo.clearSynchSet();
 	}
 
-	public void unloadData() {
+	public void unloadData()
+	{
 		changeCount.set(0);
 	}
 
 	/**
 	 * 给玩家增加经验，满足条件的时候会对玩家进行升级操作
 	 */
-	public void addExp(int exp) {
-		if (playerInfo.getPlayerLv() > ConfigMgr.playerMaxLv) {
+	public void addExp(int exp)
+	{
+		if (playerInfo.getPlayerLv() > ConfigMgr.playerMaxLv)
+		{
 			return;
 		}
 		playerInfo.setPlayerExp(playerInfo.getPlayerExp() + exp);
@@ -863,58 +1027,69 @@ public class GamePlayer {
 	/**
 	 * 检测是否需要升级
 	 */
-	public void checkLevel() {
+	public void checkLevel()
+	{
 		int curLv = playerInfo.getPlayerLv();
 		ExpInfo expInfo = ExpInfoMgr.getInstance().getExpInfo(curLv);
-		if (expInfo == null) {
+		if (expInfo == null)
+		{
 			return;
 		}
 
 		int nowLv = curLv;
 		int leftExp = playerInfo.getPlayerExp() - expInfo.needExp;
-		while (leftExp > 0) {
+		while (leftExp > 0)
+		{
 			nowLv += 1;
 			playerInfo.setPlayerExp(leftExp);
 			expInfo = ExpInfoMgr.getInstance().getExpInfo(nowLv);
-			if (expInfo == null) {
+			if (expInfo == null)
+			{
 				break;
 			}
 			leftExp = playerInfo.getPlayerExp() - expInfo.needExp;
 		}
 
-		if (curLv != nowLv) {
+		if (curLv != nowLv)
+		{
 			setPlayerLv(nowLv);
 			syncGuildMemInfo(PlayerSynchType.LEVEL, nowLv);
 			addLevelAttribute(true);
 		}
 	}
 
-	public void giveStageReward(int stageId, PvpBattleResultMsg.Builder netMsg) {
+	public void giveStageReward(int stageId, PvpBattleResultMsg.Builder netMsg)
+	{
 		LevelStageInfo stageInfo = LevelStageInfoMgr.getInstance().getLevelStageInfo(stageId);
-		if (stageInfo == null) {
+		if (stageInfo == null)
+		{
 			return;
 		}
 
 		int oldLv = getPlayerLv();
 		addExp(stageInfo.rewardExp);
-		if (getPlayerLv() > oldLv) {
+		if (getPlayerLv() > oldLv)
+		{
 			netMsg.setIsLevelUp(true);
 		}
 		addGold(stageInfo.rewardMoney, ItemChangeType.LEVEL_STAGE_REWARD);
 		netMsg.setRewardExp(stageInfo.rewardExp);
 		netMsg.setRewardGold(stageInfo.rewardMoney);
 		DropRewardInfo dropRewardInfo = RewardInfoMgr.getInstance().getDropRewardInfo(stageInfo.rewardDropId);
-		if (dropRewardInfo == null) {
+		if (dropRewardInfo == null)
+		{
 			return;
 		}
 
 		List<ResourceInfo> rewardList = new ArrayList<ResourceInfo>(3);
 		List<Integer> itemList = new ArrayList<Integer>(5);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			itemList.add(dropRewardInfo.aryDropItem[i]);
 		}
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++)
+		{
 			int index = ThreadLocalRandom.current().nextInt(0, itemList.size());
 			int itemId = itemList.get(index);
 			rewardList.add(new ResourceInfo(itemId, 1));
@@ -924,12 +1099,14 @@ public class GamePlayer {
 		}
 
 		List<Integer> rewardItemList = new ArrayList<Integer>(16);
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 16; i++)
+		{
 			rewardItemList.add(11001 + i);
 		}
 
 		randomItemIdList = new ArrayList<PropertyInfo>(8);
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++)
+		{
 			int index = ThreadLocalRandom.current().nextInt(0, rewardItemList.size());
 			int itemId = rewardItemList.get(index);
 			randomItemIdList.add(new PropertyInfo(itemId, ItemTemplateMgr.getInstance().getItemTempInfo(itemId).quality));
@@ -937,14 +1114,17 @@ public class GamePlayer {
 		}
 
 		Collections.sort(randomItemIdList);
-		for (PropertyInfo info : randomItemIdList) {
+		for (PropertyInfo info : randomItemIdList)
+		{
 			netMsg.addRandomItemIdList(info.type);
 		}
 
 		long guildId = getGuildId();
-		if (guildId > 0) {
+		if (guildId > 0)
+		{
 			Guild guild = GuildMgr.getInstance().getGuildById(guildId);
-			if (guild == null) {
+			if (guild == null)
+			{
 				return;
 			}
 
@@ -952,15 +1132,18 @@ public class GamePlayer {
 		}
 	}
 
-	public void pvpRandomItem() {
+	public void pvpRandomItem()
+	{
 		PVPRandomDiceMsg.Builder netMsg = PVPRandomDiceMsg.newBuilder();
 		int itemIndex = 0;
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 7; i++)
+		{
 			int color = ThreadLocalRandom.current().nextInt(1, 5);
 			DiceInfoMsg.Builder diceInfoMsg = DiceInfoMsg.newBuilder();
 			diceInfoMsg.setQuality(color);
 			int[] aryColor = aryWhite;
-			switch (color) {
+			switch (color)
+			{
 			case 2:
 				aryColor = aryBlack;
 				break;

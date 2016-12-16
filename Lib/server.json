@@ -1,13 +1,10 @@
 {
-	"designcfg": "E:/ARPG/Lib/txt/",
+	"designcfg": "..\Lib\txt\",
 	"isgm": "1",
 	"serverindex": "1",
-	"webpath": "E:/ARPG/Web/config/web.properties",
-	"sdkpath": "E:/ARPG/Web/config/sdkconf.properties",
-	
+    "logpath": "E:/RushServer/trunk/Web/config/log4j.properties",	
 	"accountserver":
 	{
-		"logpath": "E:/RushServer/trunk/Web/config/log4j.properties",
 		"ip": "192.168.1.227",
 		"port": "8888",
 		"adminPort": "5100"
@@ -15,7 +12,6 @@
 	
 	"gameserver":
 	{
-		"logpath": "E:/RushServer/trunk/GameServer/config/log4j.properties",
 		"ip": "192.168.1.227",
 		"port": "5000",
 		"adminPort": "5100"
@@ -24,21 +20,18 @@
 	"gateway":
 	[
 		{
-			"logpath": "E:/RushServer/trunk/Gateway/config/log4j.properties",
 			"ip": "192.168.1.227",
 			"port": "6000",
 			"adminPort": "6100"
 		},
 		
 		{
-			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
 			"ip": "192.168.1.227",
 			"port": "5000",
 			"adminPort": "5100"
 		},
 		
 		{
-			"logpath": "E:/tbgame/server/Gateway/config/log4j.properties",
 			"ip": "192.168.1.227",
 			"port": "5000",
 			"adminPort": "5100"
