@@ -1,8 +1,9 @@
 package com;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -12,63 +13,41 @@ import com.util.IDWorker;
 
 public abstract class BaseServer
 {
-	protected static String configPath;
-	private boolean terminate = true;
-	public static ServerCfgInfo serverCfgInfo = null;
+	protected boolean terminate = true;
+	protected ServerCfgInfo serverCfgInfo = null;
 	public static IDWorker IDWORK = new IDWorker(1);
 
-	public boolean start()
+	public boolean start(String configPath)
 	{
 		if (!initComponent(initServerCfg(configPath), "加载服务器配置文件"))
 		{
 			return false;
 		}
 
-		PropertyConfigurator.configure(serverCfgInfo.gameServer.logpath);
-
+		PropertyConfigurator.configure(serverCfgInfo.logPath);
 		return true;
 	}
 
-	public static boolean initServerCfg(String filaPathName)
+	public boolean initServerCfg(String filaPathName)
 	{
-		try
+		try (BufferedReader bufReader = Files.newBufferedReader(Paths.get(filaPathName)))
 		{
-			FileInputStream fs = new FileInputStream(filaPathName);
-			InputStreamReader isr = new InputStreamReader(fs, "UTF-8");
-			BufferedReader reader = new BufferedReader(isr);
 			StringBuilder serverJson = new StringBuilder();
 			String jsonStr = null;
-			while ((jsonStr = reader.readLine()) != null)
+			while ((jsonStr = bufReader.readLine()) != null)
 			{
 				serverJson.append(jsonStr);
 			}
 
 			serverCfgInfo = JSON.parseObject(serverJson.toString(), ServerCfgInfo.class);
-			reader.close();
-			fs.close();
-			return true;
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			GameLog.info("加载游戏服务器配置出错" + e.getMessage());
 			return false;
 		}
-	}
 
-	/**
-	 * 根据玩家Id获得对应的网关Id
-	 */
-	public static int getGateWayId(long accountId)
-	{
-		return (int) (accountId % serverCfgInfo.gateway.size());
-	}
-
-	/***
-	 * 得到网关的大小
-	 */
-	public static int getGateSize()
-	{
-		return serverCfgInfo.gateway.size();
+		return true;
 	}
 
 	public boolean isTerminate()

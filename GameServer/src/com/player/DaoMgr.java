@@ -10,8 +10,10 @@ import com.mail.MailDao;
 import com.prop.PropInstanceDao;
 import com.skill.FightSkillInfoDao;
 
-public class DaoMgr {
-	public static void init() {
+public class DaoMgr
+{
+	public static void init()
+	{
 		DaoMgr.playerInfoDao.resetState();
 	}
 

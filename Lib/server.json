@@ -1,8 +1,8 @@
 {
-	"designcfg": "..\Lib\txt\",
-	"isgm": "1",
-	"serverindex": "1",
-    "logpath": "E:/RushServer/trunk/Web/config/log4j.properties",	
+	"designcfgPath": "../Lib/txt/",
+	"isGM": "true",
+	"serverIndex": "1",
+    "logPath": "../L/config/log4j.properties",	
 	"accountserver":
 	{
 		"ip": "192.168.1.227",

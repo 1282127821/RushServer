@@ -5,11 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.db.DBDao;
 import com.db.DBOption;
-import com.db.MainDBDao;
 import com.util.GameLog;
 
-public class PlayerInfoDao extends MainDBDao {
+public class PlayerInfoDao extends DBDao
+{
 	private static final String insertSql = "insert into tbl_playerinfo(UserId, AccountId, UserName, JobId, CreateTime, PlayerLv) values(?, ?, ?, ?, ?, ?);";
 	private static final String updateSql = "update tbl_playerinfo set Diamond = ?, Gold = ?, JobId = ?, PlayerState = ?, NoviceProcess = ?, "
 			+ "PlayerLv = ?, FightStrength = ?, PlayerExp = ?, CurrHP = ?, CurrMP = ?, PosX = ?, PosY = ?, PosZ = ?, Direct = ?, LoginTime = ?, LogoutTime = ?, ResetTime = ?, "
@@ -19,18 +20,22 @@ public class PlayerInfoDao extends MainDBDao {
 	private static final String deletePlayerSql = "update tbl_playerinfo set IsDelete = true where UserId = ?;";
 	private static final String selectNameSql = "select * from tbl_playerinfo where UserName = ? and IsDelete = false;";
 	private static final String resetStateSql = "update tbl_playerinfo set PlayerState = 0;";
-	
-	public boolean addPlayerInfo(PlayerInfo info) {
+
+	public boolean addPlayerInfo(PlayerInfo info)
+	{
 		boolean result = false;
-		if (info != null && info.beginAdd()) {
-			Connection conn = openConn();
-			if (conn == null) {
+		if (info != null && info.beginAdd())
+		{
+			Connection conn = getConn();
+			if (conn == null)
+			{
 				return result;
 			}
-			
+
 			PreparedStatement pstmt = null;
 			long userId = info.getUserId();
-			try {
+			try
+			{
 				pstmt = conn.prepareStatement(insertSql);
 				pstmt.setLong(1, userId);
 				pstmt.setLong(2, info.getAccountId());
@@ -39,9 +44,13 @@ public class PlayerInfoDao extends MainDBDao {
 				pstmt.setInt(5, info.getCreateTime());
 				pstmt.setInt(6, info.getPlayerLv());
 				result = pstmt.executeUpdate() > -1;
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
-			} finally {
+			}
+			finally
+			{
 				closeConn(conn, pstmt);
 			}
 			info.commitAdd(userId, result);
@@ -49,34 +58,44 @@ public class PlayerInfoDao extends MainDBDao {
 		return result;
 	}
 
-	public PlayerInfo getPlayerInfo(long userId) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public PlayerInfo getPlayerInfo(long userId)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return null;
 		}
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		PlayerInfo info = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(selectSql);
 			pstmt.setLong(1, userId);
 			rs = pstmt.executeQuery();
-			while (rs.next()) {
+			while (rs.next())
+			{
 				info = getPlayerInfo(rs);
 			}
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
 			GameLog.error("执行出错" + selectSql, e);
-		} finally {
+		}
+		finally
+		{
 			closeConn(pstmt, rs);
 		}
-		
+
 		return info;
 	}
 
-	private PlayerInfo getPlayerInfo(ResultSet rs) {
+	private PlayerInfo getPlayerInfo(ResultSet rs)
+	{
 		PlayerInfo info;
-		try {
+		try
+		{
 			info = new PlayerInfo();
 			info.setUserId(rs.getLong("UserId"));
 			info.setAccountId(rs.getLong("AccountId"));
@@ -95,69 +114,90 @@ public class PlayerInfoDao extends MainDBDao {
 			info.setGuildId(rs.getLong("GuildId"));
 			info.setStrBlackUser(rs.getString("BlackUser"));
 			info.setOp(DBOption.NONE);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			info = null;
 		}
 		return info;
 	}
 
-	public PlayerInfo getPlayerByUserName(String userName) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public PlayerInfo getPlayerByUserName(String userName)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return null;
 		}
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		PlayerInfo playerInfo = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(selectNameSql);
 			pstmt.setString(1, userName);
 			rs = pstmt.executeQuery();
-			while (rs.next()) {
+			while (rs.next())
+			{
 				playerInfo = getPlayerInfo(rs);
 			}
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
 			GameLog.error("执行出错" + selectNameSql, e);
-		} finally {
+		}
+		finally
+		{
 			closeConn(pstmt, rs);
 		}
 
 		return playerInfo;
 	}
 
-	public boolean deletePlayer(long userId) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public boolean deletePlayer(long userId)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return false;
 		}
-			
+
 		boolean result = false;
 		PreparedStatement pstmt = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(deletePlayerSql);
 			pstmt.setLong(1, userId);
 			result = pstmt.executeUpdate() > -1;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			GameLog.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
-		} finally {
+		}
+		finally
+		{
 			closeConn(conn, pstmt);
 		}
-		
+
 		return result;
 	}
 
-	public void updatePlayerInfo(PlayerInfo info) {
-		if (info != null && info.beginUpdate()) {
-			Connection conn = openConn();
-			if (conn == null) {
+	public void updatePlayerInfo(PlayerInfo info)
+	{
+		if (info != null && info.beginUpdate())
+		{
+			Connection conn = getConn();
+			if (conn == null)
+			{
 				return;
 			}
-			
+
 			boolean result = false;
 			PreparedStatement pstmt = null;
 			long userId = info.getUserId();
-			try {
+			try
+			{
 				pstmt = conn.prepareStatement(updateSql);
 				pstmt.setInt(1, info.getDiamond());
 				pstmt.setInt(2, info.getGold());
@@ -179,28 +219,39 @@ public class PlayerInfoDao extends MainDBDao {
 				pstmt.setString(18, info.getStrBlackUser());
 				pstmt.setLong(19, userId);
 				result = pstmt.executeUpdate() > -1;
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				GameLog.error("调用Sql语句   " + updateSql + "出错", ex);
-			} finally {
+			}
+			finally
+			{
 				closeConn(conn, pstmt);
 			}
 			info.commitUpdate(userId, result);
 		}
 	}
 
-	public void resetState() {
-		Connection conn = openConn();
-		if (conn == null) {
+	public void resetState()
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return;
 		}
-			
+
 		PreparedStatement pstmt = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(resetStateSql);
 			pstmt.executeUpdate();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			GameLog.error("调用Sql语句   " + resetStateSql + "出错", ex);
-		} finally {
+		}
+		finally
+		{
 			closeConn(conn, pstmt);
 		}
 	}

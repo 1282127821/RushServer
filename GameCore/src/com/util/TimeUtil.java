@@ -927,8 +927,6 @@ public final class TimeUtil
 
 	/**
 	 * 获取现在是星期几和客户端匹配
-	 * 
-	 * @return
 	 */
 	public static int getNowWeek()
 	{

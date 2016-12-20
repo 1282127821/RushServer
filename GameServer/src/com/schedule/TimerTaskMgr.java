@@ -6,12 +6,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.db.DBPoolMgr;
 import com.player.WorldMgr;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
-public class TimerTaskMgr {
+public class TimerTaskMgr
+{
 	// 最小时间隔1分钟
 	protected static final int MINTIME = 1000 * 60;
 	private static Timer scanTimer;
@@ -19,7 +19,8 @@ public class TimerTaskMgr {
 	private static TimerTask saveUserData;
 	private static TimerTask checkDBPool;
 
-	public static void init() {
+	public static void init()
+	{
 		// 设置启动时间
 		Date beginDate = TimeUtil.addSystemCurTime(Calendar.SECOND, ThreadLocalRandom.current().nextInt(5) * 60);
 
@@ -36,18 +37,24 @@ public class TimerTaskMgr {
 	}
 }
 
-abstract class Task extends TimerTask {
+abstract class Task extends TimerTask
+{
 	private String name;
 
-	public Task(String name) {
+	public Task(String name)
+	{
 		this.name = "定时器任务-" + name;
 	}
 
 	@Override
-	public void run() {
-		try {
+	public void run()
+	{
+		try
+		{
 			exec();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			GameLog.error(name + "错误", e);
 		}
 	}
@@ -55,24 +62,30 @@ abstract class Task extends TimerTask {
 	public abstract void exec();
 }
 
-class SaveUserData extends Task {
-	public SaveUserData() {
+class SaveUserData extends Task
+{
+	public SaveUserData()
+	{
 		super("保存用户数据");
 	}
 
 	@Override
-	public void exec() {
+	public void exec()
+	{
 		WorldMgr.save();
 	}
 }
 
-class DBPool extends Task {
-	public DBPool() {
+class DBPool extends Task
+{
+	public DBPool()
+	{
 		super("检查连接池状态");
 	}
 
 	@Override
-	public void exec() {
-		DBPoolMgr.getInstaqnce().checkConnectionPool();
+	public void exec()
+	{
+		// DBPoolMgr.getInstaqnce().checkConnectionPool();
 	}
 }

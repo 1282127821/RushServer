@@ -1,7 +1,6 @@
 package com;
 
 public class ServerInfo {
-	public String logpath;
 	public int serverId;
 	public String ip;
 	public int port;

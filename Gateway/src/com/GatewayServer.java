@@ -18,9 +18,9 @@ public class GatewayServer extends BaseServer
 	}
 
 	@Override
-	public boolean start()
+	public boolean start(String configPath)
 	{
-		if (!super.start())
+		if (!super.start(configPath))
 		{
 			return false;
 		}
@@ -62,15 +62,14 @@ public class GatewayServer extends BaseServer
 
 	public static void main(String[] args)
 	{
-		if (args.length < 1)
+		String configPath = "../Lib/server.json";
+		if (args.length > 1)
 		{
-			System.err.println("请输入配置文件地址路径/网关服务器ID...");
-			return;
+			configPath = args[0];
 		}
 
-		configPath = args[0];
 		BaseServer gatewayServer = GatewayServer.getInstance();
-		if (!gatewayServer.start())
+		if (!gatewayServer.start(configPath))
 		{
 			GameLog.error("GateWayServer启动失败!");
 			System.exit(1);

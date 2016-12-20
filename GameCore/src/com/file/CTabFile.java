@@ -41,9 +41,9 @@ public class CTabFile
 
 		this.pathFileName = pathFileName;
 		List<String> contentList = new ArrayList<>();
-		try (BufferedReader br = Files.newBufferedReader(Paths.get(pathFileName + ".txt")))
+		try (BufferedReader bufReader = Files.newBufferedReader(Paths.get(pathFileName + ".txt")))
 		{
-			contentList = br.lines().collect(Collectors.toList());
+			contentList = bufReader.lines().collect(Collectors.toList());
 			colNames = contentList.get(0).split("\t");
 			int colNum = colNames.length;
 			totalRow = contentList.size() - 1;
@@ -56,7 +56,7 @@ public class CTabFile
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			GameLog.error("读取策划文件配置失败: pathFileName: " + pathFileName + ", " + e.getMessage());
 		}
 		return false;
 	}
