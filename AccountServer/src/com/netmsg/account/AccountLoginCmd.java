@@ -19,26 +19,36 @@ import com.util.TimeUtil;
 
 import io.netty.channel.Channel;
 
-public class AccountLoginCmd implements NetMsg {
-	public void execute(Channel channel, PBMessage packet) throws Exception {
+public class AccountLoginCmd implements NetMsg
+{
+	public void execute(Channel channel, PBMessage packet) throws Exception
+	{
 		AccountLoginMsg netMsg = AccountLoginMsg.parseFrom(packet.getMsgBody());
 		String accountName = netMsg.getAccountName();
 		AccountInfo account = AccountMgr.getInstance().getOnlineAccount(accountName);
-		if (account != null) {
-			try {
+		if (account != null)
+		{
+			try
+			{
 				KickOutPlayerMsg.Builder kickMsg = KickOutPlayerMsg.newBuilder();
 				kickMsg.setKickOutType(1);
-//				account.sendToClient(MessageUtil.buildMessage(Protocol.S_C_KICK_PLAYER, kickMsg));
-			} catch (Exception e) {
+				// account.sendToClient(MessageUtil.buildMessage(Protocol.S_C_KICK_PLAYER,
+				// kickMsg));
+			}
+			catch (Exception e)
+			{
 				GameLog.error("挤在线玩家错误  accountName : " + accountName, e);
-			} finally {
-//				long clientId = (Long) user.getSession().getAttribute(LinkedClient.KEY_ID);
-//				UserMgr.removeOnline(clientId, user.getSession());
+			}
+			finally
+			{
+				// long clientId = (Long)
+				// user.getSession().getAttribute(LinkedClient.KEY_ID);
+				// UserMgr.removeOnline(clientId, user.getSession());
 			}
 		}
-		
+
 		AccountMgr.getInstance().addAccount(accountName);
-		
+
 		// 平台密码
 		String password = netMsg.getPassword();
 		// gameId
@@ -53,7 +63,7 @@ public class AccountLoginCmd implements NetMsg {
 		String model = netMsg.getModel();
 		// 手机品牌
 		String brand = netMsg.getBrand();
-		
+
 		// 请求的ip
 		String loginIp = channel.localAddress().toString();
 		// if (!checkLoginIp(loginIp)) {
@@ -61,29 +71,34 @@ public class AccountLoginCmd implements NetMsg {
 		// }
 
 		// 验证sdk登陆
-		 boolean isSuccess = verifySDKLogin(gameId, channelId, serverId, accountName, password);
-		 if (!isSuccess) {
-			 return;
-		 }
+		boolean isSuccess = verifySDKLogin(gameId, channelId, serverId, accountName, password);
+		if (!isSuccess)
+		{
+			return;
+		}
 
 		// 手机imei 超过36截取多余的
-		if (imei.length() > 36) {
+		if (imei.length() > 36)
+		{
 			imei = imei.substring(0, 36);
 		}
-		
+
 		// 手机型号 超过36截取多余的
-		if (model.length() > 36) {
+		if (model.length() > 36)
+		{
 			model = model.substring(0, 36);
 		}
-		
+
 		// 手机品牌 超过20截取多余的
-		if (brand.length() > 20) {
+		if (brand.length() > 20)
+		{
 			brand = brand.substring(0, 20);
 		}
 
 		// 创建账号
 		AccountInfo dbAccount = getAccountInfo(accountName, loginIp, imei, model, brand, gameId);
-		if (dbAccount != null) {
+		if (dbAccount != null)
+		{
 			accountLogin(dbAccount);
 		}
 	}
@@ -91,36 +106,45 @@ public class AccountLoginCmd implements NetMsg {
 	/**
 	 * SDK的验证
 	 */
-	private boolean verifySDKLogin(String gameid, String channelId, String serverId, String accountName, String password) {
+	private boolean verifySDKLogin(String gameid, String channelId, String serverId, String accountName, String password)
+	{
 		// 是否是正式环境
-//		if (WebConfig.isFormalEnvironment) {
-			// 成功返回示例：{"code":"100","msg":"success"}
-			// 错误返回示例：{"code":"0","msg":"token error"}
-//			int code = LongtuService.getInstance().verifyLogin(gameid, channelId, serverId, accountName, password);
-//			if (code == 100) {
-//				return true;
-//			}
-//			Log.error("sdk登陆验证错误" + ", gameId:" + gameid + ", channelId:" + channelId + ", serverId:" + serverId
-//					+ ", accountName:" + accountName + ", password:" + password + ", code:" + code);
-//			 return false;
-//		} 
-		
+		// if (WebConfig.isFormalEnvironment) {
+		// 成功返回示例：{"code":"100","msg":"success"}
+		// 错误返回示例：{"code":"0","msg":"token error"}
+		// int code = LongtuService.getInstance().verifyLogin(gameid, channelId,
+		// serverId, accountName, password);
+		// if (code == 100) {
+		// return true;
+		// }
+		// Log.error("sdk登陆验证错误" + ", gameId:" + gameid + ", channelId:" +
+		// channelId + ", serverId:" + serverId
+		// + ", accountName:" + accountName + ", password:" + password + ",
+		// code:" + code);
+		// return false;
+		// }
+
 		return true;
 	}
 
 	/**
 	 * 获取账号信息，如果不存在则往数据库里面插入一个新的账号信息
 	 */
-	public static AccountInfo getAccountInfo(String accountName, String loginIP, String imei, String model, String brand, String gameId) {
+	public static AccountInfo getAccountInfo(String accountName, String loginIP, String imei, String model, String brand, String gameId)
+	{
 		AccountInfo info = DaoMgr.accountDao.getAccount(accountName);
-		if (info != null) {
+		if (info != null)
+		{
 			info.setLoginIP(loginIP);
 			boolean result = DaoMgr.accountDao.updateLoginAccount(info);
-			if (!result) {
+			if (!result)
+			{
 				GameLog.error("更新用户信息失败");
 				return null;
 			}
-		} else {
+		}
+		else
+		{
 			info = new AccountInfo();
 			info.setAccountId(BaseServer.IDWORK.nextId());
 			info.setAccountName(accountName);
@@ -128,11 +152,13 @@ public class AccountLoginCmd implements NetMsg {
 			info.setImei(imei);
 			info.setModel(model);
 			info.setBrand(brand);
-			if (StringUtil.isNotNullOrEmpty(gameId)) {
+			if (StringUtil.isNotNull(gameId))
+			{
 				info.setGameId(Integer.valueOf(gameId));
 			}
 
-			if (!DaoMgr.accountDao.addAccount(info)) {
+			if (!DaoMgr.accountDao.addAccount(info))
+			{
 				info = null;
 				GameLog.error("添加账号失败，账号名: " + accountName + "到数据库失败,请检查数据库是否正常?");
 			}
@@ -143,20 +169,23 @@ public class AccountLoginCmd implements NetMsg {
 	/**
 	 * 显示玩家
 	 */
-	private void accountLogin(AccountInfo account) {
+	private void accountLogin(AccountInfo account)
+	{
 		AccountLoginResultMsg.Builder netMsg = AccountLoginResultMsg.newBuilder();
 		int forbidExpireTime = account.getForbidExpireTime();
 		// 检查玩家是否被禁号
-		if (forbidExpireTime > 0 && TimeUtil.getSysCurSeconds() < forbidExpireTime) {
+		if (forbidExpireTime > 0 && TimeUtil.getSysCurSeconds() < forbidExpireTime)
+		{
 			netMsg.setLoginResult(2);
 			// 玩家禁号时间过期，解禁玩家
 			boolean isForbid = DaoMgr.accountDao.forbidAccount(account.getAccountId(), forbidExpireTime, "玩家禁号时间过期，系统自动解封", "系统");
-			if (!isForbid) {
+			if (!isForbid)
+			{
 				GameLog.error("玩家账号被封");
 			}
 			return;
 		}
-			
+
 		long accountId = account.getAccountId();
 		List<PlayerInfo> totalPlayerInfoList = DaoMgr.playerInfoDao.getTotalPlayerInfo(accountId);
 		netMsg.setLoginResult(1);
@@ -173,7 +202,8 @@ public class AccountLoginCmd implements NetMsg {
 		// gateway.getPort());
 		// }
 
-		for (PlayerInfo playerInfo : totalPlayerInfoList) {
+		for (PlayerInfo playerInfo : totalPlayerInfoList)
+		{
 			PlayerInfoMsg.Builder playerInfoMsg = PlayerInfoMsg.newBuilder();
 			playerInfoMsg.setUserId(playerInfo.getUserId());
 			playerInfoMsg.setUserName(playerInfo.getUserName());

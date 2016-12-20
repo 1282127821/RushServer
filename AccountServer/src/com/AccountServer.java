@@ -28,22 +28,25 @@ public class AccountServer extends BaseServer
 		return accountServer;
 	}
 
-	public boolean init()
+	@Override
+	public boolean start(String configPath)
 	{
-		// PropertyConfigurator.configure(Config.getPath("log4j.path")); //
-		// 初始化log日志
+		if (!super.start(configPath))
+		{
+			return false;
+		}
+
 		if (!initComponent(NetMsgMgr.getInstance().init(), "网络消息协议"))
 		{
 			return false;
 		}
 
 		initNet();
-		// NetConfig.getInstance().init();
-		DBPoolMgr.getInstaqnce().initMainDB(BaseServer.serverCfgInfo.mainDb);
+		DBPoolMgr.getInstance().initDBPool(serverCfgInfo.mainDb);
 		TimerTaskMgr.init();
 		return true;
 	}
-
+	
 	private boolean initNet()
 	{
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -91,14 +94,14 @@ public class AccountServer extends BaseServer
 
 	public static void main(String[] args)
 	{
-		if (args.length < 1)
+		String configPath = "../Lib/server.json";
+		if (args.length > 1)
 		{
-			System.err.println("请输入配置文件地址路径");
-			return;
+			configPath = args[0];
 		}
 
-		configPath = args[0];
-		if (!AccountServer.getInstance().init())
+		BaseServer gameServer = AccountServer.getInstance();
+		if (!gameServer.start(configPath))
 		{
 			GameLog.error("AccountServer启动失败!");
 			System.exit(1);

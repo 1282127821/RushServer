@@ -5,25 +5,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.db.MainDBDao;
+import com.db.DBDao;
 import com.util.GameLog;
 import com.util.TimeUtil;
 
-public class AccountDao extends MainDBDao {
+public class AccountDao extends DBDao
+{
 	private static final String insertSql = "insert into tbl_account(AccountId, AccountName, CreateTime, LoginIp, Imei, Model, Brand, GameId) value(?, ?, ?, ?, ?,?,1,?,?,?,?,?);";
 	private static final String selectAccountNameSql = "select * from tbl_account where AccountName = ?;";
 	private static final String forbidSql = "update tbl_account set LastLockoutDate = NOW(), ForbidReason = ?, IsForbid = ?, ForbidExpirtDate = ?, ForbidOperator = ? where AccountId = ?;";
 	private static final String updateLoginSql = "update tbl_account set LastLoginDate = ?, LoginCount = ?, LoginIp = ?, DeleteCoolTime = ?,LastLogOutDate= ? where AccountId = ?;";
 
-	public boolean addAccount(AccountInfo info) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public boolean addAccount(AccountInfo info)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return false;
 		}
-		
+
 		boolean result = false;
 		PreparedStatement pstmt = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(insertSql);
 			pstmt.setLong(1, info.getAccountId());
 			pstmt.setString(2, info.getAccountName());
@@ -35,29 +39,37 @@ public class AccountDao extends MainDBDao {
 			pstmt.setString(8, info.getBrand());
 			pstmt.setInt(9, info.getGameId());
 			result = pstmt.executeUpdate() > -1;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
-		} finally {
+		}
+		finally
+		{
 			closeConn(conn, pstmt);
 		}
-		
+
 		return result;
 	}
 
-	public AccountInfo getAccount(String accountName) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public AccountInfo getAccount(String accountName)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return null;
 		}
-		
+
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		AccountInfo info = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(selectAccountNameSql);
 			pstmt.setString(1, accountName);
 			rs = pstmt.executeQuery();
-			if (rs.last()) {
+			if (rs.last())
+			{
 				info = new AccountInfo();
 				info.setAccountId(rs.getLong("AccountId"));
 				info.setAccountName(rs.getString("AccountName"));
@@ -73,30 +85,37 @@ public class AccountDao extends MainDBDao {
 				info.setGameId(rs.getInt("GameId"));
 				info.setDelCDTime(rs.getInt("DelCDTime"));
 			}
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
 			info = null;
 			GameLog.error("执行出错", e);
-		} finally {
+		}
+		finally
+		{
 			closeConn(pstmt, rs);
 		}
-		
+
 		return info;
 	}
 
-	public boolean updateLoginAccount(AccountInfo account) {
-//		if (!TimeUtil.dateCompare(account.getLastLoginDate())) {
-//			account.setLoginTime(TimeUtil.getSysCurSeconds());
-//			account.setLoginCount(account.getLoginCount() + 1);
-//		}
-		
-		Connection conn = openConn();
-		if (conn == null) {
+	public boolean updateLoginAccount(AccountInfo account)
+	{
+		// if (!TimeUtil.dateCompare(account.getLastLoginDate())) {
+		// account.setLoginTime(TimeUtil.getSysCurSeconds());
+		// account.setLoginCount(account.getLoginCount() + 1);
+		// }
+
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return false;
 		}
-			
+
 		boolean result = false;
 		PreparedStatement pstmt = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(updateLoginSql);
 			pstmt.setLong(1, account.getLoginTime());
 			pstmt.setInt(2, account.getLoginCount());
@@ -104,38 +123,49 @@ public class AccountDao extends MainDBDao {
 			pstmt.setInt(4, account.getDelCDTime());
 			pstmt.setInt(5, account.getLogoutTime());
 			pstmt.setLong(6, account.getAccountId());
-			
+
 			result = pstmt.executeUpdate() > -1;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			GameLog.error("调用Sql语句   " + updateLoginSql + "出错", ex);
-		} finally {
+		}
+		finally
+		{
 			closeConn(conn, pstmt);
 		}
-		
+
 		return result;
 	}
 
-	public boolean forbidAccount(long accountId, int forbidExpiretTime, String forbidReason, String forbidOperator) {
-		Connection conn = openConn();
-		if (conn == null) {
+	public boolean forbidAccount(long accountId, int forbidExpiretTime, String forbidReason, String forbidOperator)
+	{
+		Connection conn = getConn();
+		if (conn == null)
+		{
 			return false;
 		}
-			
+
 		boolean result = false;
 		PreparedStatement pstmt = null;
-		try {
+		try
+		{
 			pstmt = conn.prepareStatement(forbidSql);
 			pstmt.setLong(1, accountId);
 			pstmt.setInt(2, forbidExpiretTime);
 			pstmt.setString(3, forbidReason);
 			pstmt.setString(4, forbidOperator);
 			result = pstmt.executeUpdate() > -1;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			GameLog.error("调用Sql语句   " + forbidSql + "出错", ex);
-		} finally {
+		}
+		finally
+		{
 			closeConn(conn, pstmt);
 		}
-		
+
 		return result;
 	}
 }

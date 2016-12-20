@@ -3,7 +3,8 @@ package com.game;
 /**
  * 玩家详细信息
  */
-public class PlayerInfo {
+public class PlayerInfo
+{
 	/**
 	 * 玩家的Id
 	 */
@@ -23,7 +24,7 @@ public class PlayerInfo {
 	 * 玩家的职业Id
 	 */
 	private int jobId;
-	
+
 	/**
 	 * 玩家的等级
 	 */
@@ -34,57 +35,71 @@ public class PlayerInfo {
 	 */
 	private int createTime;
 
-	public long getUserId() {
+	public long getUserId()
+	{
 		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(long userId)
+	{
 		this.userId = userId;
 	}
 
-	public long getAccountId() {
+	public long getAccountId()
+	{
 		return accountId;
 	}
 
-	public void setAccountId(long accountId) {
+	public void setAccountId(long accountId)
+	{
 		this.accountId = accountId;
 	}
 
-	public String getUserName() {
+	public String getUserName()
+	{
 		return userName;
 	}
 
-	public void setUserName(String userName) {
-		if (this.userName == null || !this.userName.equals(userName)) {
+	public void setUserName(String userName)
+	{
+		if (this.userName == null || !this.userName.equals(userName))
+		{
 			this.userName = userName;
 		}
 	}
 
-	public int getJobId() {
+	public int getJobId()
+	{
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(int jobId)
+	{
 		this.jobId = jobId;
 	}
 
-	public int getPlayerLv() {
+	public int getPlayerLv()
+	{
 		return playerLv;
 	}
 
-	public void setPlayerLv(int playerLv) {
+	public void setPlayerLv(int playerLv)
+	{
 		this.playerLv = playerLv;
 	}
 
-	public int getCreateTime() {
+	public int getCreateTime()
+	{
 		return createTime;
 	}
-	
-	public void setCreateTime(int createTime) {
+
+	public void setCreateTime(int createTime)
+	{
 		this.createTime = createTime;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("userId:		").append(userId).append("\n");
 		sb.append("userName:	").append(userName).append("\n");
