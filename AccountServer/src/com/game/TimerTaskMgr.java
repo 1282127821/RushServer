@@ -3,7 +3,7 @@ package com.game;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.util.GameLog;
+import com.util.Log;
 
 public class TimerTaskMgr
 {
@@ -34,7 +34,7 @@ class DBPool extends TimerTask
 		}
 		catch (Exception e)
 		{
-			GameLog.error("检查数据库连接的定时任务异常", e);
+			Log.error("检查数据库连接的定时任务异常", e);
 		}
 	}
 }

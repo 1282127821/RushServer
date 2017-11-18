@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.file.CTabFile;
 import com.player.GameConst;
 import com.player.PropertyInfo;
 import com.prop.PropTemplate;
 import com.prop.PropType;
+import com.util.CTabFile;
 
 public final class ItemTemplateMgr {
 	/**

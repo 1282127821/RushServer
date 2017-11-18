@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.db.DBDao;
 import com.db.DBOption;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class GuildEventDao extends DBDao
@@ -44,7 +44,7 @@ public class GuildEventDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertEventSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertEventSql + "出错", ex);
 			}
 			finally
 			{
@@ -72,7 +72,7 @@ public class GuildEventDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deleteEventByTimeSql + "出错", ex);
+			Log.error("调用Sql语句   " + deleteEventByTimeSql + "出错", ex);
 		}
 		finally
 		{
@@ -115,7 +115,7 @@ public class GuildEventDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectEventSql, e);
+			Log.error("执行出错" + selectEventSql, e);
 		}
 		finally
 		{
@@ -144,7 +144,7 @@ public class GuildEventDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deleteEventSql + "出错", ex);
+			Log.error("调用Sql语句   " + deleteEventSql + "出错", ex);
 		}
 		finally
 		{
@@ -172,7 +172,7 @@ public class GuildEventDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deleteAllEventSql + "出错", ex);
+			Log.error("调用Sql语句   " + deleteAllEventSql + "出错", ex);
 		}
 		finally
 		{

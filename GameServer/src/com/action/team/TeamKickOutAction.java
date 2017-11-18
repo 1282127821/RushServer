@@ -1,22 +1,23 @@
 package com.action.team;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.player.GamePlayer;
-import com.room.RoomMgr;
 import com.team.TeamMgr;
 
-public class TeamKickOutAction extends Action {
+public class TeamKickOutAction extends AbstractAction
+{
 	private GamePlayer player;
 	private long userId;
-	
-	public TeamKickOutAction(GamePlayer player, long userId) {
-		super(RoomMgr.executor.getDefaultQueue());
+
+	public TeamKickOutAction(GamePlayer player, long userId)
+	{
 		this.player = player;
 		this.userId = userId;
 	}
-	
+
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		TeamMgr.getInstance().kickOutTeam(player, userId);
 	}
 }

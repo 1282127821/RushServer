@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.db.DBDao;
 import com.db.DBOption;
-import com.util.GameLog;
+import com.util.Log;
 
 public class FightSkillInfoDao extends DBDao
 {
@@ -45,7 +45,7 @@ public class FightSkillInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertSkillSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertSkillSql + "出错", ex);
 			}
 			finally
 			{
@@ -78,7 +78,7 @@ public class FightSkillInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + updateSkillSql + "出错", ex);
+				Log.error("调用Sql语句   " + updateSkillSql + "出错", ex);
 			}
 			finally
 			{
@@ -117,7 +117,7 @@ public class FightSkillInfoDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectSkillSql, e);
+			Log.error("执行出错" + selectSkillSql, e);
 		}
 		finally
 		{
@@ -150,7 +150,7 @@ public class FightSkillInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertSkillChainSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertSkillChainSql + "出错", ex);
 			}
 			finally
 			{
@@ -182,7 +182,7 @@ public class FightSkillInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + updateSkillChainSql + "出错", ex);
+				Log.error("调用Sql语句   " + updateSkillChainSql + "出错", ex);
 			}
 			finally
 			{
@@ -219,7 +219,7 @@ public class FightSkillInfoDao extends DBDao
 		catch (SQLException e)
 		{
 			info = null;
-			GameLog.error("执行出错" + selectSkillChainSql, e);
+			Log.error("执行出错" + selectSkillChainSql, e);
 		}
 		finally
 		{

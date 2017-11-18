@@ -6,12 +6,11 @@ import com.pbmessage.GamePBMsg.KickOutPlayerMsg;
 import com.protocol.Protocol;
 import com.user.NetMsgMgr;
 import com.user.UserMgr;
-import com.util.GameLog;
+import com.util.Log;
 
 public class GatewayServer extends BaseServer
 {
 	private static GatewayServer gatewayServer = new GatewayServer();
-
 	public static GatewayServer getInstance()
 	{
 		return gatewayServer;
@@ -71,9 +70,9 @@ public class GatewayServer extends BaseServer
 		BaseServer gatewayServer = GatewayServer.getInstance();
 		if (!gatewayServer.start(configPath))
 		{
-			GameLog.error("GateWayServer启动失败!");
+			Log.error("GateWayServer启动失败!");
 			System.exit(1);
 		}
-		GameLog.info("GatewayServer启动成功!");
+		Log.info("GatewayServer启动成功!");
 	}
 }

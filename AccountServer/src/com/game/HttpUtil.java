@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.util.GameLog;
+import com.util.Log;
 
 public class HttpUtil {
 	private static final String REQUEST_METHOD_POST = "POST";
@@ -119,7 +119,7 @@ public class HttpUtil {
 
 			urlCon.getResponseMessage();
 		} catch (IOException e) {
-			GameLog.error("urlconnection error , url " + reqUrl, e);
+			Log.error("urlconnection error , url " + reqUrl, e);
 		} finally {
 			if (urlCon != null) {
 				urlCon.disconnect();
@@ -166,7 +166,7 @@ public class HttpUtil {
 			urlCon.getResponseMessage();
 
 		} catch (IOException e) {
-			GameLog.error("urlconnection error , url " + reqUrl, e);
+			Log.error("urlconnection error , url " + reqUrl, e);
 		} finally {
 			if (urlCon != null) {
 				urlCon.disconnect();

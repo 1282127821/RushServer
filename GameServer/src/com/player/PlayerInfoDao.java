@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.db.DBDao;
 import com.db.DBOption;
-import com.util.GameLog;
+import com.util.Log;
 
 public class PlayerInfoDao extends DBDao
 {
@@ -47,7 +47,7 @@ public class PlayerInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertSql + "出错", ex);
 			}
 			finally
 			{
@@ -81,7 +81,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectSql, e);
+			Log.error("执行出错" + selectSql, e);
 		}
 		finally
 		{
@@ -145,7 +145,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectNameSql, e);
+			Log.error("执行出错" + selectNameSql, e);
 		}
 		finally
 		{
@@ -173,7 +173,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
+			Log.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
 		}
 		finally
 		{
@@ -222,7 +222,7 @@ public class PlayerInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + updateSql + "出错", ex);
+				Log.error("调用Sql语句   " + updateSql + "出错", ex);
 			}
 			finally
 			{
@@ -248,7 +248,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + resetStateSql + "出错", ex);
+			Log.error("调用Sql语句   " + resetStateSql + "出错", ex);
 		}
 		finally
 		{

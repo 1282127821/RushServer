@@ -5,7 +5,7 @@ import java.util.Date;
 import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
 import com.player.GamePlayer;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class PlayerLoginReceiveCmd implements NetCmd {
@@ -25,7 +25,7 @@ public class PlayerLoginReceiveCmd implements NetCmd {
 			//发送所有邮件信息列表给客户端
 			player.getMailMgr().sendTotalMail();
 		} else {
-			GameLog.error(userId + " " + player.getUserName() + "当前用户状态不正确  state " + player.getPlayerState());
+			Log.error(userId + " " + player.getUserName() + "当前用户状态不正确  state " + player.getPlayerState());
 		}
 	}
 }

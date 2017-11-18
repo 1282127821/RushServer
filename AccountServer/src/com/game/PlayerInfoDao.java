@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.db.DBDao;
-import com.util.GameLog;
+import com.util.Log;
 
 public class PlayerInfoDao extends DBDao
 {
@@ -40,7 +40,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+			Log.error("调用Sql语句   " + insertSql + "出错", ex);
 		}
 		finally
 		{
@@ -64,7 +64,7 @@ public class PlayerInfoDao extends DBDao
 		catch (Exception e)
 		{
 			info = null;
-			GameLog.error("执行出错" + sql, e);
+			Log.error("执行出错" + sql, e);
 		}
 		return info;
 	}
@@ -92,7 +92,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectAllSql, e);
+			Log.error("执行出错" + selectAllSql, e);
 		}
 		finally
 		{
@@ -120,7 +120,7 @@ public class PlayerInfoDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
+			Log.error("调用Sql语句   " + deletePlayerSql + "出错", ex);
 		}
 		finally
 		{

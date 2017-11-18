@@ -1,7 +1,7 @@
 package com.table;
 
-import com.file.CTabFile;
 import com.prop.QualityType;
+import com.util.CTabFile;
 
 public class EquipBlessInfoMgr {
 	private EquipBlessInfo[] aryBlessInfo;

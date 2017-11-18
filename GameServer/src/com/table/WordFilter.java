@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.file.CTabFile;
-import com.util.GameLog;
+import com.util.CTabFile;
+import com.util.Log;
 
 /**
  * 敏感词过滤，主要用于角色取名，聊天和帮会取名判断是否合法
@@ -54,7 +54,7 @@ public final class WordFilter {
 			
 			createTree();
 		} catch (Exception e) {
-			GameLog.error("敏感词初始化失败", e);
+			Log.error("敏感词初始化失败", e);
 		}
 	}
 

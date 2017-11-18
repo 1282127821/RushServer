@@ -11,6 +11,7 @@ import com.player.GameConst;
 import com.player.GamePlayer;
 import com.player.ItemChangeType;
 import com.protocol.Protocol;
+import com.room.RoomMgr;
 import com.table.ConfigMgr;
 import com.util.DirtyData;
 
@@ -61,6 +62,6 @@ public class GuildCreateCmd implements NetCmd
 			return;
 		}
 
-		GuildMgr.getInstance().enDefaultQueue(new GuildCreateAction(player, guildName, guildSlogan, netMsg.getGuildEmblem()));
+		RoomMgr.getInstance().addAction(new GuildCreateAction(player, guildName, guildSlogan, netMsg.getGuildEmblem()));
 	}
 }

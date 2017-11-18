@@ -1,6 +1,6 @@
 package com.db;
 
-import com.util.GameLog;
+import com.util.Log;
 
 public class DBObject
 {
@@ -38,7 +38,7 @@ public class DBObject
 		if (!result)
 		{
 			setOp(DBOption.INSERT);
-			GameLog.error("添加出错了，状态还原, UserId:  " + userId + "\n" + toString());
+			Log.error("添加出错了，状态还原, UserId:  " + userId + "\n" + toString());
 		}
 	}
 
@@ -60,7 +60,7 @@ public class DBObject
 		if (!result)
 		{
 			setOp(DBOption.UPDATE);
-			GameLog.error("更新出错了，状态还原, UserId:  " + userId + "\n" + toString());
+			Log.error("更新出错了，状态还原, UserId:  " + userId + "\n" + toString());
 		}
 	}
 
@@ -82,7 +82,7 @@ public class DBObject
 		if (!result)
 		{
 			setOp(DBOption.DELETE);
-			GameLog.error("删除数据出错，状态还原, UserId:  " + userId + "\n" + toString());
+			Log.error("删除数据出错，状态还原, UserId:  " + userId + "\n" + toString());
 		}
 	}
 }

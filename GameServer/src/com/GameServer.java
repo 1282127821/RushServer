@@ -11,7 +11,6 @@ import com.player.DaoMgr;
 import com.player.LoginMgr;
 import com.player.WorldMgr;
 import com.room.RoomMgr;
-import com.schedule.MinListenMgr;
 import com.schedule.TimerTaskMgr;
 import com.table.BuffInfoMgr;
 import com.table.CharacterInfoMgr;
@@ -30,7 +29,7 @@ import com.table.MainTaskInfoMgr;
 import com.table.RewardInfoMgr;
 import com.table.SkillTemplateMgr;
 import com.util.DirtyData;
-import com.util.GameLog;
+import com.util.Log;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -180,8 +179,8 @@ public final class GameServer extends BaseServer
 		int netPort = 1001;
 		try
 		{
-			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO))
+			ServerBootstrap bootstrap = new ServerBootstrap();
+			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO))
 					.childHandler(new ChannelInitializer<SocketChannel>()
 					{
 						@Override
@@ -195,13 +194,13 @@ public final class GameServer extends BaseServer
 							p.addLast(new GameServerHandler());
 						}
 					});
-			GameLog.info("启动登录服务器成功, port : " + netPort);
-			Channel ch = b.bind(netPort).sync().channel();
+			Log.info("启动登录服务器成功, port : " + netPort);
+			Channel ch = bootstrap.bind(netPort).sync().channel();
 			ch.closeFuture().sync();
 		}
 		catch (Exception e)
 		{
-			GameLog.error("启动登录服务器失败, port : " + netPort, e);
+			Log.error("启动登录服务器失败, port : " + netPort, e);
 		}
 		finally
 		{
@@ -244,7 +243,6 @@ public final class GameServer extends BaseServer
 		}
 
 		TimerTaskMgr.init();
-		MinListenMgr.getInstance().init();
 		setTerminate(false);
 		return true;
 	}
@@ -253,7 +251,6 @@ public final class GameServer extends BaseServer
 	{
 		WorldMgr.save();
 		RoomMgr.getInstance().stop();
-		MinListenMgr.getInstance().stop();
 		return true;
 	}
 
@@ -269,11 +266,11 @@ public final class GameServer extends BaseServer
 		BaseServer gameServer = GameServer.getInstance();
 		if (!gameServer.start(configPath))
 		{
-			GameLog.error("GameServer启动失败!");
+			Log.error("GameServer启动失败!");
 			System.exit(1);
 		}
 
-		GameLog.info("GameServer启动成功，启动耗时: " + (Clock.systemDefaultZone().millis() - time));
+		Log.info("GameServer启动成功，启动耗时: " + (Clock.systemDefaultZone().millis() - time));
 	}
 }
 
@@ -282,8 +279,8 @@ class ServerShutdownHook extends Thread
 	@Override
 	public void run()
 	{
-		GameLog.info("ServerShutDown hook is running");
+		Log.info("ServerShutDown hook is running");
 		GameServer.getInstance().stop();
-		GameLog.info("ServerShutDown hook was run");
+		Log.info("ServerShutDown hook was run");
 	}
 }

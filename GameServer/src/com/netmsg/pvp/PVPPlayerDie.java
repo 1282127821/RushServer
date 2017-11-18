@@ -9,7 +9,7 @@ import com.player.GamePlayer;
 import com.room.Room;
 import com.room.RoomBossInfo;
 import com.room.RoomPlayer;
-import com.util.GameLog;
+import com.util.Log;
 
 public class PVPPlayerDie implements NetCmd {
 
@@ -21,7 +21,7 @@ public class PVPPlayerDie implements NetCmd {
 			if (roomBossInfo.pvpId == netMsg.getPvpId()) {
 				// 判断房间里面是否有跟自己敌对阵营的玩家 包括BOSS也需要判断 需要设置房间玩家的状态为死亡
 				if (roomBossInfo.bossMasterId == player.getUserId()) {
-					GameLog.info("LZGLZG PVPPlayerDie BOSS Die " + netMsg.getPvpId());
+					Log.info("LZGLZG PVPPlayerDie BOSS Die " + netMsg.getPvpId());
 					roomBossInfo.isDead = true;
 					room.isPVPEnd();
 				}
@@ -29,7 +29,7 @@ public class PVPPlayerDie implements NetCmd {
 				List<RoomPlayer> roomPlayerList = room.getTotalRoomPlayer();
 				for (RoomPlayer roomPlayer : roomPlayerList) {
 					if (roomPlayer.pvpId == netMsg.getPvpId()) {
-						GameLog.info("LZGLZG PVPPlayerDie PlayerDie " + netMsg.getPvpId());
+						Log.info("LZGLZG PVPPlayerDie PlayerDie " + netMsg.getPvpId());
 						roomPlayer.isDead = true;
 						room.isPVPEnd();
 						break;

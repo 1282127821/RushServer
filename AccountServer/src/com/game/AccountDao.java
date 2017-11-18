@@ -6,12 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.db.DBDao;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class AccountDao extends DBDao
 {
-	private static final String insertSql = "insert into tbl_account(AccountId, AccountName, CreateTime, LoginIp, Imei, Model, Brand, GameId) value(?, ?, ?, ?, ?,?,1,?,?,?,?,?);";
+	private static final String insertSql = "insert into tbl_account(AccountId, AccountName, CreateTime, LoginIp, Imei, Model, Brand, GameId) value(?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String selectAccountNameSql = "select * from tbl_account where AccountName = ?;";
 	private static final String forbidSql = "update tbl_account set LastLockoutDate = NOW(), ForbidReason = ?, IsForbid = ?, ForbidExpirtDate = ?, ForbidOperator = ? where AccountId = ?;";
 	private static final String updateLoginSql = "update tbl_account set LastLoginDate = ?, LoginCount = ?, LoginIp = ?, DeleteCoolTime = ?,LastLogOutDate= ? where AccountId = ?;";
@@ -31,18 +31,17 @@ public class AccountDao extends DBDao
 			pstmt = conn.prepareStatement(insertSql);
 			pstmt.setLong(1, info.getAccountId());
 			pstmt.setString(2, info.getAccountName());
-			pstmt.setTimestamp(3, TimeUtil.getSysteCurTime());
+			pstmt.setInt(3, info.getCreateTime());
 			pstmt.setString(4, info.getLoginIP());
-			pstmt.setTimestamp(5, TimeUtil.getSysteCurTime());
-			pstmt.setString(6, info.getImei());
-			pstmt.setString(7, info.getModel());
-			pstmt.setString(8, info.getBrand());
-			pstmt.setInt(9, info.getGameId());
+			pstmt.setString(5, info.getImei());
+			pstmt.setString(6, info.getModel());
+			pstmt.setString(7, info.getBrand());
+			pstmt.setInt(8, info.getGameId());
 			result = pstmt.executeUpdate() > -1;
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+			Log.error("调用Sql语句   " + insertSql + "出错", ex);
 		}
 		finally
 		{
@@ -89,7 +88,7 @@ public class AccountDao extends DBDao
 		catch (SQLException e)
 		{
 			info = null;
-			GameLog.error("执行出错", e);
+			Log.error("执行出错", e);
 		}
 		finally
 		{
@@ -128,7 +127,7 @@ public class AccountDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + updateLoginSql + "出错", ex);
+			Log.error("调用Sql语句   " + updateLoginSql + "出错", ex);
 		}
 		finally
 		{
@@ -159,7 +158,7 @@ public class AccountDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + forbidSql + "出错", ex);
+			Log.error("调用Sql语句   " + forbidSql + "出错", ex);
 		}
 		finally
 		{

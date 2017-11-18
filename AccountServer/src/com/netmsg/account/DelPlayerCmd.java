@@ -7,13 +7,16 @@ import com.pbmessage.GamePBMsg.PlayerInfoMsg;
 
 import io.netty.channel.Channel;
 
-public class DelPlayerCmd implements NetMsg {
-	public void execute(Channel channel, PBMessage packet) throws Exception {
+public class DelPlayerCmd implements NetMsg
+{
+	public void execute(Channel channel, PBMessage packet) throws Exception
+	{
 		PlayerInfoMsg netMsg = PlayerInfoMsg.parseFrom(packet.getMsgBody());
-		//TODO:LZGLZG判断是否有删除的冷却时间
+		// TODO:LZGLZG判断是否有删除的冷却时间
 		boolean isSuccess = DaoMgr.playerInfoDao.deletePlayer(netMsg.getUserId());
-		if (isSuccess) {
-			
+		if (isSuccess)
+		{
+
 		}
 	}
 }

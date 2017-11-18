@@ -1,20 +1,21 @@
 package com.action.team;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.player.GamePlayer;
-import com.room.RoomMgr;
 import com.team.TeamMgr;
 
-public class TeamCreateAction extends Action {
+public class TeamCreateAction extends AbstractAction
+{
 	private GamePlayer player;
-	
-	public TeamCreateAction(GamePlayer player) {
-		super(RoomMgr.executor.getDefaultQueue());
+
+	public TeamCreateAction(GamePlayer player)
+	{
 		this.player = player;
 	}
-	
+
 	@Override
-	public void execute() {
-		TeamMgr.getInstance().createTeam( player);
+	public void execute()
+	{
+		TeamMgr.getInstance().createTeam(player);
 	}
 }

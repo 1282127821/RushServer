@@ -16,7 +16,7 @@ import com.table.ConfigMgr;
 import com.table.EquipForbiddenInfoMgr;
 import com.table.EquipInlayInfo;
 import com.table.EquipInlayInfoMgr;
-import com.util.GameLog;
+import com.util.Log;
 
 public class EquipInlayCmd implements NetCmd {
 	public void execute(GamePlayer player, PBMessage packet) throws Exception {
@@ -40,37 +40,37 @@ public class EquipInlayCmd implements NetCmd {
 	private  void equipInlay(GamePlayer player, int operType, int bagType, int posIndex, int inlayPosIndex, int cardPosIndex) {
 		PlayerPropMgr propMgr = player.getPropMgr();
 		if (propMgr == null) {
-			GameLog.error("装备镶嵌卡片错误, PlayerPropMgr为空." + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, PlayerPropMgr为空." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		PropInventory equipInventory = propMgr.getPropInventory(bagType);
 		if (equipInventory == null) {
-			GameLog.error("装备镶嵌卡片错误, equipInventory为空." + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, equipInventory为空." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		PropInventory propInventory = propMgr.getPropInventory(BagType.PACKAGE);
 		if (propInventory == null) {
-			GameLog.error("装备镶嵌卡片错误, propInventory为空." + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, propInventory为空." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		Prop equip = equipInventory.getPropByPosIndex(posIndex);
 		if (equip == null) {
-			GameLog.error("装备镶嵌卡片错误, 装备为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 装备为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		int masterType = equip.getMasterType();
 		if (equip.getMasterType() != PropType.EQUIP) {
-			GameLog.error("装备镶嵌卡片出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
 			return;
 		}
 		
 		Prop cardMaterialInfo = propInventory.getPropByPosIndex(cardPosIndex);
 		if (cardMaterialInfo == null) {
-			GameLog.error("装备镶嵌卡片错误, 镶嵌的卡片为空，位置为:  " + cardPosIndex + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 镶嵌的卡片为空，位置为:  " + cardPosIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 
@@ -78,14 +78,14 @@ public class EquipInlayCmd implements NetCmd {
 		boolean isForbidden = EquipForbiddenInfoMgr.getInstance().isEquipInlayForbidden(equipId);
 		if (isForbidden) {
 			player.sendTips(1038);
-			GameLog.error("装备镶嵌卡片错误, 该装备不能够被镶嵌，equipId为:  " + equipId + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 该装备不能够被镶嵌，equipId为:  " + equipId + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		int cardId = cardMaterialInfo.getItemTempInfo().itemId;
 		EquipInlayInfo equipInlayInfo = EquipInlayInfoMgr.getInstance().getInlayCardInfo(cardId);
 		if (equipInlayInfo == null) {
-			GameLog.error("装备镶嵌卡片错误, 镶嵌的卡片不对，在表中找不到，cardId为:  " + cardId + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 镶嵌的卡片不对，在表中找不到，cardId为:  " + cardId + ", UserId: " + player.getUserId());
 			return;
 		}
 
@@ -103,7 +103,7 @@ public class EquipInlayCmd implements NetCmd {
 		}
 
 		if (equip.isInlayCard(inlayPosIndex)) {
-			GameLog.error("装备镶嵌卡片错误, 当前槽位已有卡片，需要先摘取才可以镶嵌:  " + inlayPosIndex + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 当前槽位已有卡片，需要先摘取才可以镶嵌:  " + inlayPosIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 
@@ -118,14 +118,14 @@ public class EquipInlayCmd implements NetCmd {
 		}
 
 		if (!isCanInlay) {
-			GameLog.error("装备镶嵌卡片错误, 玩家等级: " + playerLv + ",镶嵌的孔位为: " + inlayPosIndex + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 玩家等级: " + playerLv + ",镶嵌的孔位为: " + inlayPosIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 		
 		int costGold = ConfigMgr.equipInlayBase + cardMaterialInfo.getQuality() * ConfigMgr.equipInlayQualityFactor;
 		int haveGold = player.getGold();
 		if (costGold > haveGold) {
-			GameLog.error("装备镶嵌卡片错误, 所需金钱: " + costGold + ",当前金钱: " + haveGold + ", UserId: " + player.getUserId());
+			Log.error("装备镶嵌卡片错误, 所需金钱: " + costGold + ",当前金钱: " + haveGold + ", UserId: " + player.getUserId());
 			return;
 		}
 		
@@ -152,30 +152,30 @@ public class EquipInlayCmd implements NetCmd {
 	private void equipUnInlay(GamePlayer player, int operType, int bagType, int posIndex, int inlayPosIndex) {
 		PlayerPropMgr propMgr = player.getPropMgr();
 		if (propMgr == null) {
-			GameLog.error("equipUnInlay Error, PlayerPropMgr is NULL." + ", UserId: " + player.getUserId());
+			Log.error("equipUnInlay Error, PlayerPropMgr is NULL." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		PropInventory equipInventory = propMgr.getPropInventory(bagType);
 		if (equipInventory == null) {
-			GameLog.error("equipUnInlay Error, equipInventory is NULL." + ", UserId: " + player.getUserId());
+			Log.error("equipUnInlay Error, equipInventory is NULL." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		Prop equip = equipInventory.getPropByPosIndex(posIndex);
 		if (equip == null) {
-			GameLog.error("equipUnInlay Error, 道具为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
+			Log.error("equipUnInlay Error, 道具为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		int masterType = equip.getMasterType();
 		if (equip.getMasterType() != PropType.EQUIP) {
-			GameLog.error("装备摘取卡片出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
+			Log.error("装备摘取卡片出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
 			return;
 		}
 		
 		if (!equip.isInlayCard(inlayPosIndex)) {
-			GameLog.error("equipUnInlay Error, 当前槽位并没有卡片可以摘取:  " + inlayPosIndex + ", UserId: " + player.getUserId());
+			Log.error("equipUnInlay Error, 当前槽位并没有卡片可以摘取:  " + inlayPosIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 

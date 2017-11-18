@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.db.DBDao;
 import com.db.DBOption;
-import com.util.GameLog;
+import com.util.Log;
 
 public class GuildApplyDao extends DBDao
 {
@@ -43,7 +43,7 @@ public class GuildApplyDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertSql + "出错", ex);
 			}
 			finally
 			{
@@ -92,7 +92,7 @@ public class GuildApplyDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectSql, e);
+			Log.error("执行出错" + selectSql, e);
 		}
 		finally
 		{
@@ -121,7 +121,7 @@ public class GuildApplyDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deleteApplySql + "出错", ex);
+			Log.error("调用Sql语句   " + deleteApplySql + "出错", ex);
 		}
 		finally
 		{
@@ -149,7 +149,7 @@ public class GuildApplyDao extends DBDao
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("调用Sql语句   " + deleteAllApplySql + "出错", ex);
+			Log.error("调用Sql语句   " + deleteAllApplySql + "出错", ex);
 		}
 		finally
 		{

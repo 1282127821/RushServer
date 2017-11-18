@@ -1,6 +1,6 @@
 package com.table;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 
 public class CharacterInfoMgr {
 	private CharacterInfo[] aryCharacterInfo;

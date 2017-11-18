@@ -12,7 +12,7 @@ import com.guild.GuildMgr;
 import com.netmsg.PBMessage;
 import com.netmsg.player.GamePlayerDisposeCmd;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.StringUtil;
 import com.util.TimeUtil;
 
@@ -50,7 +50,7 @@ public class WorldMgr
 		}
 		catch (Exception e)
 		{
-			GameLog.error(String.format("accountId:%s userName: %s jobId %s", accountId, userName, jobId), e);
+			Log.error(String.format("accountId:%s userName: %s jobId %s", accountId, userName, jobId), e);
 		}
 		return -1;
 	}
@@ -72,7 +72,7 @@ public class WorldMgr
 		}
 		catch (Exception e)
 		{
-			GameLog.error(String.format("删除角色错误 accountId:%s userid %s", accountId, userId), e);
+			Log.error(String.format("删除角色错误 accountId:%s userid %s", accountId, userId), e);
 		}
 		return true;
 	}
@@ -96,7 +96,7 @@ public class WorldMgr
 	{
 		if (userId <= 0)
 		{
-			GameLog.error("获取用户数据不存在: " + userId);
+			Log.error("获取用户数据不存在: " + userId);
 			return null;
 		}
 
@@ -110,7 +110,7 @@ public class WorldMgr
 		PlayerInfo playerInfo = DaoMgr.playerInfoDao.getPlayerInfo(userId);
 		if (playerInfo == null)
 		{
-			GameLog.error("当前数据库playerinfo中不存在UserId: " + userId);
+			Log.error("当前数据库playerinfo中不存在UserId: " + userId);
 			return null;
 		}
 
@@ -118,7 +118,7 @@ public class WorldMgr
 		GamePlayer player = new GamePlayer();
 		if (!player.loadShareData(playerInfo))
 		{
-			GameLog.error("实例化用户 共享数据失败，请检查数据库初始化。 UserId: " + userId);
+			Log.error("实例化用户 共享数据失败，请检查数据库初始化。 UserId: " + userId);
 			return null;
 		}
 		players.addPlayer(userId, player);
@@ -181,7 +181,7 @@ public class WorldMgr
 		}
 		catch (Exception e)
 		{
-			GameLog.error("保存数据出错,userId: " + userId, e);
+			Log.error("保存数据出错,userId: " + userId, e);
 		}
 	}
 
@@ -214,7 +214,7 @@ public class WorldMgr
 		}
 		catch (Exception ex)
 		{
-			GameLog.error("用户退出失败, userId : " + player.getUserId() + ", userName : " + player.getUserName() + ", state : " + player.getPlayerState(), ex);
+			Log.error("用户退出失败, userId : " + player.getUserId() + ", userName : " + player.getUserName() + ", state : " + player.getPlayerState(), ex);
 		}
 		return true;
 	}
@@ -264,7 +264,7 @@ public class WorldMgr
 		}
 		catch (Exception e)
 		{
-			GameLog.error("凌晨5点重置在线玩家的数据错误", e);
+			Log.error("凌晨5点重置在线玩家的数据错误", e);
 		}
 	}
 }

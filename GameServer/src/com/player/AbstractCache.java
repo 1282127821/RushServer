@@ -1,6 +1,6 @@
 package com.player;
 
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public abstract class AbstractCache {
@@ -107,7 +107,7 @@ public abstract class AbstractCache {
 	protected void debugMsg(String name, String pass, String opString) {
 		if (isDebug) {
 			String msg = String.format("【%s】,用户%s 密码%s：%s了，", TimeUtil.getSysteCurTime(), name, pass, opString);
-			GameLog.info(msg);
+			Log.info(msg);
 		}
 	}
 

@@ -10,7 +10,7 @@ import com.player.GamePlayer;
 import com.player.LoginMgr;
 import com.player.WorldMgr;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 
 public class UserValidateCmd implements NetCmd {
 	public void execute(GamePlayer player, PBMessage packet) throws Exception {
@@ -21,12 +21,12 @@ public class UserValidateCmd implements NetCmd {
 		long accountId = loginReq.getAccountId();
 		boolean result = true;
 		if (!token.equalsIgnoreCase(LoginMgr.getKey(accountId))) {
-			GameLog.error("验证token值不对: " + token + " " + LoginMgr.getKey(accountId) + " " + accountId);
+			Log.error("验证token值不对: " + token + " " + LoginMgr.getKey(accountId) + " " + accountId);
 			result = false;
 		}
 
 		if (LoginMgr.isLoginWaitOpen() && WorldMgr.getOnlineCount() >= LoginMgr.getOnlineMan()) {
-			GameLog.error("服务器人数达至上限，拒绝: " + userId + "连接.... onlineCount : " + WorldMgr.getOnlineCount());
+			Log.error("服务器人数达至上限，拒绝: " + userId + "连接.... onlineCount : " + WorldMgr.getOnlineCount());
 			result = false;
 		}
 

@@ -14,7 +14,7 @@ import com.player.ItemChangeType;
 import com.protocol.Protocol;
 import com.table.ItemTemplateMgr;
 import com.table.ResourceInfo;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class PlayerPropMgr {
@@ -153,7 +153,7 @@ public class PlayerPropMgr {
 			PropInventory propInventory = getPropInventory(inventoryType);
 			int bagCount = propInventory.getSpecificPropCount(info.resourceId);
 			if (info.count > bagCount) {
-				GameLog.error("removePropByPropId多个 error. userId : " + player.getUserId() + " , propId : " + info.resourceId + ", castCount : " + info.count + ", inventoryType : " + inventoryType
+				Log.error("removePropByPropId多个 error. userId : " + player.getUserId() + " , propId : " + info.resourceId + ", castCount : " + info.count + ", inventoryType : " + inventoryType
 						+ ", bagCount : " + bagCount + ", itemChangeType : " + itemChangeType);
 				return false;
 			}
@@ -175,7 +175,7 @@ public class PlayerPropMgr {
 		PropInventory propInventory = getPropInventory(bagType);
 		boolean isSuccess = propInventory.removePropByPropId(propId, castCount, itemChangeType);
 		if (!isSuccess) {
-			GameLog.error("removePropByPropId error. userId : " + player.getUserId() + " , propId : " + propId + " , castCount : " + castCount + " , bagType : " + bagType + ", itemChangeType : "
+			Log.error("removePropByPropId error. userId : " + player.getUserId() + " , propId : " + propId + " , castCount : " + castCount + " , bagType : " + bagType + ", itemChangeType : "
 					+ itemChangeType);
 		}
 
@@ -191,7 +191,7 @@ public class PlayerPropMgr {
 			for (int i = 0; i < propIds.length; i++) {
 				int bagCount = propInventory.getSpecificPropCount(propIds[i]);
 				if (castCounts[i] > bagCount) {
-					GameLog.error("removePropByPropId多个 error. userId : " + player.getUserId() + " , propId : " + propIds[i] + " , castCount : " + castCounts[i] + " , inventoryType : " + inventoryType
+					Log.error("removePropByPropId多个 error. userId : " + player.getUserId() + " , propId : " + propIds[i] + " , castCount : " + castCounts[i] + " , inventoryType : " + inventoryType
 							+ "bagCount " + bagCount + ", itemChangeType : " + itemChangeType);
 					return false;
 				}
@@ -273,7 +273,7 @@ public class PlayerPropMgr {
 		for (ResourceInfo info : resourceInfo) {
 			PropTemplate propTemplate = ItemTemplateMgr.getInstance().getItemTempInfo(info.resourceId);
 			if (propTemplate == null) {
-				GameLog.error("propTemp is null. userId : " + player.getUserId() + ", tempId : " + info.resourceId);
+				Log.error("propTemp is null. userId : " + player.getUserId() + ", tempId : " + info.resourceId);
 				continue;
 			}
 			
@@ -321,7 +321,7 @@ public class PlayerPropMgr {
 	public Prop addOnePropToPackage(int propId, int count, short addType) {
 		PropTemplate propTemplate = ItemTemplateMgr.getInstance().getItemTempInfo(propId);
 		if (propTemplate == null) {
-			GameLog.error("CreateProp失败，道具Id不存在. 道具Id为:  " + propId + "    道具数量为:  " + count + "    道具操作类型为:  " + addType);
+			Log.error("CreateProp失败，道具Id不存在. 道具Id为:  " + propId + "    道具数量为:  " + count + "    道具操作类型为:  " + addType);
 			return null;
 		}
 
@@ -340,7 +340,7 @@ public class PlayerPropMgr {
 		Prop prop = new Prop(newPropInstance, propTemplate);
 		boolean isSuccess = getPropInventory(BagType.PACKAGE).addOnePropToPackage(prop, addType);
 		if (!isSuccess) {
-			GameLog.error("添加道具到背包中失败，是不是没有判断背包格子足够. UserId: " + player.getUserId() + "");
+			Log.error("添加道具到背包中失败，是不是没有判断背包格子足够. UserId: " + player.getUserId() + "");
 			return null;
 		}
 		
@@ -446,7 +446,7 @@ public class PlayerPropMgr {
 				aryPropInventory[index].saveToDB(userId);
 			}
 		} catch (Exception e) {
-			GameLog.error("保存玩家道具信息出错, UserId:  " + player.getUserId(), e);
+			Log.error("保存玩家道具信息出错, UserId:  " + player.getUserId(), e);
 		}
 	}
 }

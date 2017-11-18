@@ -11,7 +11,7 @@ import com.player.DaoMgr;
 import com.player.GamePlayer;
 import com.player.ItemChangeType;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 
 /**
  * 道具存储空间，比如装备栏、装备背包、背包等
@@ -203,7 +203,7 @@ public class PropInventory {
 		int leftCount = orgStackCount - count;
 		int posIndex = prop.getPosIndex();
 		if (leftCount < 0) {
-			GameLog.error("destroyPropByProp Error 背包拥有的数量为: " + orgStackCount + " 需要删除的数量为:  " + count + "。UserId为:  "
+			Log.error("destroyPropByProp Error 背包拥有的数量为: " + orgStackCount + " 需要删除的数量为:  " + count + "。UserId为:  "
 					+ player.getUserId() + ",道具删除类似为: " + itemChangeType);
 			return false;
 		} else if (leftCount == 0) {
@@ -427,11 +427,11 @@ public class PropInventory {
 				}
 
 				if (itemCount != 0) {
-					GameLog.error("Remove template error:last item cout not equal Zero.userId : " + player.getUserId()
+					Log.error("Remove template error:last item cout not equal Zero.userId : " + player.getUserId()
 							+ " , propId : " + propId + ", count : " + count);
 				}
 			} catch (Exception e) {
-				GameLog.error("removeTemplate error. userId : " + player.getUserId() + " , propId : " + propId
+				Log.error("removeTemplate error. userId : " + player.getUserId() + " , propId : " + propId
 						+ ", count : " + count, e);
 			} finally {
 				commitChanges();

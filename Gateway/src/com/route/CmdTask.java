@@ -2,7 +2,7 @@ package com.route;
 
 import com.netmsg.PBMessage;
 import com.user.NetCmd;
-import com.util.GameLog;
+import com.util.Log;
 
 import io.netty.channel.Channel;
 
@@ -31,7 +31,7 @@ public class CmdTask implements Runnable
 		}
 		catch (Exception e)
 		{
-			GameLog.error("执行 command 异常, command : " + netCmd.toString() + ", packet : " + packet.toString(), e);
+			Log.error("执行 command 异常, command : " + netCmd.toString() + ", packet : " + packet.toString(), e);
 		}
 	}
 }

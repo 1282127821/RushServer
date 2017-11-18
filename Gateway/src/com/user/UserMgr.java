@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.netmsg.PBMessage;
-import com.util.GameLog;
+import com.util.Log;
 
 import io.netty.channel.Channel;
 
@@ -56,7 +56,7 @@ public final class UserMgr {
 	public static void removeOnline(long userId, Channel channel) {
 		User user = getOnlineUser(userId);
 		if (user == null || channel != user.getChannel()) {
-			GameLog.warn("客户端 当前用户已经从在线列表中清除了, userId : " + userId);
+			Log.warn("客户端 当前用户已经从在线列表中清除了, userId : " + userId);
 			return;
 		}
 		
@@ -181,7 +181,7 @@ public final class UserMgr {
 				user.getChannel().close();
 			}
 		} catch (Exception e) {
-			GameLog.error("Client set close client session exception.");
+			Log.error("Client set close client session exception.");
 		}
 	}
 }

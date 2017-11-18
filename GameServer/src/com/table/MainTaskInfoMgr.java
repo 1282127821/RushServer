@@ -1,6 +1,6 @@
 package com.table;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 
 public final class MainTaskInfoMgr {
 	private MainTaskInfo[] aryMainTask;

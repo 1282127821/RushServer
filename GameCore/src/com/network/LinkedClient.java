@@ -1,7 +1,7 @@
 package com.network;
 
 import com.netmsg.PBMessage;
-import com.util.GameLog;
+import com.util.Log;
 
 import io.netty.channel.Channel;
 
@@ -113,7 +113,7 @@ public class LinkedClient {
 		} catch (Exception e) {
 //			connector.dispose();
 //			connector = null;
-			GameLog.error("connect to address " + address + ":" + port + " fail.", e);
+			Log.error("connect to address " + address + ":" + port + " fail.", e);
 			connTimes++;
 			return false;
 		}
@@ -140,7 +140,7 @@ public class LinkedClient {
 				channel.writeAndFlush(packet);
 			}
 		} catch (Exception e) {
-			GameLog.warn("session write error . packet : " + packet.toString(), e);
+			Log.warn("session write error . packet : " + packet.toString(), e);
 		}
 	}
 }

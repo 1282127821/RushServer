@@ -1,6 +1,6 @@
 package com.action.room;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.netmsg.MessageUtil;
 import com.pbmessage.GamePBMsg.SyncPVPCommonMsg;
 import com.player.GamePlayer;
@@ -9,25 +9,31 @@ import com.room.Room;
 import com.room.RoomPlayer;
 import com.table.BuffInfoMgr;
 
-public class AddShieldHPAction extends Action {
+public class AddShieldHPAction extends AbstractAction
+{
 	private Room room;
 	private GamePlayer player;
 	private int operType;
 
-	public AddShieldHPAction(Room room, GamePlayer player, int operType) {
-		super(room.getActionQueue());
+	public AddShieldHPAction(Room room, GamePlayer player, int operType)
+	{
 		this.room = room;
 		this.player = player;
 		this.operType = operType;
 	}
 
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		RoomPlayer roomPlayer = room.getRoomPlayer(player.getUserId());
-		if (roomPlayer != null) {
-			if (operType == 1) {
+		if (roomPlayer != null)
+		{
+			if (operType == 1)
+			{
 				roomPlayer.playerShieldHP = BuffInfoMgr.getInstance().getBuffInfo(1).shieldHP;
-			} else if (operType == 2) {
+			}
+			else if (operType == 2)
+			{
 				SyncPVPCommonMsg.Builder pvpCommonMsg = SyncPVPCommonMsg.newBuilder();
 				pvpCommonMsg.setPvpId(roomPlayer.pvpId);
 				pvpCommonMsg.setOperType(2);

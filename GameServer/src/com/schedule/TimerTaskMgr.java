@@ -7,7 +7,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.player.WorldMgr;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class TimerTaskMgr
@@ -55,7 +55,7 @@ abstract class Task extends TimerTask
 		}
 		catch (Exception e)
 		{
-			GameLog.error(name + "错误", e);
+			Log.error(name + "错误", e);
 		}
 	}
 

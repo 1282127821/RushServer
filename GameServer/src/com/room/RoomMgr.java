@@ -3,47 +3,58 @@ package com.room;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.execaction.Action;
-import com.execaction.Executor;
+import com.executor.AbstractAction;
+import com.executor.CmdTaskQueue;
+import com.executor.ExecutorPool;
 import com.pbmessage.GamePBMsg.RoomInfoListMsg;
 import com.pbmessage.GamePBMsg.RoomInfoMsg;
 import com.player.GamePlayer;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 
-public final class RoomMgr {
+public final class RoomMgr
+{
 	private AtomicInteger roomID = new AtomicInteger(0);
 	public static AtomicInteger pvpId = new AtomicInteger(0);
 	private ConcurrentHashMap<Integer, Room> pvpRoomMap = new ConcurrentHashMap<Integer, Room>();
-
-	public static Executor executor = new Executor(8, 16, 5, "RoomMgr");
+	/** 玩家命令处理线程池 */
+	public static ExecutorPool userCmdpool = new ExecutorPool("RoomMgr", Runtime.getRuntime().availableProcessors());
+	public static CmdTaskQueue actionQueue = new CmdTaskQueue(userCmdpool);
 	private static RoomMgr instance = new RoomMgr();
 
-	public static RoomMgr getInstance() {
+	public static RoomMgr getInstance()
+	{
 		return instance;
 	}
 
-	public void enDefaultQueue(Action action) {
-		executor.enDefaultQueue(action);
+	public void addAction(AbstractAction action)
+	{
+		action.setActionQueue(actionQueue);
+		actionQueue.add(action);
 	}
 
-	public void stop() {
-		GameLog.info("the RoomMgr is stop...");
-		executor.stop();
+	public void stop()
+	{
+		Log.info("the RoomMgr is stop...");
+		userCmdpool.shutdown();
+		actionQueue.clear();
 	}
 
-	public Room getRoom(int roomId) {
-		return  pvpRoomMap.get(roomId);
+	public Room getRoom(int roomId)
+	{
+		return pvpRoomMap.get(roomId);
 	}
 
-	public Room createPVPRoom() {
+	public Room createPVPRoom()
+	{
 		int roomId = roomID.addAndGet(1);
 		Room room = new Room(roomId);
 		pvpRoomMap.put(roomId, room);
 		return room;
 	}
 
-	public void removePVPRoom(Room room) {
+	public void removePVPRoom(Room room)
+	{
 		room.getTotalRoomPlayer().clear();
 		pvpRoomMap.remove(room.getRoomId());
 	}
@@ -51,10 +62,13 @@ public final class RoomMgr {
 	/**
 	 * 打包可以被打劫的房间信息给客户端
 	 */
-	public void packTotalRoomList(GamePlayer player) {
+	public void packTotalRoomList(GamePlayer player)
+	{
 		RoomInfoListMsg.Builder netMsg = RoomInfoListMsg.newBuilder();
-		for (Room roomInfo : pvpRoomMap.values()) {
-			if (roomInfo.roomState == RoomState.USEING) {
+		for (Room roomInfo : pvpRoomMap.values())
+		{
+			if (roomInfo.roomState == RoomState.USEING)
+			{
 				RoomInfoMsg.Builder roomInfoMsg = RoomInfoMsg.newBuilder();
 				roomInfoMsg.setRoomId(roomInfo.getRoomId());
 				roomInfoMsg.setRoomName(roomInfo.getRoomName());
@@ -65,7 +79,8 @@ public final class RoomMgr {
 		player.sendPacket(Protocol.S_C_ROOM_INFO_LIST, netMsg);
 	}
 
-	public void resetRooms() {
+	public void resetRooms()
+	{
 		pvpRoomMap.clear();
 	}
 }

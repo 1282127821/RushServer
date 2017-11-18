@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.db.DBDao;
-import com.util.GameLog;
+import com.util.Log;
 
 public class GuildTechDao extends DBDao
 {
@@ -38,7 +38,7 @@ public class GuildTechDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertSql + "出错", ex);
 			}
 			finally
 			{
@@ -71,7 +71,7 @@ public class GuildTechDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + updateSql + "出错", ex);
+				Log.error("调用Sql语句   " + updateSql + "出错", ex);
 			}
 			finally
 			{
@@ -107,7 +107,7 @@ public class GuildTechDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectSql, e);
+			Log.error("执行出错" + selectSql, e);
 		}
 		finally
 		{

@@ -3,7 +3,7 @@ package com.network;
 import java.util.List;
 
 import com.netmsg.PBMessage;
-import com.util.GameLog;
+import com.util.Log;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -26,7 +26,7 @@ public class PBEncoder extends MessageToMessageEncoder<PBMessage> {
 		}
 
 		if (size > Short.MAX_VALUE) {
-			GameLog.error("msgId : " + msg.getMsgId() + ", over max length");
+			Log.error("msgId : " + msg.getMsgId() + ", over max length");
 			return;
 		}
 

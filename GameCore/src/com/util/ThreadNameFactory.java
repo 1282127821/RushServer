@@ -1,36 +1,44 @@
 package com.util;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class ThreadNameFactory implements ThreadFactory {
+public class ThreadNameFactory implements ThreadFactory, UncaughtExceptionHandler
+{
+	/**
+	 * 是否为后台线程
+	 */
+	private boolean daemon;
 
-	AtomicInteger poolNumber = new AtomicInteger(1);
-	ThreadGroup group;
-	AtomicInteger threadNumber = new AtomicInteger(1);
-	String namePrefix;
-	boolean isDaemon;
+	/**
+	 * 线程名
+	 */
+	private String threadName;
 
-	public Thread newThread(Runnable runnable) {
-		Thread thread = new Thread(group, runnable, (new StringBuilder()).append(namePrefix).append(threadNumber.getAndIncrement()).toString(), 0L);
-		thread.setDaemon(isDaemon);
-		if (thread.getPriority() != 5)
-			thread.setPriority(5);
-		return thread;
-	}
-	
-	public Thread newThread(Runnable runnable,String suffix ) {
-		Thread thread = new Thread(group, runnable, (new StringBuilder()).append(namePrefix).append(suffix).toString(), 0L);
-		thread.setDaemon(isDaemon);
-		if (thread.getPriority() != 5)
-			thread.setPriority(5);
-		return thread;
+	/**
+	 * 默认构造函数，threadName 线程名前缀 daemon 是否为后台线程
+	 */
+	public ThreadNameFactory(String threadName, boolean daemon)
+	{
+		this.threadName = threadName;
+		this.daemon = daemon;
 	}
 
-	public ThreadNameFactory(String prefix,boolean isDaemon) {
-		this.isDaemon = isDaemon;
-		SecurityManager securitymanager = System.getSecurityManager();
-		group = securitymanager == null ? Thread.currentThread().getThreadGroup() : securitymanager.getThreadGroup();
-		namePrefix = (new StringBuilder()).append("pool-").append(poolNumber.getAndIncrement()).append("-").append(prefix).append("-thread-").toString();
+	public ThreadNameFactory(String threadName)
+	{
+		this(threadName, false);
+	}
+
+	public Thread newThread(Runnable r)
+	{
+		Thread t = new Thread(r, this.threadName);
+		t.setDaemon(this.daemon);
+		t.setUncaughtExceptionHandler(this);
+		return t;
+	}
+
+	public void uncaughtException(Thread thread, Throwable throwable)
+	{
+		Log.error("Uncaught Exception in thread " + thread.getName(), throwable);
 	}
 }

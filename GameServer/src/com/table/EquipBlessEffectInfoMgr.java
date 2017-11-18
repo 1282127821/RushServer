@@ -1,6 +1,6 @@
 package com.table;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 
 public class EquipBlessEffectInfoMgr {
 	private EquipBlessEffectInfo[] aryEquipBlessEffectInfo;

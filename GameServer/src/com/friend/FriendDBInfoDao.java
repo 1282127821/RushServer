@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.db.DBDao;
 import com.db.DBOption;
-import com.util.GameLog;
+import com.util.Log;
 
 public class FriendDBInfoDao extends DBDao
 {
@@ -41,7 +41,7 @@ public class FriendDBInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + insertFriendSql + "出错", ex);
+				Log.error("调用Sql语句   " + insertFriendSql + "出错", ex);
 			}
 			finally
 			{
@@ -77,7 +77,7 @@ public class FriendDBInfoDao extends DBDao
 			}
 			catch (Exception ex)
 			{
-				GameLog.error("调用Sql语句   " + updateFriendSql + "出错", ex);
+				Log.error("调用Sql语句   " + updateFriendSql + "出错", ex);
 			}
 			finally
 			{
@@ -117,7 +117,7 @@ public class FriendDBInfoDao extends DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("执行出错" + selectFriendSql, e);
+			Log.error("执行出错" + selectFriendSql, e);
 		}
 		finally
 		{

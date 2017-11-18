@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.alibaba.fastjson.JSON;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.ServerType;
 
 /**
@@ -29,7 +29,7 @@ public class StopServer
 		}
 		catch (IOException e)
 		{
-			GameLog.info("加载游戏服务器配置出错" + e.getMessage());
+			Log.info("加载游戏服务器配置出错" + e.getMessage());
 			return null;
 		}
 	}
@@ -45,7 +45,7 @@ public class StopServer
 		ServerCfgInfo serverCfgInfo = initServerCfg(args[0]);
 		if (serverCfgInfo == null)
 		{
-			GameLog.error("init server config fialed., server start failed.");
+			Log.error("init server config fialed., server start failed.");
 			return;
 		}
 

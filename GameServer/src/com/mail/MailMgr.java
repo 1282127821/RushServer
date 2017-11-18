@@ -19,7 +19,7 @@ import com.player.ItemChangeType;
 import com.prop.BagType;
 import com.protocol.Protocol;
 import com.table.ResourceInfo;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class MailMgr
@@ -290,7 +290,7 @@ public class MailMgr
 		}
 		catch (Exception e)
 		{
-			GameLog.error("保存玩家邮件信息出错, UserId:  " + userId, e);
+			Log.error("保存玩家邮件信息出错, UserId:  " + userId, e);
 		}
 	}
 }

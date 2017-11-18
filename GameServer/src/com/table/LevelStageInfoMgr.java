@@ -1,6 +1,6 @@
 package com.table;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 import com.util.SplitUtil;
 
 public final class LevelStageInfoMgr {

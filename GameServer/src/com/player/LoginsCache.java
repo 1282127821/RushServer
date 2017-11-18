@@ -2,7 +2,7 @@ package com.player;
 
 import java.util.LinkedList;
 
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class LoginsCache extends AbstractCache {
@@ -49,7 +49,7 @@ public class LoginsCache extends AbstractCache {
 				}
 			}
 		} catch (Exception e) {
-			GameLog.error("扫描排队列表出错！" + TimeUtil.getSysteCurTime(), e);
+			Log.error("扫描排队列表出错！" + TimeUtil.getSysteCurTime(), e);
 		}
 	}
 

@@ -1,11 +1,10 @@
 {
 	"designcfgPath": "../Lib/txt/",
 	"isGM": "true",
-	"serverIndex": "1",
-    "logPath": "../L/config/log4j.properties",	
+	"serverIndex": "1",	
 	"accountserver":
 	{
-		"ip": "192.168.1.227",
+		"ip": "10.10.18.114",
 		"port": "8888",
 		"adminPort": "5100"
 	},
@@ -40,17 +39,8 @@
 	
 	"maindb": 
 	{
-		"dbname": "db_star_0001",
-		"ip": "192.168.1.227",
-		"port": "3306",
-		"username": "root",
-		"password": "123456"
-	},
-	
-	"logdb": 
-	{
-		"dbname": "db_log_0001",
-		"ip": "192.168.1.227",
+		"dbname": "db_star",
+		"ip": "10.10.11.20",
 		"port": "3306",
 		"username": "root",
 		"password": "123456"

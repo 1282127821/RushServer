@@ -2,7 +2,7 @@ package com.action.room;
 
 import java.util.List;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.pbmessage.GamePBMsg.PlayerMsg;
 import com.pbmessage.GamePBMsg.RoomBossInfoMsg;
 import com.pbmessage.GamePBMsg.RoomMsg;
@@ -19,21 +19,24 @@ import com.table.LevelStageInfo;
 import com.table.LevelStageInfoMgr;
 import com.table.MainTaskInfoMgr;
 import com.team.Team;
-import com.util.GameLog;
+import com.util.Log;
 
-public class RoomCreateAction extends Action {
+public class RoomCreateAction extends AbstractAction
+{
 	private GamePlayer player;
 
-	public RoomCreateAction(GamePlayer player) {
-		super(RoomMgr.executor.getDefaultQueue());
+	public RoomCreateAction(GamePlayer player)
+	{
 		this.player = player;
 	}
 
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		Room room = RoomMgr.getInstance().createPVPRoom();
-		if (room == null) {
-			GameLog.error("创建房间失败");
+		if (room == null)
+		{
+			Log.error("创建房间失败");
 			return;
 		}
 
@@ -42,9 +45,11 @@ public class RoomCreateAction extends Action {
 		roomMsg.setRoomId(room.getRoomId());
 
 		Team team = player.getTeam();
-		if (team != null) {
+		if (team != null)
+		{
 			List<GamePlayer> teamMemberList = team.getTeamMemberList();
-			for (int i = 0; i < teamMemberList.size(); i++) {
+			for (int i = 0; i < teamMemberList.size(); i++)
+			{
 				GamePlayer tempPlayer = teamMemberList.get(i);
 				RoomPlayerInfoMsg.Builder roomPlayerInfo = RoomPlayerInfoMsg.newBuilder();
 				PlayerMsg.Builder playerInfoMsg = PlayerMgr.buildPlayerInfoMsg(tempPlayer.playerInfo);
@@ -56,7 +61,9 @@ public class RoomCreateAction extends Action {
 				room.addPlayer(tempPlayer, BattleCamp.DEFENCER, pvpId);
 				roomMsg.addRoomPlayerList(roomPlayerInfo);
 			}
-		} else {
+		}
+		else
+		{
 			RoomPlayerInfoMsg.Builder roomPlayerInfo = RoomPlayerInfoMsg.newBuilder();
 			PlayerMsg.Builder playerInfoMsg = PlayerMgr.buildPlayerInfoMsg(player.playerInfo);
 			roomPlayerInfo.setPlayerInfo(playerInfoMsg);
@@ -89,18 +96,24 @@ public class RoomCreateAction extends Action {
 		bossInfoMsg.setBossMasterId(roomBossInfo.bossMasterId);
 		roomMsg.setBossInfo(bossInfoMsg);
 
-		if (team != null) {
+		if (team != null)
+		{
 			List<GamePlayer> teamMemberList = team.getTeamMemberList();
-			for (GamePlayer teamPlayer : teamMemberList) {
+			for (GamePlayer teamPlayer : teamMemberList)
+			{
 				teamPlayer.sendPacket(S2CProtocol.S_C_ENTER_INSTANCE, roomMsg);
-				for (GamePlayer friendPlayer : teamMemberList) {
+				for (GamePlayer friendPlayer : teamMemberList)
+				{
 					long friendUserId = friendPlayer.getUserId();
-					if (friendUserId != teamPlayer.getUserId()) {
+					if (friendUserId != teamPlayer.getUserId())
+					{
 						teamPlayer.getFriendMgr().addBattleFriend(friendUserId);
 					}
 				}
 			}
-		} else {
+		}
+		else
+		{
 			player.sendPacket(S2CProtocol.S_C_ENTER_INSTANCE, roomMsg);
 		}
 	}

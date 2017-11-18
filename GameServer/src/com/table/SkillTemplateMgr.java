@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.file.CTabFile;
 import com.player.GameConst;
 import com.player.JobType;
 import com.skill.FightSkillInfo;
 import com.skill.PassiveSkillInfo;
 import com.skill.SkillType;
+import com.util.CTabFile;
 
 public final class SkillTemplateMgr {
 	/**

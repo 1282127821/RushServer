@@ -4,7 +4,7 @@ import com.google.protobuf.AbstractMessage.Builder;
 import com.netmsg.PBMessage;
 import com.network.LinkedClient;
 import com.pbmessage.GamePBMsg.LoadMsg;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.ServerType;
 
 import io.netty.channel.Channel;
@@ -33,7 +33,7 @@ public final class GatewayLinkMgr
 		client.setChannel(channel);
 		// TODO:LZGLZG以后有多个网关之后需要重新修改
 		// session.setAttribute(LinkedClient.KEY_CLIENT, client);
-		GameLog.info("GateWayServer连接到GameServer, addLinkedClient: " + client.toString());
+		Log.info("GateWayServer连接到GameServer, addLinkedClient: " + client.toString());
 		gateWay = client;
 	}
 

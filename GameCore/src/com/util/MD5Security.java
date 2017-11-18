@@ -24,7 +24,7 @@ public class MD5Security {
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (Exception e) {
-			GameLog.error("", e);
+			Log.error("", e);
 			return "";
 		}
 		char[] charArray = inStr.toCharArray();
@@ -84,7 +84,7 @@ public class MD5Security {
 			}
 			return md5.toString();
 		} catch (Exception e) {
-			GameLog.error("MD5加密错误  Str:" + text, e);
+			Log.error("MD5加密错误  Str:" + text, e);
 			return "";
 		}
 	}

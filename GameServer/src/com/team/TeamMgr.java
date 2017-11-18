@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.BaseServer;
-import com.execaction.Action;
 import com.pbmessage.GamePBMsg.TeamMemberMsg;
 import com.pbmessage.GamePBMsg.TeamMsg;
 import com.pbmessage.GamePBMsg.TeamViewListMsg;
@@ -12,25 +11,23 @@ import com.pbmessage.GamePBMsg.TeamViewMsg;
 import com.player.GamePlayer;
 import com.player.WorldMgr;
 import com.protocol.Protocol;
-import com.room.RoomMgr;
 import com.scene.SceneMgr;
 
-public final class TeamMgr {
+public final class TeamMgr
+{
 	private Map<Long, Team> teamMap = new ConcurrentHashMap<Long, Team>();
 	private static TeamMgr instance = new TeamMgr();
 
-	public static TeamMgr getInstance() {
+	public static TeamMgr getInstance()
+	{
 		return instance;
-	}
-
-	public void enDefaultQueue(Action action) {
-		RoomMgr.executor.enDefaultQueue(action);
 	}
 
 	/**
 	 * 创建队伍
 	 */
-	public void createTeam(GamePlayer player) {
+	public void createTeam(GamePlayer player)
+	{
 		Team team = new Team();
 		long teamId = BaseServer.IDWORK.nextId();
 		team.createTeam(teamId, player);
@@ -41,8 +38,10 @@ public final class TeamMgr {
 	/**
 	 * 根据队伍Id获得对应的队伍
 	 */
-	public Team getTeamById(long teamId) {
-		if (teamMap.containsKey(teamId)) {
+	public Team getTeamById(long teamId)
+	{
+		if (teamMap.containsKey(teamId))
+		{
 			return teamMap.get(teamId);
 		}
 
@@ -52,9 +51,11 @@ public final class TeamMgr {
 	/**
 	 * 加入某个队伍
 	 */
-	public void joinTeam(long teamId, GamePlayer player) {
+	public void joinTeam(long teamId, GamePlayer player)
+	{
 		Team team = getTeamById(teamId);
-		if (team == null || player.getTeam() != null) {
+		if (team == null || player.getTeam() != null)
+		{
 			return;
 		}
 
@@ -64,16 +65,19 @@ public final class TeamMgr {
 	/**
 	 * 离开队伍
 	 */
-	public void leaveTeam(GamePlayer player) {
+	public void leaveTeam(GamePlayer player)
+	{
 		Team team = player.getTeam();
-		if (team == null) {
+		if (team == null)
+		{
 			return;
 		}
 
 		SceneMgr.getInstance().playerLeave(player);
 		team.leaveTeam(player);
 		// 如果队伍不存在玩家了 ，就删除
-		if (team.getMemberCount() == 0) {
+		if (team.getMemberCount() == 0)
+		{
 			teamMap.remove(team.getTeamId());
 		}
 	}
@@ -81,15 +85,18 @@ public final class TeamMgr {
 	/**
 	 * 踢出玩家
 	 */
-	public void kickOutTeam(GamePlayer player, long userId) {
+	public void kickOutTeam(GamePlayer player, long userId)
+	{
 		Team team = player.getTeam();
-		if (team == null || !team.isLeader(player.getUserId()) || !team.isMember(userId)) {
+		if (team == null || !team.isLeader(player.getUserId()) || !team.isMember(userId))
+		{
 			return;
 		}
 
 		SceneMgr.getInstance().playerLeave(player);
 		GamePlayer teamPlayer = WorldMgr.getOnlinePlayer(userId);
-		if (teamPlayer != null) {
+		if (teamPlayer != null)
+		{
 			team.kickOutTeam(teamPlayer);
 		}
 	}
@@ -97,14 +104,17 @@ public final class TeamMgr {
 	/**
 	 * 改变队长
 	 */
-	public void changeLeaderTeam(GamePlayer player, long userId) {
+	public void changeLeaderTeam(GamePlayer player, long userId)
+	{
 		Team team = player.getTeam();
-		if (team == null || !team.isLeader(player.getUserId()) || !team.isMember(userId)) {
+		if (team == null || !team.isLeader(player.getUserId()) || !team.isMember(userId))
+		{
 			return;
 		}
 
 		GamePlayer teamPlayer = WorldMgr.getOnlinePlayer(userId);
-		if (teamPlayer != null) {
+		if (teamPlayer != null)
+		{
 			team.changeLeaderTeam(teamPlayer);
 		}
 	}
@@ -112,10 +122,12 @@ public final class TeamMgr {
 	/**
 	 * 解散队伍
 	 */
-	public void disbanTeam(GamePlayer player) {
+	public void disbanTeam(GamePlayer player)
+	{
 		Team team = player.getTeam();
 		// 判断是否有队伍和否是队长
-		if (team == null || !team.isLeader(player.getUserId())) {
+		if (team == null || !team.isLeader(player.getUserId()))
+		{
 			return;
 		}
 
@@ -125,22 +137,29 @@ public final class TeamMgr {
 		teamMap.remove(team.getTeamId());
 	}
 
-	public void requestTeamInfo(GamePlayer player) {
-		TeamMsg.Builder netMsg =TeamMsg.newBuilder();
+	public void requestTeamInfo(GamePlayer player)
+	{
+		TeamMsg.Builder netMsg = TeamMsg.newBuilder();
 		Team team = player.getTeam();
-		if (team != null) {
+		if (team != null)
+		{
 			netMsg.setTeamInfo(team.packOneTeamInfo());
-		} else {
+		}
+		else
+		{
 			netMsg.setTotalTeamList(packTotalTeamInfo());
 		}
 		player.sendPacket(Protocol.S_C_REQUEST_TEAM_INFO, netMsg);
 	}
 
-	private TeamViewListMsg.Builder packTotalTeamInfo() {
+	private TeamViewListMsg.Builder packTotalTeamInfo()
+	{
 		TeamViewListMsg.Builder netMsg = TeamViewListMsg.newBuilder();
-		for (Team value : teamMap.values()) {
+		for (Team value : teamMap.values())
+		{
 			/* 过滤非等待状态的队伍 */
-			if (value.getTeamState() != Team.TeamState.ts_wait) {
+			if (value.getTeamState() != Team.TeamState.ts_wait)
+			{
 				continue;
 			}
 
@@ -165,55 +184,70 @@ public final class TeamMgr {
 	/**
 	 * 同步队伍列表
 	 */
-	public void synTeamList(GamePlayer player) {
+	public void synTeamList(GamePlayer player)
+	{
 		player.sendPacket(Protocol.S_C_TEAM_LIST, packTotalTeamInfo());
 	}
 
-	public void synTeamMessage(GamePlayer player, int taskId) {
+	public void synTeamMessage(GamePlayer player, int taskId)
+	{
 		Team team = player.getTeam();
 		// 判断是否有队伍
-		if (team == null) {
+		if (team == null)
+		{
 			return;
 		}
 
 		// 是否是队长
-		if (!team.isLeader(player.getUserId())) {
+		if (!team.isLeader(player.getUserId()))
+		{
 			return;
 		}
 
 		team.synTeamMessage(player, taskId);
 	}
-	
-	public void combineTeam(GamePlayer player, long userId) {
+
+	public void combineTeam(GamePlayer player, long userId)
+	{
 		GamePlayer otherPlayer = WorldMgr.getOnlinePlayer(userId);
-		if (otherPlayer == null) {
+		if (otherPlayer == null)
+		{
 			return;
 		}
-		
+
 		Team team = player.getTeam();
-		if (team != null) {
+		if (team != null)
+		{
 			Team otherTeam = otherPlayer.getTeam();
-			if (otherTeam != null) {
+			if (otherTeam != null)
+			{
 				player.sendTips(1013);
 				return;
 			}
-			
-			if (team.isTeamFull()) {
+
+			if (team.isTeamFull())
+			{
 				player.sendTips(1016);
 				return;
 			}
-			
+
 			joinTeam(team.getTeamId(), otherPlayer);
-		} else {
+		}
+		else
+		{
 			Team otherTeam = otherPlayer.getTeam();
-			if (otherTeam != null) {
-				if (otherTeam.isTeamFull()) {
+			if (otherTeam != null)
+			{
+				if (otherTeam.isTeamFull())
+				{
 					player.sendTips(1015);
 					return;
 				}
-				
+
 				joinTeam(otherTeam.getTeamId(), player);
-			} else {
+			}
+			else
+			{
 				createTeam(player);
 				joinTeam(player.getTeamId(), otherPlayer);
 			}

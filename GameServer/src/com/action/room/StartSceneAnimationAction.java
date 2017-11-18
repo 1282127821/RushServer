@@ -1,26 +1,29 @@
 package com.action.room;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.room.Room;
 import com.room.RoomState;
 
-public class StartSceneAnimationAction extends Action {
+public class StartSceneAnimationAction extends AbstractAction
+{
 	private Room room;
 
-	public StartSceneAnimationAction(Room room) {
-		super(room.getActionQueue());
+	public StartSceneAnimationAction(Room room)
+	{
 		this.room = room;
 	}
 
 	@Override
-	public void execute() 
+	public void execute()
 	{
-		if (room.isStartScene == false) {
+		if (room.isStartScene == false)
+		{
 			room.isStartScene = true;
 			room.startPVPAI();
 		}
 
-		if (room.getRoomState() == RoomState.UNUSE) {
+		if (room.getRoomState() == RoomState.UNUSE)
+		{
 			room.updateRoomState(RoomState.USEING);
 		}
 	}

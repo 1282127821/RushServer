@@ -3,7 +3,7 @@ package com.table;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 
 public final class ConfigMgr {
 	private static ConfigMgr instance = new ConfigMgr();

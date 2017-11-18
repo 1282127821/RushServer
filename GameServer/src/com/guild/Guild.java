@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.db.DBOption;
-import com.execaction.AbstractActionQueue;
 import com.pbmessage.GamePBMsg.GuildApplyListMsg;
 import com.pbmessage.GamePBMsg.GuildApplyMsg;
 import com.pbmessage.GamePBMsg.GuildEventListMsg;
@@ -18,13 +17,13 @@ import com.player.GameConst;
 import com.player.GamePlayer;
 import com.player.PlayerSynchType;
 import com.protocol.Protocol;
-import com.room.RoomMgr;
 import com.table.GuildLevelInfo;
 import com.table.GuildLevelInfoMgr;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
-public class Guild extends AbstractActionQueue {
+public class Guild
+{
 	/**
 	 * 公会的公有信息
 	 */
@@ -50,38 +49,44 @@ public class Guild extends AbstractActionQueue {
 	 */
 	private GuildMemberInfo leaderInfo;
 
-	public Guild() {
-		super(RoomMgr.executor);
+	public Guild()
+	{
 		guildMemberList = new ArrayList<GuildMemberInfo>();
 		guildApplyList = new ArrayList<GuildApplyInfo>();
 		guildEventList = new ArrayList<GuildEventInfo>();
 		guildInfo = new GuildInfo();
 	}
 
-	public void init(GuildInfo guildInfo, List<GuildMemberInfo> memberList, List<GuildApplyInfo> applyList,
-			List<GuildEventInfo> eventList) {
+	public void init(GuildInfo guildInfo, List<GuildMemberInfo> memberList, List<GuildApplyInfo> applyList, List<GuildEventInfo> eventList)
+	{
 		this.guildInfo = guildInfo;
-		if (memberList != null) {
+		if (memberList != null)
+		{
 			guildMemberList = memberList;
 		}
 
-		if (applyList != null) {
+		if (applyList != null)
+		{
 			guildApplyList = applyList;
 		}
 
-		if (eventList != null) {
+		if (eventList != null)
+		{
 			guildEventList = eventList;
 		}
 
-		for (GuildMemberInfo info : guildMemberList) {
-			if (info.getPower() == 1) {
+		for (GuildMemberInfo info : guildMemberList)
+		{
+			if (info.getPower() == 1)
+			{
 				leaderInfo = info;
 				break;
 			}
 		}
 	}
 
-	public void createGuild(GuildInfo guildInfo, GamePlayer player) {
+	public void createGuild(GuildInfo guildInfo, GamePlayer player)
+	{
 		this.guildInfo = guildInfo;
 		addGuildMember(player, GuildPower.GUILD_LEADER);
 		addGuildEvent(1501, player.getUserName());
@@ -90,40 +95,50 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 获取公会Id
 	 */
-	public long getGuildId() {
+	public long getGuildId()
+	{
 		return guildInfo.getGuildId();
 	}
 
-	public List<GuildMemberInfo> getGuildMemberList() {
+	public List<GuildMemberInfo> getGuildMemberList()
+	{
 		return guildMemberList;
 	}
-	
-	public List<GuildApplyInfo> getGuildApplyList() {
+
+	public List<GuildApplyInfo> getGuildApplyList()
+	{
 		return guildApplyList;
 	}
-	
+
 	/**
 	 * 获取公会名字
 	 */
-	public String getGuildName() {
+	public String getGuildName()
+	{
 		return guildInfo.getGuildName();
 	}
 
-	public GuildInfo getGuildInfo() {
+	public GuildInfo getGuildInfo()
+	{
 		return guildInfo;
 	}
-	
-	public void setGuildLeaderInfo(GuildMemberInfo leaderInfo) {
+
+	public void setGuildLeaderInfo(GuildMemberInfo leaderInfo)
+	{
 		this.leaderInfo = leaderInfo;
 	}
 
-	public int getMaxGuildMemberCount() {
+	public int getMaxGuildMemberCount()
+	{
 		return GameConst.GUILD_BASE_MEMBER_COUNT + guildInfo.getGuildLv();
 	}
 
-	public boolean isInApplyList(long userId) {
-		for (GuildApplyInfo info : guildApplyList) {
-			if (info.getUserId() == userId) {
+	public boolean isInApplyList(long userId)
+	{
+		for (GuildApplyInfo info : guildApplyList)
+		{
+			if (info.getUserId() == userId)
+			{
 				return true;
 			}
 		}
@@ -133,7 +148,8 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 打包公会信息
 	 */
-	public GuildInfoMsg.Builder packGuildInfo(long userId) {
+	public GuildInfoMsg.Builder packGuildInfo(long userId)
+	{
 		GuildInfoMsg.Builder infoMsg = GuildInfoMsg.newBuilder();
 		infoMsg.setGuildId(guildInfo.getGuildId());
 		infoMsg.setGuildName(guildInfo.getGuildName());
@@ -146,19 +162,23 @@ public class Guild extends AbstractActionQueue {
 		infoMsg.setGuildLeaderLv(leaderInfo.getPlayerLv());
 		infoMsg.setCreateTime(guildInfo.getCreateTime());
 		int applyState = 0;
-		if (userId != 0 && isInApplyList(userId)) {
+		if (userId != 0 && isInApplyList(userId))
+		{
 			applyState = 1;
 		}
 		infoMsg.setApplyState(applyState);
 		return infoMsg;
 	}
-	
+
 	/**
 	 * 获取公会某个成员
 	 */
-	public GuildMemberInfo getGuildMember(long userId) {
-		for (GuildMemberInfo info : guildMemberList) {
-			if (info.getUserId() == userId) {
+	public GuildMemberInfo getGuildMember(long userId)
+	{
+		for (GuildMemberInfo info : guildMemberList)
+		{
+			if (info.getUserId() == userId)
+			{
 				return info;
 			}
 		}
@@ -168,11 +188,13 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 获取帮会的人数
 	 */
-	public int getMemberCount() {
+	public int getMemberCount()
+	{
 		return guildMemberList.size();
 	}
 
-	public void addGuildMember(GamePlayer player, int power) {
+	public void addGuildMember(GamePlayer player, int power)
+	{
 		GuildMemberInfo guildMember = new GuildMemberInfo();
 		guildMember.setUserId(player.getUserId());
 		guildMember.setUserName(player.getUserName());
@@ -183,13 +205,17 @@ public class Guild extends AbstractActionQueue {
 		guildMember.setJobId(player.getJobId());
 		int logoutTime = 0;
 		player.setGuildId(guildInfo.getGuildId());
-		if (!player.isOnline()) {
+		if (!player.isOnline())
+		{
 			logoutTime = player.getLogoutTime();
 		}
 		guildMember.setLogoutTime(logoutTime);
-		if (power == 1) {
+		if (power == 1)
+		{
 			leaderInfo = guildMember;
-		} else {
+		}
+		else
+		{
 			addGuildExp(3);
 		}
 		guildMember.setPower(power);
@@ -197,16 +223,19 @@ public class Guild extends AbstractActionQueue {
 		guildMemberList.add(guildMember);
 	}
 
-	public GuildMemberListMsg.Builder packGuildMember() {
+	public GuildMemberListMsg.Builder packGuildMember()
+	{
 		GuildMemberListMsg.Builder netMsg = GuildMemberListMsg.newBuilder();
-		for (GuildMemberInfo memberInfo : guildMemberList) {
+		for (GuildMemberInfo memberInfo : guildMemberList)
+		{
 			netMsg.addGuildMemList(packOneGuildMember(memberInfo));
 		}
 
 		return netMsg;
 	}
 
-	public GuildMemberMsg.Builder packOneGuildMember(GuildMemberInfo memberInfo) {
+	public GuildMemberMsg.Builder packOneGuildMember(GuildMemberInfo memberInfo)
+	{
 		GuildMemberMsg.Builder infoMsg = GuildMemberMsg.newBuilder();
 		infoMsg.setUserId(memberInfo.getUserId());
 		infoMsg.setUserName(memberInfo.getUserName());
@@ -220,9 +249,11 @@ public class Guild extends AbstractActionQueue {
 		return infoMsg;
 	}
 
-	public GuildApplyListMsg.Builder packGuildApply() {
+	public GuildApplyListMsg.Builder packGuildApply()
+	{
 		GuildApplyListMsg.Builder netMsg = GuildApplyListMsg.newBuilder();
-		for (GuildApplyInfo applyInfo : guildApplyList) {
+		for (GuildApplyInfo applyInfo : guildApplyList)
+		{
 			GuildApplyMsg.Builder infoMsg = GuildApplyMsg.newBuilder();
 			infoMsg.setUserId(applyInfo.getUserId());
 			infoMsg.setUserName(applyInfo.getUserName());
@@ -235,9 +266,11 @@ public class Guild extends AbstractActionQueue {
 		return netMsg;
 	}
 
-	public GuildEventListMsg.Builder packGuildEveList() {
+	public GuildEventListMsg.Builder packGuildEveList()
+	{
 		GuildEventListMsg.Builder netMsg = GuildEventListMsg.newBuilder();
-		for (GuildEventInfo eventInfo : guildEventList) {
+		for (GuildEventInfo eventInfo : guildEventList)
+		{
 			GuildEventMsg.Builder infoMsg = GuildEventMsg.newBuilder();
 			infoMsg.setEventDesc(eventInfo.getEventDesc());
 			infoMsg.setEventTime(eventInfo.getEventTime());
@@ -249,9 +282,11 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 公会某成员增加贡献度
 	 */
-	public void addContribution(GamePlayer player, int contribution, int donateType) {
+	public void addContribution(GamePlayer player, int contribution, int donateType)
+	{
 		int infoId = 1551;
-		if (donateType == 2) {
+		if (donateType == 2)
+		{
 			infoId = 1552;
 		}
 		addGuildEvent(infoId, player.getUserName(), contribution);
@@ -264,31 +299,39 @@ public class Guild extends AbstractActionQueue {
 		player.sendPacket(Protocol.S_C_RETURN_GUILD_INFO, infoMsg);
 	}
 
-	public void addContribution(int value) {
+	public void addContribution(int value)
+	{
 		guildInfo.setTotalExp(guildInfo.getTotalExp() + value);
 	}
-	
-	public void addGuildExp(int addExp) {
+
+	public void addGuildExp(int addExp)
+	{
 		short curGuildLv = guildInfo.getGuildLv();
-		if (curGuildLv >= GameConst.MAX_GUILD_LEVEL) {
+		if (curGuildLv >= GameConst.MAX_GUILD_LEVEL)
+		{
 			return;
 		}
-		
+
 		int totalGuildExp = guildInfo.getTotalExp() + addExp;
 		GuildLevelInfo guildLevelInfo = GuildLevelInfoMgr.getInstance().getGuildLevelInfo(curGuildLv);
-		if (guildLevelInfo == null) {
+		if (guildLevelInfo == null)
+		{
 			return;
 		}
-		
+
 		int remainExp = totalGuildExp - guildLevelInfo.needExp;
-		if (remainExp > 0) {
+		if (remainExp > 0)
+		{
 			curGuildLv += 1;
-			if (curGuildLv == GameConst.MAX_GUILD_LEVEL) {
+			if (curGuildLv == GameConst.MAX_GUILD_LEVEL)
+			{
 				remainExp = 0;
 			}
 			guildInfo.setGuildLv(curGuildLv);
 			guildInfo.setTotalExp(remainExp);
-		} else {
+		}
+		else
+		{
 			guildInfo.setTotalExp(totalGuildExp);
 		}
 	}
@@ -296,26 +339,30 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 获取申请信息的条数
 	 */
-	public int getApplyCount() {
+	public int getApplyCount()
+	{
 		return guildApplyList.size();
 	}
 
 	/**
 	 * 增加一个公会申请信息
 	 */
-	public void applyJoinGuild(GamePlayer player) {
-		if (getMemberCount() >= getMaxGuildMemberCount()) {
+	public void applyJoinGuild(GamePlayer player)
+	{
+		if (getMemberCount() >= getMaxGuildMemberCount())
+		{
 			player.sendTips(1023);
 			return;
 		}
 
 		long userId = player.getUserId();
-		if (isInApplyList(userId)) {
+		if (isInApplyList(userId))
+		{
 			player.sendTips(1543);
 			return;
 		}
 
-//		if (guildInfo.getIsAudit() == 2) {
+		// if (guildInfo.getIsAudit() == 2) {
 		GuildApplyInfo applyInfo = new GuildApplyInfo();
 		applyInfo.setUserId(userId);
 		applyInfo.setUserName(player.getUserName());
@@ -330,26 +377,29 @@ public class Guild extends AbstractActionQueue {
 		netMsg.setGuildId(getGuildId());
 		netMsg.setApplyState(1);
 		player.sendPacket(Protocol.S_C_APPLY_JOIN_GUILD, netMsg);
-//		} else {
-//			addGuildMember(player, GuildPower.GUILD_MEMBER);
-//			addGuildEvent(1503, player.getUserName());
-//			GuildMgr.getInstance().deleteUserApply(userId);
-//			GuildMgr.getInstance().syncGuildInfo(guildInfo.getGuildId(), player);
-//			GuildCommonMsg.Builder netMsg = GuildCommonMsg.newBuilder();
-//			netMsg.setGuildId(guildInfo.getGuildId());
-//			netMsg.setGuildName(guildInfo.getGuildName());
-//			player.sendPacket(Protocol.S_C_SUCCESS_JOIN_GUILD, netMsg);
-//		}
+		// } else {
+		// addGuildMember(player, GuildPower.GUILD_MEMBER);
+		// addGuildEvent(1503, player.getUserName());
+		// GuildMgr.getInstance().deleteUserApply(userId);
+		// GuildMgr.getInstance().syncGuildInfo(guildInfo.getGuildId(), player);
+		// GuildCommonMsg.Builder netMsg = GuildCommonMsg.newBuilder();
+		// netMsg.setGuildId(guildInfo.getGuildId());
+		// netMsg.setGuildName(guildInfo.getGuildName());
+		// player.sendPacket(Protocol.S_C_SUCCESS_JOIN_GUILD, netMsg);
+		// }
 	}
 
 	/**
 	 * 删除一个公会申请
 	 */
-	public void deleteGuildApply(long guildId, long userId) {
+	public void deleteGuildApply(long guildId, long userId)
+	{
 		Iterator<GuildApplyInfo> iter = guildApplyList.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			GuildApplyInfo info = iter.next();
-			if (info.getUserId() == userId) {
+			if (info.getUserId() == userId)
+			{
 				iter.remove();
 				break;
 			}
@@ -361,7 +411,8 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 删除掉公会的所有申请
 	 */
-	public void deleteAllGuildApply(long guildId) {
+	public void deleteAllGuildApply(long guildId)
+	{
 		guildApplyList.clear();
 		DaoMgr.guildApplyDao.deleteAllGuildApplyInfo(guildId);
 	}
@@ -369,12 +420,15 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 删除一个公会成员
 	 */
-	public void deleteGuildMember(GamePlayer player) {
+	public void deleteGuildMember(GamePlayer player)
+	{
 		long userId = player.getUserId();
 		Iterator<GuildMemberInfo> iter = guildMemberList.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			GuildMemberInfo info = iter.next();
-			if (info.getUserId() == userId) {
+			if (info.getUserId() == userId)
+			{
 				iter.remove();
 				break;
 			}
@@ -386,10 +440,13 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 获得公会副会长的个数
 	 */
-	public int getDeputyChairmanCount() {
+	public int getDeputyChairmanCount()
+	{
 		int totalCount = 0;
-		for (GuildMemberInfo info : guildMemberList) {
-			if (info.getPower() == 2) {
+		for (GuildMemberInfo info : guildMemberList)
+		{
+			if (info.getPower() == 2)
+			{
 				totalCount++;
 			}
 		}
@@ -399,14 +456,16 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 改变公会的公告信息
 	 */
-	public void setGuildSlogan(String guildSlogan) {
+	public void setGuildSlogan(String guildSlogan)
+	{
 		guildInfo.setGuildSlogan(guildSlogan);
 	}
 
 	/**
 	 * 是否拥有这个权力
 	 */
-	public boolean isHavePower(long userId) {
+	public boolean isHavePower(long userId)
+	{
 		GuildMemberInfo memberInfo = getGuildMember(userId);
 		return memberInfo != null && memberInfo.getPower() <= GuildPower.GUILD_LEADER;
 	}
@@ -414,27 +473,31 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 是否为会长
 	 */
-	public boolean isLeader(long userId) {
+	public boolean isLeader(long userId)
+	{
 		return leaderInfo.getUserId() == userId;
 	}
 
 	/**
 	 * 删除掉公会内的所有数据
 	 */
-	public void deleteAllInfo(long guildId, GamePlayer player) {
+	public void deleteAllInfo(long guildId, GamePlayer player)
+	{
 		deleteGuildMember(player);
 		deleteAllGuildApply(guildId);
 		guildEventList.clear();
 		DaoMgr.guildEventDao.deleteAllGuildEvent(guildId);
 	}
 
-	public void addGuildEvent(int eventId, Object... args) {
+	public void addGuildEvent(int eventId, Object... args)
+	{
 		GuildEventInfo eventInfo = new GuildEventInfo();
 		// eventInfo.setEventDesc(SystemMsgMgr.getInstance().getMsgInfoByMsgId(eventId,
 		// args));
 		eventInfo.setEventTime(TimeUtil.getSysCurSeconds());
 		eventInfo.setOp(DBOption.INSERT);
-		if (guildEventList.size() >= 50) {
+		if (guildEventList.size() >= 50)
+		{
 			GuildEventInfo deleteEvent = guildEventList.remove(0);
 			DaoMgr.guildEventDao.deleteGuildEventInfo(guildInfo.getGuildId(), deleteEvent.getEventTime());
 		}
@@ -442,26 +505,37 @@ public class Guild extends AbstractActionQueue {
 		guildEventList.add(eventInfo);
 	}
 
-	public void syncUpdateMemInfo(long userId, short propertyType, int propertyValue) {
+	public void syncUpdateMemInfo(long userId, short propertyType, int propertyValue)
+	{
 		GuildMemberInfo memberInfo = getGuildMember(userId);
-		if (memberInfo != null) {
-			if (propertyType == PlayerSynchType.LOGOUT_TIME) {
+		if (memberInfo != null)
+		{
+			if (propertyType == PlayerSynchType.LOGOUT_TIME)
+			{
 				memberInfo.setLogoutTime(propertyValue);
-			} else if (propertyType == PlayerSynchType.LEVEL) {
+			}
+			else if (propertyType == PlayerSynchType.LEVEL)
+			{
 				memberInfo.setPlayerLv(propertyValue);
-			} else if (propertyType == PlayerSynchType.FIGHT_STRENGTH) {
+			}
+			else if (propertyType == PlayerSynchType.FIGHT_STRENGTH)
+			{
 				memberInfo.setFightStrength(propertyValue);
-			} else if (propertyType == PlayerSynchType.VIPLV) {
+			}
+			else if (propertyType == PlayerSynchType.VIPLV)
+			{
 				memberInfo.setVipLv(propertyValue);
 			}
 		}
 	}
 
-	public GuildMemberInfo getLeaderInfo() {
+	public GuildMemberInfo getLeaderInfo()
+	{
 		return leaderInfo;
 	}
 
-	public int getSelfContribution(long userId) {
+	public int getSelfContribution(long userId)
+	{
 		GuildMemberInfo info = getGuildMember(userId);
 		return info != null ? info.getContribution() : 0;
 	}
@@ -469,55 +543,77 @@ public class Guild extends AbstractActionQueue {
 	/**
 	 * 保存公会的信息
 	 */
-	public void saveGuildInfo() {
+	public void saveGuildInfo()
+	{
 		long guildId = getGuildId();
-		try {
-			if (guildInfo.getOp() == DBOption.INSERT) {
+		try
+		{
+			if (guildInfo.getOp() == DBOption.INSERT)
+			{
 				DaoMgr.guildDao.addGuildInfo(guildId, guildInfo);
 			}
 
-			if (guildInfo.getOp() == DBOption.UPDATE) {
+			if (guildInfo.getOp() == DBOption.UPDATE)
+			{
 				DaoMgr.guildDao.updateGuildInfo(guildId, guildInfo);
 			}
-		} catch (Exception e) {
-			GameLog.error("保存公会数据,guildId: " + guildId, e);
+		}
+		catch (Exception e)
+		{
+			Log.error("保存公会数据,guildId: " + guildId, e);
 		}
 
-		try {
+		try
+		{
 			List<GuildMemberInfo> saveList = new ArrayList<GuildMemberInfo>(guildMemberList);
-			for (GuildMemberInfo memberInfo : saveList) {
-				if (memberInfo.getOp() == DBOption.INSERT) {
+			for (GuildMemberInfo memberInfo : saveList)
+			{
+				if (memberInfo.getOp() == DBOption.INSERT)
+				{
 					DaoMgr.guildMemerDao.addGuildMemberInfo(guildId, memberInfo);
 				}
 
-				if (memberInfo.getOp() == DBOption.UPDATE) {
+				if (memberInfo.getOp() == DBOption.UPDATE)
+				{
 					DaoMgr.guildMemerDao.updateMemberInfo(guildId, memberInfo);
 				}
 			}
-		} catch (Exception e) {
-			GameLog.error("保存公会成员数据,guildId: " + guildId, e);
+		}
+		catch (Exception e)
+		{
+			Log.error("保存公会成员数据,guildId: " + guildId, e);
 		}
 
-		try {
+		try
+		{
 			List<GuildApplyInfo> saveList = new ArrayList<GuildApplyInfo>(guildApplyList);
-			for (GuildApplyInfo applyInfo : saveList) {
-				if (applyInfo.getOp() == DBOption.INSERT) {
+			for (GuildApplyInfo applyInfo : saveList)
+			{
+				if (applyInfo.getOp() == DBOption.INSERT)
+				{
 					DaoMgr.guildApplyDao.addGuildApplyInfo(guildId, applyInfo);
 				}
 			}
-		} catch (Exception e) {
-			GameLog.error("保存公会申请数据,guildId: " + guildId, e);
+		}
+		catch (Exception e)
+		{
+			Log.error("保存公会申请数据,guildId: " + guildId, e);
 		}
 
-		try {
+		try
+		{
 			List<GuildEventInfo> saveList = new ArrayList<GuildEventInfo>(guildEventList);
-			for (GuildEventInfo eventInfo : saveList) {
-				if (eventInfo.getOp() == DBOption.INSERT) {
+			for (GuildEventInfo eventInfo : saveList)
+			{
+				if (eventInfo.getOp() == DBOption.INSERT)
+				{
 					DaoMgr.guildEventDao.addGuildEventInfo(guildId, eventInfo);
 				}
 			}
-		} catch (Exception e) {
-			GameLog.error("保存公会事件数据,guildId: " + guildId, e);
+		}
+		catch (Exception e)
+		{
+			Log.error("保存公会事件数据,guildId: " + guildId, e);
 		}
 	}
 }

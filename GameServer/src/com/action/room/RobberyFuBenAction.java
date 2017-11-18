@@ -2,7 +2,7 @@ package com.action.room;
 
 import java.util.List;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.pbmessage.GamePBMsg.PlayerMsg;
 import com.pbmessage.GamePBMsg.RoomBossInfoMsg;
 import com.pbmessage.GamePBMsg.RoomInfoMsg;
@@ -19,27 +19,31 @@ import com.room.RoomPlayer;
 import com.room.RoomState;
 import com.team.Team;
 
-public class RobberyFuBenAction extends Action {
+public class RobberyFuBenAction extends AbstractAction
+{
 	private GamePlayer player;
 	private RoomInfoMsg netMsg;
 
-	public RobberyFuBenAction(GamePlayer player, RoomInfoMsg netMsg) {
-		super(RoomMgr.executor.getDefaultQueue());
+	public RobberyFuBenAction(GamePlayer player, RoomInfoMsg netMsg)
+	{
 		this.player = player;
 		this.netMsg = netMsg;
 	}
 
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		Team team = player.getTeam();
-		if (team != null && !team.isLeader(player.getUserId())) {
+		if (team != null && !team.isLeader(player.getUserId()))
+		{
 			player.sendTips(1017);
 			return;
 		}
 
 		int roomId = netMsg.getRoomId();
 		Room room = RoomMgr.getInstance().getRoom(roomId);
-		if (room == null || room.roomState == RoomState.PLAYING || player.getRoom() != null) {
+		if (room == null || room.roomState == RoomState.PLAYING || player.getRoom() != null)
+		{
 			return;
 		}
 
@@ -51,7 +55,8 @@ public class RobberyFuBenAction extends Action {
 		attackRoomMsg.setRoomStageId(room.roomStageId);
 		List<RoomPlayer> roomPlayerList = room.getTotalRoomPlayer();
 		int robberyCamp = BattleCamp.ATTACKER;
-		for (RoomPlayer roomPlayer : roomPlayerList) {
+		for (RoomPlayer roomPlayer : roomPlayerList)
+		{
 			RoomPlayerInfoMsg.Builder roomPlayerInfoMsg = RoomPlayerInfoMsg.newBuilder();
 			PlayerMsg.Builder playerInfoMsg = PlayerMgr.buildPlayerInfoMsg(roomPlayer.player.playerInfo);
 			playerInfoMsg.setCurrHP(roomPlayer.playerHP);
@@ -66,9 +71,11 @@ public class RobberyFuBenAction extends Action {
 
 		int roomPlayerCount = room.getRoomPlayerCount();
 		robberyCamp += 1;
-		if (team != null) {
+		if (team != null)
+		{
 			List<GamePlayer> teamMemberList = team.getTeamMemberList();
-			for (int i = 0; i < teamMemberList.size(); i++) {
+			for (int i = 0; i < teamMemberList.size(); i++)
+			{
 				GamePlayer tempPlayer = teamMemberList.get(i);
 				RoomPlayerInfoMsg.Builder roomPlayerInfo = RoomPlayerInfoMsg.newBuilder();
 				PlayerMsg.Builder playerInfoMsg = PlayerMgr.buildPlayerInfoMsg(tempPlayer.playerInfo);
@@ -81,7 +88,9 @@ public class RobberyFuBenAction extends Action {
 				defenserRoomMsg.addRoomPlayerList(roomPlayerInfo);
 				attackRoomMsg.addRoomPlayerList(roomPlayerInfo);
 			}
-		} else {
+		}
+		else
+		{
 			RoomPlayerInfoMsg.Builder roomPlayerInfo = RoomPlayerInfoMsg.newBuilder();
 			PlayerMsg.Builder playerInfoMsg = PlayerMgr.buildPlayerInfoMsg(player.playerInfo);
 			roomPlayerInfo.setPlayerInfo(playerInfoMsg);
@@ -95,8 +104,10 @@ public class RobberyFuBenAction extends Action {
 		}
 
 		roomPlayerList = room.getTotalRoomPlayer();
-		for (RoomPlayer roomPlayer : roomPlayerList) {
-			if (roomPlayer.roomCamp != robberyCamp) {
+		for (RoomPlayer roomPlayer : roomPlayerList)
+		{
+			if (roomPlayer.roomCamp != robberyCamp)
+			{
 				roomPlayer.player.sendPacket(Protocol.S_C_ROBBERYED_INSTANCE, defenserRoomMsg);
 			}
 		}
@@ -110,12 +121,16 @@ public class RobberyFuBenAction extends Action {
 		bossInfoMsg.setBossHP(roomBossInfo.bossHP);
 		attackRoomMsg.setBossInfo(bossInfoMsg);
 
-		if (team != null) {
+		if (team != null)
+		{
 			List<GamePlayer> teamMemberList = team.getTeamMemberList();
-			for (GamePlayer tempPlayer : teamMemberList) {
+			for (GamePlayer tempPlayer : teamMemberList)
+			{
 				tempPlayer.sendPacket(Protocol.S_C_ROBBERY_INSTANCE, attackRoomMsg);
 			}
-		} else {
+		}
+		else
+		{
 			player.sendPacket(Protocol.S_C_ROBBERY_INSTANCE, attackRoomMsg);
 		}
 

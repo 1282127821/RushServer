@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.file.CTabFile;
+import com.util.CTabFile;
 
 public class RandomNameMgr {
 	private RandomNameInfo[] aryUserName;

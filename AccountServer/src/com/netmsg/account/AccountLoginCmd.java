@@ -13,7 +13,7 @@ import com.pbmessage.GamePBMsg.AccountLoginMsg;
 import com.pbmessage.GamePBMsg.AccountLoginResultMsg;
 import com.pbmessage.GamePBMsg.KickOutPlayerMsg;
 import com.pbmessage.GamePBMsg.PlayerInfoMsg;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.StringUtil;
 import com.util.TimeUtil;
 
@@ -37,7 +37,7 @@ public class AccountLoginCmd implements NetMsg
 			}
 			catch (Exception e)
 			{
-				GameLog.error("挤在线玩家错误  accountName : " + accountName, e);
+				Log.error("挤在线玩家错误  accountName : " + accountName, e);
 			}
 			finally
 			{
@@ -139,7 +139,7 @@ public class AccountLoginCmd implements NetMsg
 			boolean result = DaoMgr.accountDao.updateLoginAccount(info);
 			if (!result)
 			{
-				GameLog.error("更新用户信息失败");
+				Log.error("更新用户信息失败");
 				return null;
 			}
 		}
@@ -149,6 +149,7 @@ public class AccountLoginCmd implements NetMsg
 			info.setAccountId(BaseServer.IDWORK.nextId());
 			info.setAccountName(accountName);
 			info.setLoginIP(loginIP);
+			info.setCreateTime(TimeUtil.getSysCurSeconds());
 			info.setImei(imei);
 			info.setModel(model);
 			info.setBrand(brand);
@@ -160,7 +161,7 @@ public class AccountLoginCmd implements NetMsg
 			if (!DaoMgr.accountDao.addAccount(info))
 			{
 				info = null;
-				GameLog.error("添加账号失败，账号名: " + accountName + "到数据库失败,请检查数据库是否正常?");
+				Log.error("添加账号失败，账号名: " + accountName + "到数据库失败,请检查数据库是否正常?");
 			}
 		}
 		return info;
@@ -181,7 +182,7 @@ public class AccountLoginCmd implements NetMsg
 			boolean isForbid = DaoMgr.accountDao.forbidAccount(account.getAccountId(), forbidExpireTime, "玩家禁号时间过期，系统自动解封", "系统");
 			if (!isForbid)
 			{
-				GameLog.error("玩家账号被封");
+				Log.error("玩家账号被封");
 			}
 			return;
 		}

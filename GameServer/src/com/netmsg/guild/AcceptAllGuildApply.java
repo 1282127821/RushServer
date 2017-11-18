@@ -5,9 +5,11 @@ import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
 import com.player.GamePlayer;
 
-public class AcceptAllGuildApply implements NetCmd {
+public class AcceptAllGuildApply implements NetCmd
+{
 
-	public void execute(GamePlayer player, PBMessage packet) throws Exception {
+	public void execute(GamePlayer player, PBMessage packet) throws Exception
+	{
 		GuildMgr.getInstance().acceptTotalGuildApply(player);
 	}
 }

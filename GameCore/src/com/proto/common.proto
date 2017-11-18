@@ -1,0 +1,27 @@
+package com.pbmessage;
+option java_package = "com.pbmessage";
+option java_outer_classname = "CommonMsg";
+
+message BoolMsg {
+	optional bool value = 1;
+}
+
+message IntMsg {
+	optional int32 value = 1;  
+}
+
+message IntListMsg {
+	repeated int32 values = 1; 
+}
+
+message LongMsg {
+	optional int64 value = 1;
+}
+
+message LongListMsg {
+	repeated int64 values = 1;
+}
+
+message StringMsg {
+	optional string value = 1;
+}

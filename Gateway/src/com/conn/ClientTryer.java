@@ -5,7 +5,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.network.LinkedClient;
-import com.util.GameLog;
+import com.util.Log;
 
 /**
  * 该类负责如果服务器端连接断开,尝试继续连接
@@ -57,23 +57,23 @@ class TryRunner implements Runnable {
 			
 			if (!client.isTry()) {
 				future.cancel(true);
-				GameLog.info("Try connect to " + client.getAddress() + ":" + client.getPort() + " cancel, tryRunner will exit.");
+				Log.info("Try connect to " + client.getAddress() + ":" + client.getPort() + " cancel, tryRunner will exit.");
 				return;
 			}
 
 			boolean result = client.connect();
-			GameLog.info("try connect to server, address is " + client.getAddress() + ":" + client.getPort() + (result ? " succeed" : " failed") + ".");
+			Log.info("try connect to server, address is " + client.getAddress() + ":" + client.getPort() + (result ? " succeed" : " failed") + ".");
 			if (result) {
 				future.cancel(true);
-				GameLog.info("Try connect to " + client.getAddress() + ":" + client.getPort() + " succeed,tryRunner exit.");
+				Log.info("Try connect to " + client.getAddress() + ":" + client.getPort() + " succeed,tryRunner exit.");
 				ClientSet.sendRegisterMsg(client.getType(), client);
 			} else if (tryTimes == 0) {
 				future.cancel(true);
 				ClientSet.removeServerClient(client);
-				GameLog.info("Try connect to " + client.getAddress() + " fail, tryRunner will exit.");
+				Log.info("Try connect to " + client.getAddress() + " fail, tryRunner will exit.");
 			} 
 		} catch (Exception e) {
-			GameLog.error("TryRunner has exception:", e);
+			Log.error("TryRunner has exception:", e);
 		}
 	}
 }

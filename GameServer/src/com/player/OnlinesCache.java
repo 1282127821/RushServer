@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.util.GameLog;
+import com.util.Log;
 import com.util.StringUtil;
 import com.util.TimeUtil;
 
@@ -57,7 +57,7 @@ public class OnlinesCache extends AbstractCache
 			}
 			catch (Exception e)
 			{
-				GameLog.error("同步服务器在线人数出错!", e);
+				Log.error("同步服务器在线人数出错!", e);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class OnlinesCache extends AbstractCache
 		catch (Exception e)
 		{
 			String msg = String.format("较验失败UserId:%s,Key:%s", userId, key);
-			GameLog.error(msg, e);
+			Log.error(msg, e);
 		}
 		return false;
 	}

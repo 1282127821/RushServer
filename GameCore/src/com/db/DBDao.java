@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.util.GameLog;
+import com.util.Log;
 
 public abstract class DBDao
 {
@@ -25,7 +25,7 @@ public abstract class DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("关闭数据库出错", e);
+			Log.error("关闭数据库出错", e);
 		}
 	}
 
@@ -41,7 +41,7 @@ public abstract class DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("关闭数据库出错", e);
+			Log.error("关闭数据库出错", e);
 		}
 		closeConn(conn);
 	}
@@ -60,7 +60,7 @@ public abstract class DBDao
 		}
 		catch (SQLException e)
 		{
-			GameLog.error("关闭db连接时异常", e);
+			Log.error("关闭db连接时异常", e);
 		}
 	}
 }

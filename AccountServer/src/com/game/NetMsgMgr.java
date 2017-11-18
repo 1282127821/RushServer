@@ -6,7 +6,7 @@ import com.netmsg.account.AccountLoginCmd;
 import com.netmsg.account.CreatePlayerCmd;
 import com.netmsg.account.DelPlayerCmd;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 
 /**
  * 网络消息管理器
@@ -31,7 +31,7 @@ public final class NetMsgMgr {
 
 	private void registerNetMsg(short codeId, NetMsg netMsg) {
 		if (netMsgMap.containsKey(codeId)) {
-			GameLog.error("网络协议号重复:  0x: " + Integer.toHexString(codeId));
+			Log.error("网络协议号重复:  0x: " + Integer.toHexString(codeId));
 			System.exit(1);
 		}
 		

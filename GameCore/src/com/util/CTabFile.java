@@ -1,4 +1,4 @@
-package com.file;
+package com.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,8 +7,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.util.GameLog;
 
 /*
  * 这个支持以Tab为分隔符的txt文件格式，支持的编码可以为UTF-8和Unicode，默认以UTF-8格式支持，因为考虑国际化。
@@ -56,7 +54,7 @@ public class CTabFile
 		}
 		catch (IOException e)
 		{
-			GameLog.error("读取策划文件配置失败: pathFileName: " + pathFileName + ", " + e.getMessage());
+			Log.error("读取策划文件配置失败: pathFileName: " + pathFileName + ", " + e.getMessage());
 		}
 		return false;
 	}
@@ -75,7 +73,7 @@ public class CTabFile
 
 		if (colIndex == Integer.MAX_VALUE)
 		{
-			GameLog.error("读取配置出错，文件名为: " + this.pathFileName + " 字段名为 " + colName + "不存在");
+			Log.error("读取配置出错，文件名为: " + this.pathFileName + " 字段名为 " + colName + "不存在");
 		}
 
 		return colIndex;

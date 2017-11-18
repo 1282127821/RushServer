@@ -5,13 +5,16 @@ import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
 import com.player.GamePlayer;
 import com.room.Room;
+import com.room.RoomMgr;
 
-public class SyncPVPState implements NetCmd {
-	public void execute(GamePlayer player, PBMessage packet) throws Exception {
+public class SyncPVPState implements NetCmd
+{
+	public void execute(GamePlayer player, PBMessage packet) throws Exception
+	{
 		Room room = player.getRoom();
-		if (room != null) 
+		if (room != null)
 		{
-			room.enqueue(new EnterAnimationAction(room, packet));
+			RoomMgr.getInstance().addAction(new EnterAnimationAction(room, packet));
 		}
 	}
 }

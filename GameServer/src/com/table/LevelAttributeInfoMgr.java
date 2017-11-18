@@ -1,7 +1,7 @@
 package com.table;
 
-import com.file.CTabFile;
 import com.player.FightAttributeType;
+import com.util.CTabFile;
 
 public class LevelAttributeInfoMgr {
 	private LevelAttributeInfo[] aryLevelAttributeInfo;

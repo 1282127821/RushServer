@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.GameServerHandler;
 import com.db.DBOption;
+import com.executor.CmdTaskQueue;
+import com.executor.ExecutorPool;
 import com.friend.FriendMgr;
 import com.google.protobuf.AbstractMessage.Builder;
 import com.guild.Guild;
 import com.guild.GuildMgr;
 import com.mail.MailMgr;
-import com.netmsg.AbstractCmdTaskQueue;
-import com.netmsg.CmdTask;
-import com.netmsg.CmdTaskQueue;
 import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
 import com.network.LinkedClient;
@@ -51,11 +49,14 @@ import com.table.LockData;
 import com.table.ResourceInfo;
 import com.table.RewardInfoMgr;
 import com.team.Team;
-import com.util.GameLog;
+import com.util.Log;
 import com.util.TimeUtil;
 
 public class GamePlayer
 {
+	/** 玩家命令处理线程池 */
+	public static ExecutorPool userCmdpool = new ExecutorPool("game-player-drive-pool", Runtime.getRuntime().availableProcessors());
+
 	/**
 	 * 当前的任务Id
 	 */
@@ -96,11 +97,6 @@ public class GamePlayer
 	 */
 	public int chatTime;
 
-	/**
-	 * 
-	 */
-	private int serverIndex;
-
 	private CmdTaskQueue cmdTaskQueue;
 	private Object lock;
 	private LockData loadLock = new LockData();
@@ -120,7 +116,7 @@ public class GamePlayer
 
 	public GamePlayer()
 	{
-		cmdTaskQueue = new AbstractCmdTaskQueue(GameServerHandler.executor);
+		cmdTaskQueue = new CmdTaskQueue(userCmdpool);
 		changeCount = new AtomicInteger(0);
 	}
 
@@ -485,7 +481,7 @@ public class GamePlayer
 			catch (Exception e)
 			{
 				setPlayerState(PlayerState.OFFLINE);
-				GameLog.error(String.format("用户 userId = %s, nickName = %s:私有数据加载失败", getUserId(), getUserName()), e);
+				Log.error(String.format("用户 userId = %s, nickName = %s:私有数据加载失败", getUserId(), getUserName()), e);
 				return false;
 			}
 			finally
@@ -544,7 +540,7 @@ public class GamePlayer
 			}
 			catch (Exception e)
 			{
-				GameLog.error("unload personal data error. userId : " + getUserId(), e);
+				Log.error("unload personal data error. userId : " + getUserId(), e);
 			}
 			finally
 			{
@@ -570,7 +566,7 @@ public class GamePlayer
 		}
 		catch (Exception e)
 		{
-			GameLog.error("保存玩家数据出错: UserId" + getUserId(), e);
+			Log.error("保存玩家数据出错: UserId" + getUserId(), e);
 		}
 
 		if (propMgr != null)
@@ -620,7 +616,7 @@ public class GamePlayer
 		}
 		else
 		{
-			GameLog.error("Can not found gateway connection , userId = " + getUserId() + " packet forward failed.");
+			Log.error("Can not found gateway connection , userId = " + getUserId() + " packet forward failed.");
 		}
 	}
 
@@ -654,7 +650,7 @@ public class GamePlayer
 		}
 		catch (Exception e)
 		{
-			GameLog.error("重置玩家数据异常,  userId : " + getUserId() + ", userName : " + getUserName(), e);
+			Log.error("重置玩家数据异常,  userId : " + getUserId() + ", userName : " + getUserName(), e);
 		}
 	}
 
@@ -672,7 +668,7 @@ public class GamePlayer
 		{
 			String msg = "5点重置数据,userId :  " + getUserId() + ", userName : " + getUserName() + " , resetTime : "
 					+ TimeUtil.getDateFormat(new Date(playerInfo.getResetTime() * 1000L));
-			GameLog.error(msg, e);
+			Log.error(msg, e);
 		}
 		finally
 		{
@@ -696,7 +692,7 @@ public class GamePlayer
 		int changes = changeCount.decrementAndGet();
 		if (changes < 0)
 		{
-			GameLog.error("changeCount Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n");
+			Log.error("changeCount Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n");
 			changeCount.set(0);
 		}
 
@@ -879,7 +875,7 @@ public class GamePlayer
 			break;
 
 		default:
-			GameLog.info(String.format("资源%s没有添加成功", resourceId));
+			Log.info(String.format("资源%s没有添加成功", resourceId));
 			break;
 		}
 	}

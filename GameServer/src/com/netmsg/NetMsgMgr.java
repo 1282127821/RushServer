@@ -70,7 +70,7 @@ import com.netmsg.team.TeamKickOutCmd;
 import com.netmsg.team.TeamLeaveCmd;
 import com.netmsg.team.TeamSynMessageCMD;
 import com.protocol.Protocol;
-import com.util.GameLog;
+import com.util.Log;
 
 /**
  * 网络消息管理器
@@ -160,7 +160,7 @@ public final class NetMsgMgr {
 
 	private void registerNetMsg(short codeId, NetCmd netCmd) {
 		if (netMsgMap.containsKey(codeId)) {
-			GameLog.error("网络协议号重复:  0x: " + Integer.toHexString(codeId));
+			Log.error("网络协议号重复:  0x: " + Integer.toHexString(codeId));
 			System.exit(0);
 		}
 		

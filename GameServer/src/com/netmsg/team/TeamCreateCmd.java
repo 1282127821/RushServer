@@ -4,14 +4,17 @@ import com.action.team.TeamCreateAction;
 import com.netmsg.NetCmd;
 import com.netmsg.PBMessage;
 import com.player.GamePlayer;
-import com.team.TeamMgr;
+import com.room.RoomMgr;
 
-public class TeamCreateCmd implements NetCmd {
-	public void execute(GamePlayer player, PBMessage packet) throws Exception {
-		if (player.getTeam() != null) {
+public class TeamCreateCmd implements NetCmd
+{
+	public void execute(GamePlayer player, PBMessage packet) throws Exception
+	{
+		if (player.getTeam() != null)
+		{
 			return;
 		}
-		
-		TeamMgr.getInstance().enDefaultQueue(new TeamCreateAction(player));
+
+		RoomMgr.getInstance().addAction(new TeamCreateAction(player));
 	}
 }

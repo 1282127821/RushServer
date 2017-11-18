@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.util.GameLog;
+import com.util.Log;
 import com.util.StringUtil;
 
 /**
@@ -37,7 +37,7 @@ public final class DirtyData
 		}
 		catch (IOException e)
 		{
-			GameLog.error("读取脏字符文件时异常", e);
+			Log.error("读取脏字符文件时异常", e);
 			return false;
 		}
 

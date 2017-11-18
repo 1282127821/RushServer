@@ -14,7 +14,7 @@ import com.player.ItemChangeType;
 import com.protocol.Protocol;
 import com.table.ConfigMgr;
 import com.table.SkillTemplateMgr;
-import com.util.GameLog;
+import com.util.Log;
 
 public class FightSkillMgr {
 	private GamePlayer player;
@@ -145,7 +145,7 @@ public class FightSkillMgr {
 	public void skillLevelUp(int skillId, int upgradeType) {
 		FightSkillUnit skillInfo = getSkillUnitBySkillId(skillId);
 		if (skillInfo == null) {
-			GameLog.error("skillLevelUp 技能Id为: " + skillId + " 并未学习，" + "UserId: " + player.getUserId());
+			Log.error("skillLevelUp 技能Id为: " + skillId + " 并未学习，" + "UserId: " + player.getUserId());
 			return;
 		}
 
@@ -155,7 +155,7 @@ public class FightSkillMgr {
 		}
 		int curSkillLv = skillInfo.getSkillLv();
 		if (curSkillLv == maxSkillLv) {
-			GameLog.error("skillLevelUp 当前技能等级已达最高级，等级为:   " + curSkillLv + "，技能Id为:  " + skillId + "，UserId: "
+			Log.error("skillLevelUp 当前技能等级已达最高级，等级为:   " + curSkillLv + "，技能Id为:  " + skillId + "，UserId: "
 					+ player.getUserId());
 			return;
 		}
@@ -284,7 +284,7 @@ public class FightSkillMgr {
 				}
 			}
 		} catch (Exception e) {
-			GameLog.error("保存玩家技能信息出错, UserId:  " + userId, e);
+			Log.error("保存玩家技能信息出错, UserId:  " + userId, e);
 		}
 	}
 }

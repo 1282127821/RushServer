@@ -94,19 +94,19 @@ public final class IDWorker
 				public void run()
 				{
 					long startTime = System.currentTimeMillis();
-					GameLog.info("start!");
+					Log.info("start!");
 					for (int i = 0; i < 30000; i++)
 					{
 						long id = worker2.nextId();
 						Long old = keys.putIfAbsent(id, id);
 						if (old != null)
 						{
-							GameLog.error("冲突id=" + id);
+							Log.error("冲突id=" + id);
 						}
 					}
 
 					long dt = System.currentTimeMillis() - startTime;
-					GameLog.info("ok! " + keys.size() + " dt=" + dt);
+					Log.info("ok! " + keys.size() + " dt=" + dt);
 				}
 			});
 		}

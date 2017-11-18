@@ -1,20 +1,21 @@
 package com.action.team;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.player.GamePlayer;
-import com.room.RoomMgr;
 import com.team.TeamMgr;
 
-public class TeamLeaveAction extends Action {
+public class TeamLeaveAction extends AbstractAction
+{
 	private GamePlayer player;
-	
-	public TeamLeaveAction(GamePlayer player) {
-		super(RoomMgr.executor.getDefaultQueue());
+
+	public TeamLeaveAction(GamePlayer player)
+	{
 		this.player = player;
 	}
-	
+
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		TeamMgr.getInstance().leaveTeam(player);
 	}
 }

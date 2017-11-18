@@ -10,7 +10,7 @@ import com.prop.PlayerPropMgr;
 import com.prop.Prop;
 import com.prop.PropInventory;
 import com.prop.PropType;
-import com.util.GameLog;
+import com.util.Log;
 
 public class PropOperatorCmd implements NetCmd {
 	/**
@@ -48,7 +48,7 @@ public class PropOperatorCmd implements NetCmd {
 	private void putOnEquip(GamePlayer player, int posIndex) {
 		PlayerPropMgr propMgr = player.getPropMgr();
 		if (propMgr == null) {
-			GameLog.error("穿装备出错, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
+			Log.error("穿装备出错, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
 			return;
 		}
 
@@ -59,7 +59,7 @@ public class PropOperatorCmd implements NetCmd {
 		
 		int masterType = equip.getMasterType();
 		if (equip.getMasterType() != PropType.EQUIP) {
-			GameLog.error("穿装备出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
+			Log.error("穿装备出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
 			return;
 		}
 		
@@ -83,7 +83,7 @@ public class PropOperatorCmd implements NetCmd {
 	private void unEquip(GamePlayer player, int posIndex) {
 		PlayerPropMgr propMgr = player.getPropMgr();
 		if (propMgr == null) {
-			GameLog.error("unEquip Error, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
+			Log.error("unEquip Error, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class PropOperatorCmd implements NetCmd {
 
 		int masterType = equip.getMasterType();
 		if (equip.getMasterType() != PropType.EQUIP) {
-			GameLog.error("卸载装备出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
+			Log.error("卸载装备出错, 此道具不是装备 MasterType:  " + masterType +  ", UserId: " + player.getUserId());
 			return;
 		}
 		
@@ -123,18 +123,18 @@ public class PropOperatorCmd implements NetCmd {
 	private void sellProp(GamePlayer player, int inventoryType, int posIndex, int propCount) {
 		PlayerPropMgr propMgr = player.getPropMgr();
 		if (propMgr == null) {
-			GameLog.error("sellProp Error, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
+			Log.error("sellProp Error, PlayerPropInventory is NULL." + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		Prop prop = propMgr.getPropByPosIndex(inventoryType, posIndex);
 		if (prop == null) {
-			GameLog.error("sellProp Error, 道具为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
+			Log.error("sellProp Error, 道具为空，位置为:  " + posIndex + ", UserId: " + player.getUserId());
 			return;
 		}
 
 		if (propCount <= 0 || prop.getStackCount() < propCount) {
-			GameLog.error("sellProp Error, SellCount: " + propCount + ", propStackCount: " + prop.getStackCount()
+			Log.error("sellProp Error, SellCount: " + propCount + ", propStackCount: " + prop.getStackCount()
 					+ ", UserId: " + player.getUserId());
 			return;
 		}

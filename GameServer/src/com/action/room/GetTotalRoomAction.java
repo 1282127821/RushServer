@@ -1,20 +1,21 @@
 package com.action.room;
 
-import com.execaction.Action;
+import com.executor.AbstractAction;
 import com.player.GamePlayer;
 import com.room.RoomMgr;
 
-public class GetTotalRoomAction extends Action {
+public class GetTotalRoomAction extends AbstractAction
+{
 	private GamePlayer player;
 
-	public GetTotalRoomAction(GamePlayer player) {
-		super(RoomMgr.executor.getDefaultQueue());
+	public GetTotalRoomAction(GamePlayer player)
+	{
 		this.player = player;
 	}
 
 	@Override
-	public void execute() {
+	public void execute()
+	{
 		RoomMgr.getInstance().packTotalRoomList(player);
 	}
 }
-
