@@ -32,23 +32,23 @@ public final class TimeUtil
 	 */
 	public static long getSysCurTimeMillis()
 	{
-		return getCalendar().getTimeInMillis();
+		return System.currentTimeMillis();
 	}
 
 	/**
 	 * 获取系统距1970年1月1日总秒
 	 */
-	public static int getSysCurSeconds()
+	public static int getSysCurSecond()
 	{
-		return (int) (getSysCurTimeMillis() * SECOND_FACTOR);
+		return (int) (System.currentTimeMillis() * SECOND_FACTOR);
 	}
 
 	/**
-	 * 获取系统距1970年1月1日总秒
+	 * 获取系统距1970年1月1日总天数
 	 */
 	public static int getSysCurDay()
 	{
-		return (int) (getSysCurTimeMillis() / MILSEC_PER_DAY);
+		return (int) (System.currentTimeMillis() / MILSEC_PER_DAY);
 	}
 
 	/**

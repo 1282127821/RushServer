@@ -8,7 +8,6 @@ import com.netmsg.NetMsgMgr;
 import com.network.PBDecoder;
 import com.network.PBEncoder;
 import com.player.DaoMgr;
-import com.player.LoginMgr;
 import com.player.WorldMgr;
 import com.room.RoomMgr;
 import com.schedule.TimerTaskMgr;
@@ -55,7 +54,6 @@ public final class GameServer extends BaseServer
 
 	private boolean loadMemoryData()
 	{
-		LoginMgr.init();
 		DaoMgr.init();
 		GuildMgr.getInstance().loadAllGuild();
 		return true;

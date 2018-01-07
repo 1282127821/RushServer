@@ -64,7 +64,7 @@ public final class GuildMgr
 		guildInfo.setIsAudit(true);
 		guildInfo.setGuildLv((short) 1);
 		guildInfo.setTotalExp(0);
-		guildInfo.setCreateTime(TimeUtil.getSysCurSeconds());
+		guildInfo.setCreateTime(TimeUtil.getSysCurSecond());
 		guildInfo.setExist(true);
 		guildInfo.setOp(DBOption.INSERT);
 

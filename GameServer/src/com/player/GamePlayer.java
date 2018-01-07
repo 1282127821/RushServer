@@ -366,7 +366,8 @@ public class GamePlayer
 
 	public void enqueue(NetCmd netCmd, PBMessage packet)
 	{
-		cmdTaskQueue.enqueue(new CmdTask(this, netCmd, packet, cmdTaskQueue));
+		// cmdTaskQueue.enqueue(new CmdTask(this, netCmd, packet,
+		// cmdTaskQueue));
 	}
 
 	public FightInventory getFightInventory()
@@ -504,7 +505,7 @@ public class GamePlayer
 			{
 				setPlayerState(PlayerState.OFFLINE);
 				WorldMgr.onlineCount.decrementAndGet();
-				int logoutTime = TimeUtil.getSysCurSeconds();
+				int logoutTime = TimeUtil.getSysCurSecond();
 				setLogoutTime(logoutTime);
 				syncGuildMemInfo(PlayerSynchType.LOGOUT_TIME, logoutTime);
 				unloadData();
@@ -662,7 +663,7 @@ public class GamePlayer
 		try
 		{
 			beginChanges();
-			playerInfo.setResetTime(TimeUtil.getSysCurSeconds());
+			playerInfo.setResetTime(TimeUtil.getSysCurSecond());
 		}
 		catch (Exception e)
 		{

@@ -78,7 +78,7 @@ public class MailMgr
 		mailInfo.setMailAttach(mailAttach);
 		mailInfo.setMailType(mailType);
 		mailInfo.setMailState(MailState.NOTGET);
-		mailInfo.setSendTime(TimeUtil.getSysCurSeconds());
+		mailInfo.setSendTime(TimeUtil.getSysCurSecond());
 		mailInfo.setOp(DBOption.INSERT);
 		mailList.add(mailInfo);
 		return mailInfo;

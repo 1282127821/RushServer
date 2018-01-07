@@ -1,8 +1,9 @@
 {
 	"designcfgPath": "../Lib/txt/",
 	"isGM": "true",
+	"adminIp":"10.10.11.20",
 	"serverIndex": "1",	
-	"accountserver":
+	"loginserver":
 	{
 		"ip": "10.10.18.114",
 		"port": "8888",
@@ -16,27 +17,6 @@
 		"adminPort": "5100"
 	},
 	
-	"gateway":
-	[
-		{
-			"ip": "192.168.1.227",
-			"port": "6000",
-			"adminPort": "6100"
-		},
-		
-		{
-			"ip": "192.168.1.227",
-			"port": "5000",
-			"adminPort": "5100"
-		},
-		
-		{
-			"ip": "192.168.1.227",
-			"port": "5000",
-			"adminPort": "5100"
-		},
-	],
-	
 	"maindb": 
 	{
 		"dbname": "db_star",
@@ -44,26 +24,5 @@
 		"port": "3306",
 		"username": "root",
 		"password": "123456"
-	},
-
-	"crossserver":
-	[
-		{
-			"ip": "192.168.0.118",
-			"port": "5000",
-			"adminPort": "5100"
-		},
-		
-		{
-			"ip": "192.168.0.118",
-			"port": "5000",
-			"adminPort": "5100"
-		},
-		
-		{
-			"ip": "192.168.0.118",
-			"port": "5000",
-			"adminPort": "5100"
-		},
-	]
+	}
 }

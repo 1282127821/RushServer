@@ -48,7 +48,7 @@ public class MailInfo extends DBObject {
 	 * 是否超过七天
 	 */
 	public boolean isOverdue() {
-		return TimeUtil.getSysCurSeconds() - sendTime > 86400 * 7;
+		return TimeUtil.getSysCurSecond() - sendTime > 86400 * 7;
 	}
 
 	public List<ResourceInfo> getMailAttach() {

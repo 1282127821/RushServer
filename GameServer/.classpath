@@ -7,6 +7,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/GameCore"/>
 	<classpathentry kind="lib" path="/Lib/lib/fastjson-1.2.22.jar"/>
 	<classpathentry kind="lib" path="/Lib/lib/netty-all-4.1.6.Final.jar"/>
-	<classpathentry kind="lib" path="/Lib/lib/HikariCP-2.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

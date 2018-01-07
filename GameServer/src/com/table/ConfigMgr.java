@@ -5,10 +5,12 @@ import java.util.Map;
 
 import com.util.CTabFile;
 
-public final class ConfigMgr {
+public final class ConfigMgr
+{
 	private static ConfigMgr instance = new ConfigMgr();
 
-	public static ConfigMgr getInstance() {
+	public static ConfigMgr getInstance()
+	{
 		return instance;
 	}
 
@@ -151,25 +153,27 @@ public final class ConfigMgr {
 	 * 装备祝福失败概率
 	 */
 	public static double equipBlessFailChance;
-	
+
 	/**
 	 * 达到此祝福等级后祝福额外增加属性
 	 */
 	public static int equipBlessOverLv;
-	
+
 	/**
 	 * 装备祝福的最高等级
 	 */
 	public static int equipBlessMaxLv;
 
-	public boolean load(String fileName) {
+	public boolean load(String fileName)
+	{
 		CTabFile file = new CTabFile();
 		if (!file.load(fileName))
 			return false;
 
 		int len = file.getRows();
-		Map<String, String> configMap = new HashMap<String, String>(len);
-		for (int i = 0; i < len; ++i) {
+		Map<String, String> configMap = new HashMap<String, String>();
+		for (int i = 0; i < len; ++i)
+		{
 			String key = file.getStringByColName(i, "ConfigName");
 			String value = file.getStringByColName(i, "ConfigValue");
 			configMap.put(key, value);

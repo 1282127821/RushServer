@@ -11,8 +11,7 @@ import com.zaxxer.hikari.HikariDataSource;
 /**
  * 数据库连接池管理类
  */
-public final class DBPoolMgr
-{
+public final class DBPoolMgr {
 	private static final String URL = "jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true";
 	private HikariDataSource dbPool;
 	private String dbUrl;
@@ -20,13 +19,11 @@ public final class DBPoolMgr
 
 	private static DBPoolMgr instance = new DBPoolMgr();
 
-	public static DBPoolMgr getInstance()
-	{
+	public static DBPoolMgr getInstance() {
 		return instance;
 	}
 
-	public boolean initDBPool(DBInfo dbInfo)
-	{
+	public boolean initDBPool(DBInfo dbInfo) {
 		this.dbUrl = String.format(URL, dbInfo.ip, dbInfo.port, dbInfo.dbName);
 		this.maxConnCount = 32;
 		HikariConfig config = new HikariConfig();
@@ -44,14 +41,10 @@ public final class DBPoolMgr
 	/**
 	 * 获得一个数据库连接
 	 */
-	public Connection getConn()
-	{
-		try
-		{
+	public Connection getConn() {
+		try {
 			return dbPool.getConnection();
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			Log.error("获取数据库连接失败", e);
 			return null;
 		}
@@ -60,17 +53,14 @@ public final class DBPoolMgr
 	/**
 	 * 关闭数据库连接池
 	 */
-	public void closeDBPool()
-	{
-		if (dbPool != null)
-		{
+	public void closeDBPool() {
+		if (dbPool != null) {
 			dbPool.close();
 			dbPool = null;
 		}
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("dbUrl:		").append(dbUrl).append("\n");
 		sb.append("maxConnCount:		").append(maxConnCount);

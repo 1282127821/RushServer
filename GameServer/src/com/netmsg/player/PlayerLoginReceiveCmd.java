@@ -8,23 +8,28 @@ import com.player.GamePlayer;
 import com.util.Log;
 import com.util.TimeUtil;
 
-public class PlayerLoginReceiveCmd implements NetCmd {
+public class PlayerLoginReceiveCmd implements NetCmd
+{
 
-	public void execute(GamePlayer player, PBMessage packet) throws Exception {
+	public void execute(GamePlayer player, PBMessage packet) throws Exception
+	{
 		long userId = player.getUserId();
-		if (!player.isOnline()) {
+		if (!player.isOnline())
+		{
 			player.beginChanges();
 			player.loadPersonData();
-			player.setLoginTime(TimeUtil.getSysCurSeconds());
+			player.setLoginTime(TimeUtil.getSysCurSecond());
 			player.refershData(new Date());
 			player.commitChages(true);
-			
-			//发送黑名单列表给玩家
+
+			// 发送黑名单列表给玩家
 			player.sendTotalBlackUser();
-			
-			//发送所有邮件信息列表给客户端
+
+			// 发送所有邮件信息列表给客户端
 			player.getMailMgr().sendTotalMail();
-		} else {
+		}
+		else
+		{
 			Log.error(userId + " " + player.getUserName() + "当前用户状态不正确  state " + player.getPlayerState());
 		}
 	}

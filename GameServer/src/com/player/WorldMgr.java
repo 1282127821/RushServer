@@ -39,7 +39,7 @@ public class WorldMgr
 			playerInfo.setAccountId(accountId);
 			playerInfo.setUserName(userName);
 			playerInfo.setJobId(jobId);
-			playerInfo.setCreateTime(TimeUtil.getSysCurSeconds());
+			playerInfo.setCreateTime(TimeUtil.getSysCurSecond());
 			playerInfo.setPlayerLv(1);
 			playerInfo.setOp(DBOption.INSERT);
 			boolean result = DaoMgr.playerInfoDao.addPlayerInfo(playerInfo);
@@ -75,18 +75,6 @@ public class WorldMgr
 			Log.error(String.format("删除角色错误 accountId:%s userid %s", accountId, userId), e);
 		}
 		return true;
-	}
-
-	// 检测登陆
-	public LoginMsg checkLogin(String name)
-	{
-		return LoginMgr.checkLogin(name);
-	}
-
-	// 检测在线
-	public boolean checkOnline(long userId, String key)
-	{
-		return LoginMgr.checkOnline(userId, key);
 	}
 
 	/**
@@ -173,7 +161,7 @@ public class WorldMgr
 				userId = player.getUserId();
 				player.save();
 				// 离线玩家的数据需要被卸载
-				if (TimeUtil.getSysCurSeconds() - playerData.updateTime > INTERVALTIME)
+				if (TimeUtil.getSysCurSecond() - playerData.updateTime > INTERVALTIME)
 				{
 					disposePlayer(player);
 				}
@@ -281,7 +269,7 @@ class Players
 		PlayerData playerData = playerContext.get(userId);
 		if (playerData != null)
 		{
-			playerData.updateTime = TimeUtil.getSysCurSeconds();
+			playerData.updateTime = TimeUtil.getSysCurSecond();
 			return playerData.player;
 		}
 
@@ -372,7 +360,7 @@ class PlayerData
 
 	public PlayerData(GamePlayer player)
 	{
-		updateTime = TimeUtil.getSysCurSeconds();
+		updateTime = TimeUtil.getSysCurSecond();
 		this.player = player;
 	}
 }

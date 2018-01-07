@@ -370,7 +370,7 @@ public class Guild
 		applyInfo.setJobId(player.getJobId());
 		applyInfo.setFightStrength(player.getFightStrength());
 		applyInfo.setVipLv(player.getVipLv());
-		applyInfo.setApplyTime(TimeUtil.getSysCurSeconds());
+		applyInfo.setApplyTime(TimeUtil.getSysCurSecond());
 		applyInfo.setOp(DBOption.INSERT);
 		guildApplyList.add(applyInfo);
 		GuildInfoMsg.Builder netMsg = GuildInfoMsg.newBuilder();
@@ -494,7 +494,7 @@ public class Guild
 		GuildEventInfo eventInfo = new GuildEventInfo();
 		// eventInfo.setEventDesc(SystemMsgMgr.getInstance().getMsgInfoByMsgId(eventId,
 		// args));
-		eventInfo.setEventTime(TimeUtil.getSysCurSeconds());
+		eventInfo.setEventTime(TimeUtil.getSysCurSecond());
 		eventInfo.setOp(DBOption.INSERT);
 		if (guildEventList.size() >= 50)
 		{

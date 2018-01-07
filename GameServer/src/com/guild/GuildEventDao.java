@@ -67,7 +67,7 @@ public class GuildEventDao extends DBDao
 		try
 		{
 			pstmt = conn.prepareStatement(deleteEventByTimeSql);
-			pstmt.setInt(1, TimeUtil.getSysCurSeconds() - 5 * TimeUtil.SECOND_PER_DAY);
+			pstmt.setInt(1, TimeUtil.getSysCurSecond() - 5 * TimeUtil.SECOND_PER_DAY);
 			pstmt.executeUpdate();
 		}
 		catch (Exception ex)
