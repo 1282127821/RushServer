@@ -11,6 +11,7 @@ import com.game.PBMessage;
 import com.game.PlayerInfo;
 import com.pbmessage.GamePBMsg.AccountLoginMsg;
 import com.pbmessage.GamePBMsg.AccountLoginResultMsg;
+import com.pbmessage.GamePBMsg.AttributeInfoMsg;
 import com.pbmessage.GamePBMsg.KickOutPlayerMsg;
 import com.pbmessage.GamePBMsg.PlayerInfoMsg;
 import com.protocol.S2CProtocol;
@@ -97,6 +98,23 @@ public class AccountLoginCmd implements NetMsg {
 
 		PBMessage pbMsg = new PBMessage(S2CProtocol.S_C_LOGIN_GATEWAY);
 		pbMsg.setMsgBody(netMsg.build().toByteArray());
+		ctx.writeAndFlush(pbMsg);
+		
+		PlayerInfoMsg.Builder infoMsg = PlayerInfoMsg.newBuilder();
+		infoMsg.setUserId(accountId);
+		infoMsg.setUserName("zhongjiaxin");
+		infoMsg.setPlayerLv(20);
+		infoMsg.setJobType(1);
+		infoMsg.setFightStrength(1000);
+		pbMsg = new PBMessage(S2CProtocol.S_C_PLAYER_INFO);
+		pbMsg.setMsgBody(infoMsg.build().toByteArray());
+		ctx.writeAndFlush(pbMsg);
+
+		AttributeInfoMsg.Builder attMsg = AttributeInfoMsg.newBuilder();
+		attMsg.setAttributeType(5);
+		attMsg.setAttributeValue(10000);
+		pbMsg = new PBMessage(S2CProtocol.S_C_SYNC_MAIN_CITY_PLAYER);
+		pbMsg.setMsgBody(infoMsg.build().toByteArray());
 		ctx.writeAndFlush(pbMsg);
 	}
 }
